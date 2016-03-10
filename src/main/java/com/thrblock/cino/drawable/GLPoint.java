@@ -79,5 +79,12 @@ public class GLPoint extends GLShape {
         gl.glVertex2f(x, y);
         gl.glEnd();
     }
-
+    
+    public float getDistanceSquare(GLPoint point) {
+        return point.x * point.x + point.y * point.y;
+    }
+    
+    public float getDistance(GLPoint point) {
+    	return (float)Math.sqrt(getDistanceSquare(point));
+    }
 }
