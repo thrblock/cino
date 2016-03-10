@@ -5,34 +5,34 @@ import java.awt.Color;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public class GLPoint extends GLShape {
+public final class GLPoint extends GLShape {
     private float x;
     private float y;
     
-    private int alpha;
-    private int r = 255;
-    private int g = 255;
-    private int b = 255;
+    private float alpha = 1.0f;
+    private float r = 255;
+    private float g = 255;
+    private float b = 255;
     public GLPoint(float x,float y) {
         this.x = x;
         this.y = y;
     }
     
     public void setColor(Color c) {
-        this.r = c.getRed();
-        this.g = c.getGreen();
-        this.b = c.getBlue();
+        this.r = c.getRed() / 255f;
+        this.g = c.getGreen() / 255f;
+        this.b = c.getBlue() / 255f;
     }
     
-    public int getR() {
+    public float getR() {
         return r;
     }
 
-    public int getG() {
+    public float getG() {
         return g;
     }
 
-    public int getB() {
+    public float getB() {
         return b;
     }
 
@@ -74,17 +74,29 @@ public class GLPoint extends GLShape {
 
     @Override
     public void drawShape(GL2 gl) {
-        gl.glColor4i(r,g,b,alpha);
-        gl.glBegin(GL.GL_POINTS);
+    	gl.glBegin(GL.GL_POINTS);
+        gl.glColor4f(r,g,b,alpha);
         gl.glVertex2f(x, y);
         gl.glEnd();
     }
     
     public float getDistanceSquare(GLPoint point) {
-        return point.x * point.x + point.y * point.y;
+        float xl = x - point.x;
+        float yl = y - point.y;
+    	return xl * xl + yl * yl;
+    }
+    
+    public float getDistanceSquare(float ax,float ay) {
+    	float xl = x - ax;
+    	float yl = y - ay;
+    	return xl * xl + yl*yl;
     }
     
     public float getDistance(GLPoint point) {
     	return (float)Math.sqrt(getDistanceSquare(point));
+    }
+    
+    public float getDistance(float ax,float ay) {
+    	return (float)Math.sqrt(getDistanceSquare(ax,ay));
     }
 }

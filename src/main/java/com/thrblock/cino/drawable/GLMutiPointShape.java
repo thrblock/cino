@@ -1,18 +1,42 @@
 package com.thrblock.cino.drawable;
 
-import com.jogamp.opengl.GL2;
+import java.awt.Color;
 
-public abstract class MutiPointGLShape extends GLShape {
-    private final GLPoint[] points;
+public abstract class GLMutiPointShape extends GLShape {
+    protected final GLPoint[] points;
     private float theta = 0;
-    public MutiPointGLShape(GLPoint... points) {
+    public GLMutiPointShape(GLPoint... points) {
         this.points = points;
     }
 
     public float getTheta() {
         return theta;
     }
-
+    
+    public void setColor(Color c) {
+        for(GLPoint point:points) {
+            point.setColor(c);
+        }
+    }
+    
+    public void setPointColor(int index,Color c) {
+        if(index >=0 && index < points.length) {
+            points[index].setColor(c);
+        }
+    }
+    
+    public void setAlpha(int alpha) {
+    	for(GLPoint point:points) {
+            point.setAlpha(alpha);
+        }
+    }
+    
+    public void setPointAlpha(int index,int alpha) {
+        if(index >=0 && index < points.length) {
+            points[index].setAlpha(alpha);
+        }
+    }
+    
     public void setTheta(float dstTheta) {
         float offset = dstTheta - this.theta;
         float cx = getCentralX();
@@ -52,11 +76,6 @@ public abstract class MutiPointGLShape extends GLShape {
         for (GLPoint point : points) {
             point.setYOffset(offset);
         }
-    }
-
-    @Override
-    public void drawShape(GL2 gl) {
-        
     }
 
     private float revolveX(float x, float y, float cx, float cy, float theta) {
