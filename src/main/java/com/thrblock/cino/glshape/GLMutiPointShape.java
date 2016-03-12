@@ -1,4 +1,4 @@
-package com.thrblock.cino.drawable;
+package com.thrblock.cino.glshape;
 
 import java.awt.Color;
 

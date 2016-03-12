@@ -1,4 +1,4 @@
-package com.thrblock.cino.drawable;
+package com.thrblock.cino.glshape;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -19,14 +19,11 @@ public final class GLLine extends GLMutiPointShape {
 
 	@Override
     public void drawShape(GL2 gl) {
+		gl.glLineWidth(lineWidth);
         gl.glBegin(GL.GL_LINES);
-        gl.glLineWidth(lineWidth);
         for(GLPoint point:points) {
             gl.glColor4f(point.getR(), point.getG(),point.getB(),point.getAlpha());
             gl.glVertex2f(point.getX(),point.getY());
-        }
-        if (lineWidth != 1.0f) {
-            gl.glLineWidth(1.0f);
         }
         gl.glEnd();
     }

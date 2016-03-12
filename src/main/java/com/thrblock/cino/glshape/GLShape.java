@@ -1,10 +1,25 @@
-package com.thrblock.cino.drawable;
+package com.thrblock.cino.glshape;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 public abstract class GLShape {
 	private boolean visible = false;
 	private boolean destory = false;
+	private int mixAlpha = GL.GL_SRC_ALPHA;
+	private int mixBeta = GL.GL_ONE_MINUS_SRC_ALPHA;
+	public int getMixAlpha() {
+		return mixAlpha;
+	}
+	public void setMixAlpha(int mixAlpha) {
+		this.mixAlpha = mixAlpha;
+	}
+	public int getMixBeta() {
+		return mixBeta;
+	}
+	public void setMixBeta(int mixBeta) {
+		this.mixBeta = mixBeta;
+	}
 	public void show() {
 		this.visible = true;
 	}
