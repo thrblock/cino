@@ -1,10 +1,8 @@
 package com.thrblock.cino.gllayer;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import com.jogamp.opengl.GL;
@@ -14,7 +12,7 @@ public class GLLayer implements Iterable<GLShape> {
 	private int mixA = GL.GL_SRC_ALPHA;
 	private int mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
 	private List<GLShape> shapeList = new LinkedList<>();
-	private Set<GLShape> swap = new HashSet<GLShape>();
+	private List<GLShape> swap = new LinkedList<GLShape>();
 	private Semaphore swapSp = new Semaphore(1);
 	public GLLayer() {
 	}

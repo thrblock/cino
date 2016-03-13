@@ -1,4 +1,4 @@
-package com.thrblock.cino.fragment;
+package com.thrblock.cino.glfragment;
 
 import org.springframework.context.support.AbstractApplicationContext;
 

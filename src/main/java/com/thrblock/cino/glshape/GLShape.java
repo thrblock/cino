@@ -1,5 +1,7 @@
 package com.thrblock.cino.glshape;
 
+import java.awt.Color;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
@@ -35,5 +37,9 @@ public abstract class GLShape {
 	public boolean isDestory() {
 		return destory;
 	}
+	public abstract void setAlpha(float alpha);
+	public abstract void setColor(Color c);
+	public abstract void setXOffset(float offset);
+	public abstract void setYOffset(float offset);
 	public abstract void drawShape(GL2 gl);
 }

@@ -26,8 +26,8 @@ public class GLLayerContainer implements IGLLayerContainer {
 			layerList.get(index).addShapeToSwap(shape);
 		} else {
 			LOG.warn("layer not found:" + index);
-			for(int i = layerList.size() - 1;i <= index;i++) {
-				LOG.warn("layer auto generated:" + (index + 1));
+			for(int i = index;i >= layerList.size();i--) {
+				LOG.warn("layer auto generated:" + i);
 				GLLayer gen = new GLLayer();
 				layerList.add(gen);
 				if(i == index) {

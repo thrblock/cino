@@ -3,16 +3,28 @@ package com.thrblock.cino.glshape;
 import java.awt.Color;
 
 public abstract class GLMutiPointShape extends GLShape {
+	protected float lineWidth = 1.0f;
     protected final GLPoint[] points;
     private float theta = 0;
     public GLMutiPointShape(GLPoint... points) {
         this.points = points;
     }
+    
+    public int maxPointIndex() {
+    	return points.length - 1;
+    }
+    
+    public float getLineWidth() {
+		return lineWidth;
+	}
 
+    public void setLineWidth(float lineWidth) {
+		this.lineWidth = lineWidth;
+	}
     public float getTheta() {
         return theta;
     }
-    
+    @Override
     public void setColor(Color c) {
         for(GLPoint point:points) {
             point.setColor(c);
@@ -25,7 +37,8 @@ public abstract class GLMutiPointShape extends GLShape {
         }
     }
     
-    public void setAlpha(int alpha) {
+    @Override
+    public void setAlpha(float alpha) {
     	for(GLPoint point:points) {
             point.setAlpha(alpha);
         }
@@ -65,13 +78,13 @@ public abstract class GLMutiPointShape extends GLShape {
         }
         return result / points.length;
     }
-
+    @Override
     public void setXOffset(float offset) {
         for (GLPoint point : points) {
             point.setXOffset(offset);
         }
     }
-
+    @Override
     public void setYOffset(float offset) {
         for (GLPoint point : points) {
             point.setYOffset(offset);

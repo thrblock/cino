@@ -5,7 +5,7 @@ import java.awt.Color;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public final class GLPoint extends GLShape {
+public class GLPoint extends GLShape {
     private float pointSize = 1f;
     private float x;
     private float y;
@@ -27,6 +27,7 @@ public final class GLPoint extends GLShape {
         this.pointSize = pointSize;
     }
 
+    @Override
     public void setColor(Color c) {
         this.r = c.getRed() / 255f;
         this.g = c.getGreen() / 255f;
@@ -56,7 +57,7 @@ public final class GLPoint extends GLShape {
     public void setX(float x) {
         this.x = x;
     }
-    
+    @Override
     public void setXOffset(float offset) {
         this.x += offset;
     }
@@ -68,7 +69,7 @@ public final class GLPoint extends GLShape {
     public void setY(float y) {
         this.y = y;
     }
-    
+    @Override
     public void setYOffset(float offset) {
         this.y += offset;
     }
@@ -77,7 +78,8 @@ public final class GLPoint extends GLShape {
         return alpha;
     }
 
-    public void setAlpha(int alpha) {
+    @Override
+    public void setAlpha(float alpha) {
         this.alpha = alpha;
     }
 

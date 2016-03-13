@@ -3,19 +3,11 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public final class GLLine extends GLMutiPointShape {
-    private float lineWidth = 1.0f;
+public class GLLine extends GLMutiPointShape {
+    
     public GLLine(float x1,float y1,float x2,float y2) {
         super(new GLPoint[]{new GLPoint(x1,y1),new GLPoint(x2,y2)});
     }
-
-    public float getLineWidth() {
-		return lineWidth;
-	}
-
-    public void setLineWidth(float lineWidth) {
-		this.lineWidth = lineWidth;
-	}
 
 	@Override
     public void drawShape(GL2 gl) {

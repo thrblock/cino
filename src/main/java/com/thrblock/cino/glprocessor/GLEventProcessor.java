@@ -1,6 +1,5 @@
 package com.thrblock.cino.glprocessor;
 
-import java.awt.Color;
 import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,11 +11,11 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.thrblock.cino.fragment.IGLFragmentContainer;
+import com.thrblock.cino.glfragment.IGLFragmentContainer;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
-import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLShape;
+import com.thrblock.cino.gltexture.IGLTextureContainer;
 
 @Component
 public class GLEventProcessor implements GLEventListener {
@@ -28,23 +27,16 @@ public class GLEventProcessor implements GLEventListener {
 	@Autowired
 	private IGLLayerContainer layerContainer;
 	
+	@Autowired
+	private IGLTextureContainer textureContainer;
+	
 	private GL gl;
 	private GL2 gl2;
-	private GLLine x = new GLLine(0,300f,800f,300f);
-	private GLLine y = new GLLine(400f,0f,400f,600f);
-	{
-		x.setColor(Color.GREEN);
-		x.setLineWidth(3.5f);
-		y.setColor(Color.YELLOW);
-		y.setLineWidth(3.5f);
-	}
+	
 	@Override
 	public void display(GLAutoDrawable drawable) {
+		textureContainer.parseTexture(gl2);
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		
-		x.drawShape(gl2);
-		y.drawShape(gl2);
-		
 		for(GLLayer layer:layerContainer) {
 			gl2.glBlendFunc(layer.getMixA(),layer.getMixB());
 			Iterator<GLShape> shapeIter = layer.iterator();
