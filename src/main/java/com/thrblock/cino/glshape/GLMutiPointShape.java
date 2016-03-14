@@ -70,6 +70,10 @@ public abstract class GLMutiPointShape extends GLShape {
         }
         return result / points.length;
     }
+    
+    public void setCentralX(float x) {
+        setXOffset(x - getCentralX());
+    }
 
     public float getCentralY() {
         float result = 0;
@@ -78,6 +82,11 @@ public abstract class GLMutiPointShape extends GLShape {
         }
         return result / points.length;
     }
+    
+    public void setCentralY(float y) {
+    	setYOffset(y - getCentralY());
+    }
+    
     @Override
     public void setXOffset(float offset) {
         for (GLPoint point : points) {

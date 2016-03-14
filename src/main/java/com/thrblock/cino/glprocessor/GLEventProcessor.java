@@ -85,17 +85,18 @@ public class GLEventProcessor implements GLEventListener {
 	public void reshape(GLAutoDrawable drawable, int x, int y, int w,
 			int h) {
 		LOG.info("reshape:x-" + x + ",y-" + y + ",w-" + w + ",h-" + h);
-		if (h == 0) {
-			h = 1;
-		}
 		gl2.glViewport(0, 0, w, h);
 
 		gl2.glMatrixMode(GL2.GL_PROJECTION);
 		gl2.glLoadIdentity();
-		gl2.glOrtho(0.0f, w, h, 0.0f, 0.0f, 1.0f);
+		gl2.glOrtho(0,w == 0?1:w,h == 0?1:h,0,0,1.0f);
+		
+		gl2.glMatrixMode(GL2.GL_MODELVIEW);
+		gl2.glLoadIdentity();
 	}
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
+		LOG.info("GL dispose");
 	}
 }

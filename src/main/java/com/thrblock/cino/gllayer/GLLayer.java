@@ -9,12 +9,25 @@ import com.jogamp.opengl.GL;
 import com.thrblock.cino.glshape.GLShape;
 
 public class GLLayer implements Iterable<GLShape> {
+	private float viewXOffset;
+	private float viewYOffset;
 	private int mixA = GL.GL_SRC_ALPHA;
 	private int mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
 	private List<GLShape> shapeList = new LinkedList<>();
-	private List<GLShape> swap = new LinkedList<GLShape>();
+	private List<GLShape> swap = new LinkedList<>();
 	private Semaphore swapSp = new Semaphore(1);
-	public GLLayer() {
+	
+	public float getViewXOffset() {
+		return viewXOffset;
+	}
+	public void setViewXOffset(float viewXOffset) {
+		this.viewXOffset = viewXOffset;
+	}
+	public float getViewYOffset() {
+		return viewYOffset;
+	}
+	public void setViewYOffset(float viewYOffset) {
+		this.viewYOffset = viewYOffset;
 	}
 	public int getMixA() {
 		return mixA;

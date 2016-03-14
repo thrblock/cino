@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GLFragmentContainer implements IGLFragmentContainer{
 	private List<IGLFragment> frags = new LinkedList<>();
-	private List<IGLFragment> swap = new LinkedList<IGLFragment>();
+	private List<IGLFragment> swap = new LinkedList<>();
 	private Semaphore swapSp = new Semaphore(1);
 	@Override
 	public void allFragment() {
