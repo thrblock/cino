@@ -16,25 +16,35 @@ public class GLLayerContainer implements IGLLayerContainer {
 	private List<GLLayer> layerList = new CopyOnWriteArrayList<>();
 	
 	@Override
-	public void addLayer(GLLayer layer) {
+	public GLLayer getLayer(int index) {
+		if(layerList.size() <= index) {
+			LOG.warn("layer not found:" + index);
+			for(int i = layerList.size();i <= index;i++) {
+				LOG.info("layer auto generated:" + i);
+				GLLayer gen = new GLLayer();
+				layerList.add(gen);
+			}
+		}
+		return layerList.get(index);
+	}
+	
+	@Override
+	public int addLayer(GLLayer layer) {
 		layerList.add(layer);
+		return layerList.size() - 1;
 	}
 	
 	@Override
 	public void addShapeToSwap(int index,GLShape shape) {
-		if(layerList.size() > index) {
-			layerList.get(index).addShapeToSwap(shape);
-		} else {
+		if(layerList.size() <= index) {
 			LOG.warn("layer not found:" + index);
-			for(int i = 0;i <= index;i++) {
-				LOG.warn("layer auto generated:" + i);
+			for(int i = layerList.size();i <= index;i++) {
+				LOG.info("layer auto generated:" + i);
 				GLLayer gen = new GLLayer();
 				layerList.add(gen);
-				if(i == index) {
-					gen.addShapeToSwap(shape);
-				}
 			}
 		}
+		layerList.get(index).addShapeToSwap(shape);
 	}
 	
 	@Override
@@ -48,4 +58,5 @@ public class GLLayerContainer implements IGLLayerContainer {
 	public Iterator<GLLayer> iterator() {
 		return layerList.iterator();
 	}
+
 }

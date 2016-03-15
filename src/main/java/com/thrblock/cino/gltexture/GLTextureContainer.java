@@ -22,20 +22,20 @@ import com.jogamp.opengl.util.texture.TextureIO;
 @Component
 public class GLTextureContainer implements IGLTextureContainer {
 	private static final Logger LOG = LogManager.getLogger(GLTextureContainer.class);
-	private Map<String, Texture> textureMap = new HashMap<>();
+	private Map<String, Texture> imgTextureMap = new HashMap<>();
 	private Map<String, StreamPair> swap = new HashMap<>();
 	private Semaphore swapSp = new Semaphore(1);
 
 	@Override
 	public Texture getTexture(String name) {
-		return textureMap.get(name);
+		return imgTextureMap.get(name);
 	}
 	
 	@Override
 	public void registerTexture(String name,String imgType,InputStream srcStream) {
 		LOG.info("registerTexture name:" + name + ",type:" + imgType + ",stream:" + srcStream);
 		swapSp.acquireUninterruptibly();
-		if(!swap.containsKey(name) && !textureMap.containsKey(name)) {
+		if(!swap.containsKey(name) && !imgTextureMap.containsKey(name)) {
 			swap.put(name, new StreamPair(imgType,srcStream));
 		}
 		swapSp.release();
@@ -68,7 +68,7 @@ public class GLTextureContainer implements IGLTextureContainer {
 					Texture texture = TextureIO.newTexture(pair.stream,false,pair.imgType);
 					texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
 					texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST);
-					textureMap.put(entry.getKey(),texture);
+					imgTextureMap.put(entry.getKey(),texture);
 				} catch (GLException | IOException e) {
 					LOG.warn("Exception in parseTexture:" + e);
 				}

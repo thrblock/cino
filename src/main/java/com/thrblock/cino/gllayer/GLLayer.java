@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glshape.GLShape;
 
 public class GLLayer implements Iterable<GLShape> {
@@ -28,6 +29,12 @@ public class GLLayer implements Iterable<GLShape> {
 	}
 	public void setViewYOffset(float viewYOffset) {
 		this.viewYOffset = viewYOffset;
+	}
+	public void viewOffset(GL2 gl) {
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+
+		gl.glTranslatef(viewXOffset,viewYOffset,0);
 	}
 	public int getMixA() {
 		return mixA;
