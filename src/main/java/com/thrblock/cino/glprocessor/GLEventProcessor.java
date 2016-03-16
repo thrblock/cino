@@ -62,6 +62,7 @@ public class GLEventProcessor implements GLEventListener {
         LOG.info("GL init");
         Thread.currentThread().setName("GL_Draw");
         gl = drawable.getGL();
+        gl.setSwapInterval(1);
         gl2 = gl.getGL2();
 
         gl2.glEnable(GL.GL_MULTISAMPLE);

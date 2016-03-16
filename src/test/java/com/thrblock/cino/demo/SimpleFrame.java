@@ -35,7 +35,7 @@ public class SimpleFrame extends JFrame {
     private static final long serialVersionUID = -5581088030379424903L;
     private FPSAnimator animator;
     public SimpleFrame(GLEventListener proc) {
-        setSize(800 + 8, 600 + 27);
+        setSize(400 + 8, 300 + 27);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GLCapabilities glcaps = new GLCapabilities(GLProfile.getDefault());
         glcaps.setDoubleBuffered(true);
@@ -43,7 +43,9 @@ public class SimpleFrame extends JFrame {
         canvas.addGLEventListener(proc);
         getContentPane().add(canvas, BorderLayout.CENTER);
         
-        this.animator= new FPSAnimator(canvas,55,true);
+        this.animator= new FPSAnimator(canvas,50,true);
+        //this.animator= new Animator(canvas);
+        //animator.setRunAsFastAsPossible(false);
         
         // Transparent 16 x 16 pixel cursor image.
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -95,6 +97,7 @@ public class SimpleFrame extends JFrame {
         rect.setFill(true);
         rect.show();
         
+        
         final IKeyControlStack keyIO = context.getBean(IKeyControlStack.class);
         final IMouseControl mouseIO = context.getBean(IMouseControl.class);
         new AbstractGLFragment() {
@@ -103,14 +106,14 @@ public class SimpleFrame extends JFrame {
                 point.setX(mouseIO.getMouseX());
                 point.setY(mouseIO.getMouseY());
                 if(keyIO.isKeyDown(KeyEvent.VK_LEFT)) {
-                    rect.setXOffset(-3f);
+                	rect.setXOffset(-3f);
                 } else if(keyIO.isKeyDown(KeyEvent.VK_RIGHT)) {
-                    rect.setXOffset(3f);
+                	rect.setXOffset(3f);
                 }
                 if(keyIO.isKeyDown(KeyEvent.VK_UP)) {
-                    rect.setYOffset(-3f);
+                	rect.setYOffset(-3f);
                 } else if(keyIO.isKeyDown(KeyEvent.VK_DOWN)) {
-                    rect.setYOffset(3f);
+                	rect.setYOffset(3f);
                 }
             }
         };
