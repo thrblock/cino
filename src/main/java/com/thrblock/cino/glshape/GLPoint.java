@@ -11,9 +11,9 @@ public class GLPoint extends GLShape {
     private float y;
     
     private float alpha = 1.0f;
-    private float r = 255;
-    private float g = 255;
-    private float b = 255;
+    private float r = 1.0f;
+    private float g = 1.0f;
+    private float b = 1.0f;
     public GLPoint(float x,float y) {
         this.x = x;
         this.y = y;

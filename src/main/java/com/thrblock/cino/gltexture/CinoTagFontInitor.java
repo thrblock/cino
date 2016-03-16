@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class CinoTagFontInitor extends GLFontInitor {
-
 	@Override
 	protected GLFontTexture getFontTexture() {
 		logger.info("generating glfont object...");
