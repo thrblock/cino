@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.gllayer.IGLLayerContainer;
-import com.thrblock.cino.glshape.GLCharLine;
+import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLImage;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLOval;
@@ -101,9 +101,9 @@ public class GLShapeBuilder implements IGLShapeBuilder{
     }
 
     @Override
-    public GLCharLine buildGLCharLine(String fontName, float x, float y,
+    public GLCharArea buildGLCharLine(String fontName, float x, float y,
             String initStr) {
-        GLCharLine charLine = new GLCharLine(fontName,x,y,initStr);
+        GLCharArea charLine = new GLCharArea(fontName,x,y,initStr);
         layerContainer.addShapeToSwap(layer, charLine);
         return charLine;
     }

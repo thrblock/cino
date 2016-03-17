@@ -3,7 +3,7 @@ package com.thrblock.cino.glshape.builder;
 import java.io.File;
 import java.io.InputStream;
 
-import com.thrblock.cino.glshape.GLCharLine;
+import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLImage;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLOval;
@@ -19,5 +19,5 @@ public interface IGLShapeBuilder {
 	public GLImage buildGLImage(float x,float y,float width,float height,String textureName);
 	public GLImage buildGLImage(float x,float y,float width,float height,File imgFile);
 	public GLImage buildGLImage(float x,float y,float width,float height,InputStream imgInputStream,String imgType);
-	public GLCharLine buildGLCharLine(String fontName,float x,float y,String initStr);
+	public GLCharArea buildGLCharLine(String fontName,float x,float y,String initStr);
 }
