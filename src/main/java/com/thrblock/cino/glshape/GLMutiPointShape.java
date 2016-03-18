@@ -3,7 +3,7 @@ package com.thrblock.cino.glshape;
 import java.awt.Color;
 
 public abstract class GLMutiPointShape extends GLShape {
-	protected float lineWidth = 1.0f;
+    protected float lineWidth = 1.0f;
     protected final GLPoint[] points;
     private float theta = 0;
     public GLMutiPointShape(GLPoint... points) {
