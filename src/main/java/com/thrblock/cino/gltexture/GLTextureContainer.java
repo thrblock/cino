@@ -18,6 +18,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
+import com.thrblock.cino.glfont.GLFontTexture;
 
 @Component
 public class GLTextureContainer implements IGLTextureContainer {

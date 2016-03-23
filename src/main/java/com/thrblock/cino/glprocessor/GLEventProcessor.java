@@ -32,7 +32,6 @@ public class GLEventProcessor implements GLEventListener {
     
     private GL gl;
     private GL2 gl2;
-    
     @Override
     public void display(GLAutoDrawable drawable) {
         textureContainer.parseTexture(gl2);

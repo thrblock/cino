@@ -1,4 +1,4 @@
-package com.thrblock.cino.gltexture;
+package com.thrblock.cino.glfont;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +14,10 @@ public class GLFontTexture {
 	private char min;
 	private Class<?> clazz;
 	private char[] chars;
-	public GLFontTexture(Class<?> clazz,char[] chars,char max,char min) {
+	private String name;
+	public GLFontTexture(Class<?> clazz,String name,char[] chars,char max,char min) {
 		tarray = new Texture[max - min + 1];
+		this.name = name;
 		this.clazz = clazz;
 		this.chars = chars;
 		this.max = max;
@@ -30,7 +32,7 @@ public class GLFontTexture {
 	}
 	public void loadFontAsTexture(GL2 gl) throws IOException {
 		for(char c:chars) {
-			try(InputStream is = clazz.getResourceAsStream(String.valueOf(Integer.valueOf(c)))){
+			try(InputStream is = clazz.getResourceAsStream(name + "/" + Integer.valueOf(c))){
 				Texture texture = TextureIO.newTexture(is,false,"png");
 				texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
 				texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST);

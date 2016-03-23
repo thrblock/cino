@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
+import com.thrblock.cino.glfont.GLFontTexture;
 
 public interface IGLTextureContainer {
 	public Texture getTexture(String name);

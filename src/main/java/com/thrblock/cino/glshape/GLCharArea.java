@@ -9,7 +9,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 import com.thrblock.cino.CinoInitor;
-import com.thrblock.cino.gltexture.GLFontTexture;
+import com.thrblock.cino.glfont.GLFontTexture;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 
 public class GLCharArea extends GLShape {
