@@ -38,7 +38,23 @@ public class GLCharArea extends GLShape {
                 : 16);
         points.add(new GLPoint(x, y));
     }
+    
+    public float getX() {
+        return points.get(0).getX();
+    }
+    public float getY() {
+    	return points.get(0).getY();
+    }
+    public void setX(float x) {
+        float offset = x - getX();
+        setXOffset(offset);
+    }
 
+    public void setY(float y) {
+        float offset = y - getY();
+        setYOffset(offset);
+    }
+    
     public float getWidthLimit() {
         return widthLimit;
     }

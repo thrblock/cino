@@ -26,7 +26,11 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
 
     @Override
     public KeyListener popKeyListener() {
-        return listenerStack.pop();
+        if(!listenerStack.isEmpty()) {
+            return listenerStack.pop();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -43,14 +47,14 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
     }
 
     private void onKeyTyped(KeyEvent e) {
-    	KeyListener listener = peekKeyListener();
+        KeyListener listener = peekKeyListener();
         if(listener != null) {
             listener.keyTyped(e);
         }
     }
     
     private void onKeyPressed(KeyEvent e) {
-    	KeyListener listener = peekKeyListener();
+        KeyListener listener = peekKeyListener();
         if(listener != null) {
             listener.keyPressed(e);
         }
@@ -60,7 +64,7 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
     }
     
     private void onKeyRelease(KeyEvent e) {
-    	KeyListener listener = peekKeyListener();
+        KeyListener listener = peekKeyListener();
         if(listener != null) {
             listener.keyReleased(e);
         }
@@ -89,5 +93,11 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
             }
         }
         
+    }
+
+    @Override
+    public void replaceKeyListener(KeyListener keyListener) {
+        popKeyListener();
+        pushKeyListener(keyListener);
     }
 }

@@ -12,5 +12,6 @@ import java.awt.event.KeyListener;
 public interface IKeyControlStack {
 	public void pushKeyListener(KeyListener keyListener);
 	public KeyListener popKeyListener();
+	public void replaceKeyListener(KeyListener keyListener);
 	public boolean isKeyDown(int code);
 }
