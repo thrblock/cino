@@ -18,8 +18,15 @@ public class LinkedGLFragment extends AbstractGLFragment {
 		}
 	}
 	
-	public LinkedGLFragment add(ConditionGLFragment frag) {
-		node.fragment = frag;
+	public LinkedGLFragment add(IOneceFragment frag) {
+		node.fragment = new ConditionGLFragment(new OneceGLFragment(frag));
+		node.next = new Node();
+		node = node.next;
+		return this;
+	}
+	
+	public LinkedGLFragment add(IConditionFragment frag) {
+		node.fragment = new ConditionGLFragment(frag);
 		node.next = new Node();
 		node = node.next;
 		return this;
