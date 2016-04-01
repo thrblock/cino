@@ -27,14 +27,25 @@ public class GLPoint extends GLShape {
         this.pointSize = pointSize;
     }
 
-    @Override
     public void setColor(Color c) {
         this.r = c.getRed() / 255f;
         this.g = c.getGreen() / 255f;
         this.b = c.getBlue() / 255f;
     }
     
-    public float getR() {
+    public void setR(float r) {
+		this.r = r;
+	}
+
+	public void setG(float g) {
+		this.g = g;
+	}
+
+	public void setB(float b) {
+		this.b = b;
+	}
+
+	public float getR() {
         return r;
     }
 
@@ -78,7 +89,6 @@ public class GLPoint extends GLShape {
         return alpha;
     }
 
-    @Override
     public void setAlpha(float alpha) {
         this.alpha = alpha;
     }

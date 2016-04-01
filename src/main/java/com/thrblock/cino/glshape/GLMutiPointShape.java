@@ -24,8 +24,8 @@ public abstract class GLMutiPointShape extends GLShape {
     public float getTheta() {
         return theta;
     }
-    @Override
-    public void setColor(Color c) {
+
+    public void setAllPointColor(Color c) {
         for(GLPoint point:points) {
             point.setColor(c);
         }
@@ -37,8 +37,31 @@ public abstract class GLMutiPointShape extends GLShape {
         }
     }
     
-    @Override
-    public void setAlpha(float alpha) {
+    public void setPointR(int index,int r) {
+    	points[index].setR(r);
+    }
+    
+    public float getPointR(int index) {
+    	return points[index].getR();
+    }
+    
+    public void setPointG(int index,int g) {
+    	points[index].setG(g);
+    }
+    
+    public float getPointG(int index) {
+    	return points[index].getG();
+    }
+    
+    public void setPointB(int index,int b) {
+    	points[index].setB(b);
+    }
+    
+    public float getPointB(int index) {
+    	return points[index].getB();
+    }
+    
+    public void setAllPointAlpha(float alpha) {
     	for(GLPoint point:points) {
             point.setAlpha(alpha);
         }
@@ -48,6 +71,10 @@ public abstract class GLMutiPointShape extends GLShape {
         if(index >=0 && index < points.length) {
             points[index].setAlpha(alpha);
         }
+    }
+    
+    public float getPointAlpha(int index) {
+    	return points[index].getAlpha();
     }
     
     public void setTheta(float dstTheta) {

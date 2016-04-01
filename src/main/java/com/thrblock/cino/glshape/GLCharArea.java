@@ -34,17 +34,18 @@ public class GLCharArea extends GLShape {
 
         this.fontName = fontName;
         this.str = charmap;
-        points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4
-                : 16);
+        points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4 : 16);
         points.add(new GLPoint(x, y));
     }
-    
+
     public float getX() {
         return points.get(0).getX();
     }
+
     public float getY() {
-    	return points.get(0).getY();
+        return points.get(0).getY();
     }
+
     public void setX(float x) {
         float offset = x - getX();
         setXOffset(offset);
@@ -54,7 +55,7 @@ public class GLCharArea extends GLShape {
         float offset = y - getY();
         setYOffset(offset);
     }
-    
+
     public float getWidthLimit() {
         return widthLimit;
     }
@@ -89,12 +90,10 @@ public class GLCharArea extends GLShape {
         recalcPoint = true;
     }
 
-    @Override
     public void setAlpha(float alpha) {
         this.alpha = alpha;
     }
 
-    @Override
     public void setColor(Color c) {
         this.r = c.getRed() / 255f;
         this.g = c.getGreen() / 255f;
@@ -132,7 +131,7 @@ public class GLCharArea extends GLShape {
         }
         gl.glColor4f(r, g, b, alpha);
         for (int i = 0; i < local.length; i++) {
-            if(local[i] == '\n') {
+            if (local[i] == '\n') {
                 continue;
             }
             Texture t = tx.getTexture(local[i]);
