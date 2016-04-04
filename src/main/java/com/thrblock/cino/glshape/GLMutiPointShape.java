@@ -90,6 +90,12 @@ public abstract class GLMutiPointShape extends GLShape {
         this.theta = dstTheta;
     }
 
+    public float getPointX(int index) {
+    	return points[index].getX();
+    }
+    public float getPointY(int index) {
+    	return points[index].getY();
+    }
     public float getCentralX() {
         float result = 0;
         for (GLPoint point : points) {

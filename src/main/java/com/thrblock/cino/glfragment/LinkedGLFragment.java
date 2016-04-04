@@ -14,7 +14,7 @@ public class LinkedGLFragment extends AbstractGLFragment {
 				current = current.next;
 			}
 		} else {
-			destory();
+			disable();
 		}
 	}
 	
