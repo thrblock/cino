@@ -11,6 +11,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.glfragment.IGLFragmentContainer;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
@@ -30,8 +31,12 @@ public class GLEventProcessor implements GLEventListener {
     @Autowired
     private IGLTextureContainer textureContainer;
     
+    @Autowired
+    CinoFrameConfig config;
+    
     private GL gl;
     private GL2 gl2;
+    private boolean reshaped = false;
     @Override
     public void display(GLAutoDrawable drawable) {
         textureContainer.parseTexture(gl2);
@@ -61,7 +66,9 @@ public class GLEventProcessor implements GLEventListener {
         LOG.info("GL init");
         Thread.currentThread().setName("GL_Draw");
         gl = drawable.getGL();
-        gl.setSwapInterval(1);
+        if(config.isVsync()) {
+            gl.setSwapInterval(1);
+        }
         gl2 = gl.getGL2();
 
         gl2.glEnable(GL.GL_MULTISAMPLE);
@@ -86,13 +93,14 @@ public class GLEventProcessor implements GLEventListener {
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int w,
             int h) {
-        LOG.info("GL reshape:" + x + "," + y + "," + w + "," + h);
-        
-        gl2.glViewport(0, 0, w, h);
-
-        gl2.glMatrixMode(GL2.GL_PROJECTION);
-        gl2.glLoadIdentity();
-        gl2.glOrtho(0,w <= 0?1:w,h <= 0?1:h,0,0,1.0f);
+        if(!reshaped || config.getFlexMode() == CinoFrameConfig.FIX) {
+            reshaped = true;
+            gl2.glViewport(0, 0, w, h);
+            gl2.glMatrixMode(GL2.GL_PROJECTION);
+            gl2.glLoadIdentity();
+            gl2.glOrtho(0,w <= 0?1:w,h <= 0?1:h,0,0,1.0f);
+            LOG.info("GL reshape:" + x + "," + y + "," + w + "," + h);
+        }
     }
 
     @Override

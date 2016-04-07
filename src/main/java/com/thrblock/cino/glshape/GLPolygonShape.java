@@ -1,12 +1,16 @@
 package com.thrblock.cino.glshape;
 
-import com.jogamp.opengl.GL2;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 
-public abstract class GLSquareableShape extends GLMutiPointShape{
+import com.jogamp.opengl.GL2;
+import com.thrblock.cino.glfragment.AbstractGLFragment;
+
+public abstract class GLPolygonShape extends GLMutiPointShape{
 
     private boolean fill = false;
     
-    public GLSquareableShape(GLPoint[] points) {
+    public GLPolygonShape(GLPoint[] points) {
         super(points);
     }
     public boolean isFill() {
@@ -17,7 +21,7 @@ public abstract class GLSquareableShape extends GLMutiPointShape{
         this.fill = fill;
     }
 
-    public boolean isSquareableCollide(GLSquareableShape another) {
+    public boolean isSquareableCollide(GLPolygonShape another) {
         for(GLPoint point:points) {
             if(another.isPointInside(point.getX(),point.getY())) {
                 return true;
@@ -74,5 +78,18 @@ public abstract class GLSquareableShape extends GLMutiPointShape{
         gl.glLineWidth(1.0f);
         gl.glEnd();
     }
+    
+    public AbstractGLFragment bindBody(Body b2dBody) {
+		return new AbstractGLFragment(){
+			private Body body = b2dBody;
+			@Override
+			public void fragment() {
+				GLPolygonShape.this.setTheta(body.getAngle());
+				Vec2 vec = body.getPosition();
+				GLPolygonShape.this.setCentralX(vec.x);
+				GLPolygonShape.this.setCentralY(vec.y);
+			}
+		};
+	}
 
 }

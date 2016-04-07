@@ -1,6 +1,6 @@
 package com.thrblock.cino.glshape;
 
-public class GLRect extends GLSquareableShape {
+public class GLRect extends GLPolygonShape {
 	public GLRect(float x,float y,float width,float height) {
 		super(new GLPoint[]{
 				new GLPoint(x,y),

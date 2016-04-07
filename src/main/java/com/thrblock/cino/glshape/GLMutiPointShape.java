@@ -14,6 +14,10 @@ public abstract class GLMutiPointShape extends GLShape {
     	return points.length - 1;
     }
     
+    public int getPointNumber() {
+    	return points.length;
+    }
+    
     public float getLineWidth() {
 		return lineWidth;
 	}
@@ -88,6 +92,10 @@ public abstract class GLMutiPointShape extends GLShape {
             point.setY(dy);
         }
         this.theta = dstTheta;
+    }
+    
+    public void setAngle(float angle) {
+    	this.setTheta((float)(angle * Math.PI / 180));
     }
 
     public float getPointX(int index) {

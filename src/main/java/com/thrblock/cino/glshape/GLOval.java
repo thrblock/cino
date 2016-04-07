@@ -1,6 +1,6 @@
 package com.thrblock.cino.glshape;
 
-public class GLOval extends GLSquareableShape {
+public class GLOval extends GLPolygonShape {
 	private GLOval(GLPoint[] points) {
 		super(points);
 	}
