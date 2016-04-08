@@ -7,6 +7,9 @@ public class LinkedGLFragment extends AbstractGLFragment {
 	}
 	private Node node = new Node();
 	private Node current = node;
+	
+	protected LinkedGLFragment(){
+	}
 	@Override
 	public void fragment() {
 		if(current.fragment != null) {
@@ -18,7 +21,7 @@ public class LinkedGLFragment extends AbstractGLFragment {
 		}
 	}
 	
-	public LinkedGLFragment add(IOneceFragment frag) {
+	public LinkedGLFragment add(IPureFragment frag) {
 		node.fragment = new ConditionGLFragment(new OneceGLFragment(frag));
 		node.next = new Node();
 		node = node.next;

@@ -3,12 +3,9 @@ package com.thrblock.cino.glshape;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import org.springframework.context.support.AbstractApplicationContext;
-
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
-import com.thrblock.cino.CinoInitor;
 import com.thrblock.cino.glfont.GLFontTexture;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 
@@ -24,14 +21,12 @@ public class GLCharArea extends GLShape {
     private float b = 1.0f;
     private float alpha = 1.0f;
 
-    public GLCharArea(String fontName, float x, float y, String initStr) {
-        this(fontName, x, y, initStr.toCharArray());
+    public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y, String initStr) {
+        this(textureContainer,fontName, x, y, initStr.toCharArray());
     }
 
-    public GLCharArea(String fontName, float x, float y, char[] charmap) {
-        AbstractApplicationContext context = CinoInitor.getCinoContext();
-        textureContainer = context.getBean(IGLTextureContainer.class);
-
+    public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y, char[] charmap) {
+        this.textureContainer = textureContainer;
         this.fontName = fontName;
         this.str = charmap;
         points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4 : 16);

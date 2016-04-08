@@ -1,10 +1,6 @@
 package com.thrblock.cino.glshape;
 
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-
 import com.jogamp.opengl.GL2;
-import com.thrblock.cino.glfragment.AbstractGLFragment;
 
 public abstract class GLPolygonShape extends GLMutiPointShape{
 
@@ -79,17 +75,4 @@ public abstract class GLPolygonShape extends GLMutiPointShape{
         gl.glEnd();
     }
     
-    public AbstractGLFragment bindBody(Body b2dBody) {
-		return new AbstractGLFragment(){
-			private Body body = b2dBody;
-			@Override
-			public void fragment() {
-				GLPolygonShape.this.setTheta(body.getAngle());
-				Vec2 vec = body.getPosition();
-				GLPolygonShape.this.setCentralX(vec.x);
-				GLPolygonShape.this.setCentralY(vec.y);
-			}
-		};
-	}
-
 }

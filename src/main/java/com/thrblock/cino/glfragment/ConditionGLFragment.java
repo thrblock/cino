@@ -7,7 +7,7 @@ public class ConditionGLFragment extends AbstractGLFragment {
 	*/
 	private IConditionFragment condition;
 	
-	public ConditionGLFragment(IConditionFragment condition) {
+	protected ConditionGLFragment(IConditionFragment condition) {
 		this.condition = condition;
 	}
 	

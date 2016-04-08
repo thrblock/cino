@@ -7,6 +7,8 @@ public class LoopedGLFragment extends AbstractGLFragment {
 		Node next;
 	}
 	private Node node = null;
+	protected LoopedGLFragment(){
+	}
 	@Override
 	public void fragment() {
 		if(node != null) {
@@ -18,7 +20,7 @@ public class LoopedGLFragment extends AbstractGLFragment {
 		}
 	}
 	
-	public LoopedGLFragment add(IOneceFragment frag) {
+	public LoopedGLFragment add(IPureFragment frag) {
 		ConditionGLFragment condition = new ConditionGLFragment(new OneceGLFragment(frag));
 		if(node == null) {
 			node = new Node();

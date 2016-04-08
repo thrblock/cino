@@ -68,7 +68,7 @@ public class GLShapeBuilder implements IGLShapeBuilder{
     @Override
     public GLImage buildGLImage(float x, float y, float width, float height,
             String textureName) {
-        GLImage image = new GLImage(x,y,width,height,textureName);
+        GLImage image = new GLImage(textureContainer,x,y,width,height,textureName);
         layerContainer.addShapeToSwap(layer, image);
         return image;
     }
@@ -85,7 +85,7 @@ public class GLShapeBuilder implements IGLShapeBuilder{
             LOG.warn("error in get canonical name of file:" + imgFile + ", the texture may be unable to reuse");
         }
         textureContainer.registerTexture(textureName, imgFile);
-        GLImage image = new GLImage(x,y,width,height,textureName);
+        GLImage image = new GLImage(textureContainer,x,y,width,height,textureName);
         layerContainer.addShapeToSwap(layer, image);
         return image;
     }
@@ -95,7 +95,7 @@ public class GLShapeBuilder implements IGLShapeBuilder{
             InputStream imgInputStream,String imgType) {
         String textureName = imgInputStream.toString();
         textureContainer.registerTexture(textureName, imgType, imgInputStream);
-        GLImage image = new GLImage(x,y,width,height,textureName);
+        GLImage image = new GLImage(textureContainer,x,y,width,height,textureName);
         layerContainer.addShapeToSwap(layer, image);
         return image;
     }
@@ -103,7 +103,7 @@ public class GLShapeBuilder implements IGLShapeBuilder{
     @Override
     public GLCharArea buildGLCharLine(String fontName, float x, float y,
             String initStr) {
-        GLCharArea charLine = new GLCharArea(fontName,x,y,initStr);
+        GLCharArea charLine = new GLCharArea(textureContainer,fontName,x,y,initStr);
         layerContainer.addShapeToSwap(layer, charLine);
         return charLine;
     }

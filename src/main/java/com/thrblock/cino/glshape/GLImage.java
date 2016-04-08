@@ -1,11 +1,8 @@
 package com.thrblock.cino.glshape;
 
-import org.springframework.context.support.AbstractApplicationContext;
-
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
-import com.thrblock.cino.CinoInitor;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 
 public class GLImage extends GLRect {
@@ -15,11 +12,10 @@ public class GLImage extends GLRect {
 	private int mode = MODE_NORMAL;
 	private String textureName;
 	private IGLTextureContainer textureContainer;
-	public GLImage(float x, float y, float width, float height,String textureName) {
+	public GLImage(IGLTextureContainer textureContainer,float x, float y, float width, float height,String textureName) {
 		super(x, y, width, height);
 		this.textureName = textureName;
-		AbstractApplicationContext context = CinoInitor.getCinoContext();
-		textureContainer = context.getBean(IGLTextureContainer.class);
+		this.textureContainer = textureContainer;
 	}
 	
 	public String getTextureName() {

@@ -6,6 +6,8 @@ public class AutoMachine extends AbstractGLFragment {
 		public IStatusGLFragment statusFragment();
 	}
 	private IStatusGLFragment current;
+	protected AutoMachine() {
+	}
 	public void enableWith(IStatusGLFragment fragment){
 		this.current = fragment;
 		enable();

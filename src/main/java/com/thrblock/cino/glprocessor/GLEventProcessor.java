@@ -93,6 +93,8 @@ public class GLEventProcessor implements GLEventListener {
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int w,
             int h) {
+        config.setScreenWidth(w);
+        config.setScreenHeight(h);
         if(!reshaped || config.getFlexMode() == CinoFrameConfig.FIX) {
             reshaped = true;
             gl2.glViewport(0, 0, w, h);

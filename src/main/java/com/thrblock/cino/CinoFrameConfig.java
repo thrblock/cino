@@ -28,7 +28,7 @@ public class CinoFrameConfig {
      */
     public static final int SCALE = 0;
     /**
-     * 仅仅是画布边打，图形大小不变
+     * 仅仅是画布变大，图形大小不变
      */
     public static final int FIX = 1;
     

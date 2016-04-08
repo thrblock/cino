@@ -37,12 +37,11 @@ public class GLTextureContainer implements IGLTextureContainer {
     
     @Override
     public void registerTexture(String name,String imgType,InputStream srcStream) {
-    	LOG.info("registerTexture name:" + name + ",type:" + imgType + ",stream:" + srcStream);
         imageSwapSp.acquireUninterruptibly();
         if(!imageSwap.containsKey(name) && !imgTextureMap.containsKey(name)) {
+            LOG.info("registerTexture name:" + name + ",type:" + imgType + ",stream:" + srcStream);
             imageSwap.put(name, new StreamPair(imgType,srcStream));
         } else {
-        	LOG.info("reuse name:" + name);
         	try {
 				srcStream.close();
 			} catch (IOException e) {

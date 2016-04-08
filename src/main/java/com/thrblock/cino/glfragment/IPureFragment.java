@@ -1,6 +1,6 @@
 package com.thrblock.cino.glfragment;
 
 @FunctionalInterface
-public interface IOneceFragment {
+public interface IPureFragment {
 	public void fragment();
 }
