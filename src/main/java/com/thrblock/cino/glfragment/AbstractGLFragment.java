@@ -1,8 +1,21 @@
 package com.thrblock.cino.glfragment;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 public abstract class AbstractGLFragment implements IGLFragment {
 	private boolean enable = false;
 	private boolean destory = false;
+	
+	@Autowired
+    private IGLFragmentContainer container;
+	
+    @PostConstruct
+    private void addToContainer() {
+        container.addFragment(this);
+    }
+    
 	protected AbstractGLFragment(){
 	}
 	@Override

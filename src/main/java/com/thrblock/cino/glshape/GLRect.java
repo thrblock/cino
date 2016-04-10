@@ -9,6 +9,16 @@ public class GLRect extends GLPolygonShape {
 				new GLPoint(x,y + height)});
 	}
 	
+	public void setX(float x) {
+		float offset = x - points[0].getX();
+		setXOffset(offset);
+	}
+	
+	public void setY(float y) {
+		float offset = y - points[0].getY();
+		setYOffset(offset);
+	}
+	
 	public float getWidth() {
 		float xl = points[0].getX() - points[1].getX();
 		float yl = points[0].getY() - points[1].getY();
