@@ -21,14 +21,21 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 
+/**
+ * GL渲染窗体设置
+ * @author thrblock
+ *
+ */
 @Component
 public class CinoFrameConfig {
     /**
      * 等比例缩放
+     * @see #setFlexMode
      */
     public static final int SCALE = 0;
     /**
      * 仅仅是画布变大，图形大小不变
+     * @see #setFlexMode
      */
     public static final int FIX = 1;
     
@@ -69,90 +76,148 @@ public class CinoFrameConfig {
      */
     private int flexMode = SCALE;
     
+    /**
+     * 渲染位置宽度 （像素）
+     */
     private int screenWidth = 800;
+    /**
+     * 渲染位置高度（像素）
+     */
     private int screenHeight = 600;
     
     
+    /**
+     * 是否隐藏鼠标
+     */
     public boolean isHideMouse() {
         return hideMouse;
     }
 
+    /**
+     * 设置是否隐藏鼠标
+     * @param hideMouse 代表是否隐藏鼠标的布尔值
+     */
     public void setHideMouse(boolean hideMouse) {
         this.hideMouse = hideMouse;
     }
 
+    /**
+     * 获得 渲染位置宽度 像素
+     */
     public int getScreenWidth() {
         return screenWidth;
     }
 
+    /**
+     * 设置 渲染位置宽度 像素
+     */
     public void setScreenWidth(int screenWidth) {
         this.screenWidth = screenWidth;
     }
-
+    
+    /**
+     * 获得 渲染位置高度 像素
+     */
     public int getScreenHeight() {
         return screenHeight;
     }
 
+    /**
+     * 设置 渲染位置高度 像素
+     */
     public void setScreenHeight(int screenHeight) {
         this.screenHeight = screenHeight;
     }
 
-    public GraphicsDevice getGraphicsDevice() {
-        return graphicsDevice;
-    }
-
-    public void setGraphicsDevice(GraphicsDevice graphicsDevice) {
-        this.graphicsDevice = graphicsDevice;
-    }
-
+    /**
+     * 是否使用双重缓冲
+     */
     public boolean isDoubleBuffer() {
         return doubleBuffer;
     }
 
+    /**
+     * 设置 是否使用双重缓冲
+     */
     public void setDoubleBuffer(boolean doubleBuffer) {
         this.doubleBuffer = doubleBuffer;
     }
 
+    /**
+     * 是否使用垂直同步
+     */
     public boolean isVsync() {
         return vsync;
     }
 
+    /**
+     * 设置 是否使用垂直同步
+     */
     public void setVsync(boolean vsync) {
         this.vsync = vsync;
     }
 
+    /**
+     * 是否全屏
+     */
     public boolean isFullScreen() {
         return fullScreen;
     }
 
+    /**
+     * 设置 是否全屏
+     */
     public void setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
     }
 
+    /**
+     * 获得 期望 每秒绘制速率
+     */
     public int getFramesPerSecond() {
         return framesPerSecond;
     }
 
+    /**
+     * 设置 期望 每秒绘制速率
+     */
     public void setFramesPerSecond(int framesPerSecond) {
         this.framesPerSecond = framesPerSecond;
     }
 
+    /**
+     * 窗体是否可变
+     */
     public boolean isFlexible() {
         return flexible;
     }
 
+    /**
+     * 设置 窗体是否可变
+     */
     public void setFlexible(boolean flexible) {
         this.flexible = flexible;
     }
 
+    /**
+     * 获得 当前缩放模式
+     */
     public int getFlexMode() {
         return flexMode;
     }
 
+    /**
+     * 设置 当前缩放模式
+     * @see #SCALE
+     * @see #FIX
+     */
     public void setFlexMode(int flexMode) {
         this.flexMode = flexMode;
     }
 
+    /**
+     * 按照配置 构造JFrame
+     */
     public JFrame buildFrame() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -10,6 +10,28 @@ import com.thrblock.cino.glfont.GLFontTexture;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 
 public class GLCharArea extends GLShape {
+    public static final int HOR_LEFT = 0;
+    public static final int HOR_RIGHT = 1;
+    public static final int HOR_CENTRAL = 2;
+    
+    public static final int VER_UP = 0;
+    public static final int VER_BOTTOM = 1;
+    public static final int VER_CENTRAL = 2;
+    
+    /**
+     * 垂直对齐方式，默认为靠上
+     */
+    private int verAlia = VER_UP;
+    /**
+     * 水平对齐方式，默认为左对齐
+     */
+    private int horAlia = HOR_LEFT;
+    private float x;
+    private float y;
+    private float width;
+    private float height;
+    
+    
     private IGLTextureContainer textureContainer;
     private float widthLimit = -1f;
     private char[] str;
@@ -21,24 +43,50 @@ public class GLCharArea extends GLShape {
     private float b = 1.0f;
     private float alpha = 1.0f;
 
-    public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y, String initStr) {
-        this(textureContainer,fontName, x, y, initStr.toCharArray());
+    public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y,float w,float h, String initStr) {
+        this(textureContainer,fontName, x, y, w, h, initStr.toCharArray());
     }
 
-    public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y, char[] charmap) {
+    public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y,float w,float h, char[] charmap) {
         this.textureContainer = textureContainer;
         this.fontName = fontName;
         this.str = charmap;
+        
+        this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+        
         points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4 : 16);
         points.add(new GLPoint(x, y));
     }
 
+    public void setHorAlia(int horAlia) {
+        this.horAlia = horAlia;
+        resize();
+    }
+    
+    public void setVerAlia(int verAlia) {
+        this.verAlia = verAlia;
+        resize();
+    }
+    
+    public void setWidth(float width) {
+        this.width = width;
+        resize();
+    }
+    
+    public void setHeight(float height) {
+        this.height = height;
+        resize();
+    }
+    
     public float getX() {
-        return points.get(0).getX();
+        return x;
     }
 
     public float getY() {
-        return points.get(0).getY();
+        return y;
     }
 
     public void setX(float x) {
@@ -97,6 +145,11 @@ public class GLCharArea extends GLShape {
 
     @Override
     public void setXOffset(float offset) {
+        x += offset;
+        setPointXOffset(offset);
+    }
+    
+    private void setPointXOffset(float offset) {
         for (GLPoint point : points) {
             point.setXOffset(offset);
         }
@@ -104,6 +157,11 @@ public class GLCharArea extends GLShape {
 
     @Override
     public void setYOffset(float offset) {
+        y += offset;
+        setPointYOffset(offset);
+    }
+    
+    private void setPointYOffset(float offset) {
         for (GLPoint point : points) {
             point.setYOffset(offset);
         }
@@ -123,6 +181,7 @@ public class GLCharArea extends GLShape {
                 recalc(tx);
             }
             recalcPoint = false;
+            recalcOffset();
         }
         gl.glColor4f(r, g, b, alpha);
         for (int i = 0; i < local.length; i++) {
@@ -151,6 +210,45 @@ public class GLCharArea extends GLShape {
             gl.glEnd();
             gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
         }
+    }
+
+    private void recalcOffset() {
+        float minDx = points.get(0).getX();
+        float maxDx = minDx;
+        
+        float minDy = points.get(0).getY();
+        float maxDy = minDy;
+        for(GLPoint p:points) {
+            if(p.getX() > maxDx) {
+                maxDx = p.getX();
+            }
+            if(p.getY() > maxDy) {
+                maxDy = p.getY();
+            }
+        }
+        
+        float rw = maxDx - minDx;
+        float rh = maxDy - minDy;
+        
+        float offsetX,offsetY;
+        
+        if(horAlia == HOR_LEFT) {
+            offsetX = 0;
+        } else if(horAlia == HOR_LEFT) {
+            offsetX = width - rw;
+        } else {
+            offsetX = (width - rw) / 2;
+        }
+        
+        if(verAlia == VER_UP) {
+            offsetY = 0;
+        } else if(verAlia == VER_BOTTOM) {
+            offsetY = height - rh;
+        } else {
+            offsetY = (height - rh) / 2;
+        }
+        setPointXOffset(offsetX);
+        setPointYOffset(offsetY);
     }
 
     private void recalcWithLimit(GLFontTexture tx) {

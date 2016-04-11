@@ -20,4 +20,5 @@ public interface IGLShapeBuilder {
 	public GLImage buildGLImage(float x,float y,float width,float height,File imgFile);
 	public GLImage buildGLImage(float x,float y,float width,float height,InputStream imgInputStream,String imgType);
 	public GLCharArea buildGLCharLine(String fontName,float x,float y,String initStr);
+	public GLCharArea buildGLCharLine(String fontName,float x,float y,float w,float h,String initStr);
 }

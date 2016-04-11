@@ -30,7 +30,7 @@ public class ConditionGLFragment extends AbstractGLFragment {
     @Override
     public void fragment() {
         if(condition.fragment()) {
-            destory();
+            disable();
         }
     }
 }

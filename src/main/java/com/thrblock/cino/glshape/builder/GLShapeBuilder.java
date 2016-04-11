@@ -101,9 +101,16 @@ public class GLShapeBuilder implements IGLShapeBuilder{
     }
 
     @Override
-    public GLCharArea buildGLCharLine(String fontName, float x, float y,
+    public GLCharArea buildGLCharLine(String fontName, float x, float y,String initStr) {
+        GLCharArea charLine = new GLCharArea(textureContainer,fontName,x,y,1,1,initStr);
+        layerContainer.addShapeToSwap(layer, charLine);
+        return charLine;
+    }
+    
+    @Override
+    public GLCharArea buildGLCharLine(String fontName, float x, float y,float w,float h,
             String initStr) {
-        GLCharArea charLine = new GLCharArea(textureContainer,fontName,x,y,initStr);
+        GLCharArea charLine = new GLCharArea(textureContainer,fontName,x,y,w,h,initStr);
         layerContainer.addShapeToSwap(layer, charLine);
         return charLine;
     }

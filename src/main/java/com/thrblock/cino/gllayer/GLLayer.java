@@ -9,6 +9,12 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glshape.GLShape;
 
+/**
+ * 绘制层<br />
+ * 一个绘制层定义了绘制顺序、混合模式、视角偏移量
+ * 一个绘制层包含了该层次的图形对象，并提供遍历支持
+ * @author thrblock
+ */
 public class GLLayer implements Iterable<GLShape> {
 	private float viewXOffset;
 	private float viewYOffset;
