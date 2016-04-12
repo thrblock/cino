@@ -52,13 +52,13 @@ public class GLCharArea extends GLShape {
         this.fontName = fontName;
         this.str = charmap;
         
-        this.x = x;
-        this.y = y;
-        this.width = w;
-        this.height = h;
+        this.x = (int)x;
+        this.y = (int)y;
+        this.width = (int)w;
+        this.height = (int)h;
         
         points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4 : 16);
-        points.add(new GLPoint(x, y));
+        points.add(new GLPoint(this.x, this.y));
     }
 
     public void setHorAlia(int horAlia) {
@@ -72,12 +72,12 @@ public class GLCharArea extends GLShape {
     }
     
     public void setWidth(float width) {
-        this.width = width;
+        this.width = (int)width;
         resize();
     }
     
     public void setHeight(float height) {
-        this.height = height;
+        this.height = (int)height;
         resize();
     }
     
@@ -90,12 +90,12 @@ public class GLCharArea extends GLShape {
     }
 
     public void setX(float x) {
-        float offset = x - getX();
+        float offset = (int)x - getX();
         setXOffset(offset);
     }
 
     public void setY(float y) {
-        float offset = y - getY();
+        float offset = (int)y - getY();
         setYOffset(offset);
     }
 
@@ -104,7 +104,7 @@ public class GLCharArea extends GLShape {
     }
 
     public void setWidthLimit(float widthLimit) {
-        this.widthLimit = widthLimit;
+        this.widthLimit = (int)widthLimit;
     }
 
     public void setFontName(String fontName) {
@@ -145,25 +145,25 @@ public class GLCharArea extends GLShape {
 
     @Override
     public void setXOffset(float offset) {
-        x += offset;
-        setPointXOffset(offset);
+        x += (int)offset;
+        setPointXOffset((int)offset);
     }
     
     private void setPointXOffset(float offset) {
         for (GLPoint point : points) {
-            point.setXOffset(offset);
+            point.setXOffset((int)offset);
         }
     }
 
     @Override
     public void setYOffset(float offset) {
-        y += offset;
-        setPointYOffset(offset);
+        y += (int)offset;
+        setPointYOffset((int)offset);
     }
     
     private void setPointYOffset(float offset) {
         for (GLPoint point : points) {
-            point.setYOffset(offset);
+            point.setYOffset((int)offset);
         }
     }
 
