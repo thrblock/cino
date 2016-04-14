@@ -42,6 +42,8 @@ public class GLCharArea extends GLShape {
     private float g = 1.0f;
     private float b = 1.0f;
     private float alpha = 1.0f;
+    
+    private float theta = 0;
 
     public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y,float w,float h, String initStr) {
         this(textureContainer,fontName, x, y, w, h, initStr.toCharArray());
@@ -71,34 +73,144 @@ public class GLCharArea extends GLShape {
         resize();
     }
     
+    /**
+     * 设置区域宽度，区域宽度将作为文字的水平对齐标准
+     * @param width 区域宽度
+     */
     public void setWidth(float width) {
         this.width = (int)width;
         resize();
     }
     
+    /**
+     * 设置区域高度，区域宽度将作为文字的垂直对齐标准
+     * @param height 区域高度
+     */
     public void setHeight(float height) {
         this.height = (int)height;
         resize();
     }
-    
+    /**
+     * {@inheritDoc}<br />
+     * 获得 位置量x，定义为区域的左上定点的横坐标
+     * */
+    @Override
     public float getX() {
         return x;
     }
-
+    /**
+     * {@inheritDoc}<br />
+     * 获得 位置量y，定义为区域的左上定点的纵坐标
+     * */
+    @Override
     public float getY() {
         return y;
     }
-
+    /**
+     * {@inheritDoc}<br />
+     * 设置 位置量x，定义为区域的左上定点的横坐标
+     * */
+    @Override
     public void setX(float x) {
         float offset = (int)x - getX();
         setXOffset(offset);
     }
-
+    /**
+     * {@inheritDoc}<br />
+     * 设置 位置量y，定义为区域的左上定点的纵坐标
+     * */
+    @Override
     public void setY(float y) {
         float offset = (int)y - getY();
         setYOffset(offset);
     }
 
+    /**
+     * {@inheritDoc}<br />
+     * 获得 中心位置x，定义为区域的中心位置<br />
+     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
+     * */
+    @Override
+	public float getCentralX() {
+		return x + width / 2;
+	}
+
+    /**
+     * {@inheritDoc}<br />
+     * 获得 中心位置y，定义为区域的中心位置<br />
+     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
+     * */
+	@Override
+	public float getCentralY() {
+		return y + height / 2;
+	}
+	/**
+     * {@inheritDoc}<br />
+     * 设置 中心位置x，定义为区域的中心位置<br />
+     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
+     * */
+	@Override
+	public void setCentralX(float x) {
+		float offset = (int)x - getCentralX();
+		setXOffset(offset);
+	}
+
+	/**
+     * {@inheritDoc}<br />
+     * 设置 中心位置y，定义为区域的中心位置<br />
+     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
+     * */
+	@Override
+	public void setCentralY(float y) {
+		float offset = (int)y - getCentralY();
+		setYOffset(offset);
+	}
+	/**
+     * {@inheritDoc}<br />
+     * 获得 通道参数，文字区域不提供对指定点的alpha设定
+     * */
+	@Override
+	public float getAlpha() {
+		return alpha;
+	}
+	/**
+     * {@inheritDoc}<br />
+     * 获得 旋转角度
+     * */
+	@Override
+	public float getTheta() {
+		return theta;
+	}
+	/**
+     * {@inheritDoc}<br />
+     * 设置 旋转角度<br />
+     * 注意，低分辨率下扭曲可能影响文字质量
+     * */
+	@Override
+	public void setTheta(float dstTheta) {
+		setTheta(dstTheta,getCentralX(),getCentralY());
+	}
+	/**
+     * {@inheritDoc}<br />
+     * 设置 旋转角度，以指定轴x,y<br />
+     * 注意，低分辨率下扭曲可能影响文字质量
+     * */
+	@Override
+	public void setTheta(float dstTheta, float x, float y) {
+		float offset = dstTheta - this.theta;
+		float nx = revolveX(this.x,this.y,x,y,offset);
+		float ny = revolveY(this.x,this.y,x,y,offset);
+        for (GLPoint point : points) {
+            float dx = revolveX(point.getX(),point.getY(),x,y,offset);
+            float dy = revolveY(point.getX(),point.getY(),x,y,offset);
+            point.setX(dx);
+            point.setY(dy);
+        }
+        this.theta = dstTheta;
+        this.x = nx;
+        this.y = ny;
+	}
+	
     public float getWidthLimit() {
         return widthLimit;
     }
@@ -115,11 +227,21 @@ public class GLCharArea extends GLShape {
         return fontName;
     }
 
+    /**
+     * 设置文字<br />
+     * 注意，重置文字后旋转特性将丢失
+     * @param str 文字字符串
+     */
     public void setFontString(String str) {
         this.str = str.toCharArray();
         resize();
     }
 
+    /**
+     * 设置文字
+     * 注意，重置文字后旋转特性将丢失
+     * @param str 文字字符数组
+     */
     public void setFontString(char[] str) {
         this.str = str;
         resize();
@@ -129,7 +251,11 @@ public class GLCharArea extends GLShape {
         return new String(str);
     }
 
+    /**
+     * 重新计算文字点，角度丢失
+     */
     public void resize() {
+        this.theta = 0;
         recalcPoint = true;
     }
 
@@ -142,7 +268,10 @@ public class GLCharArea extends GLShape {
         this.g = c.getGreen() / 255f;
         this.b = c.getBlue() / 255f;
     }
-
+    /**
+     * {@inheritDoc}<br />
+     * 设置 横向偏移量
+     * */
     @Override
     public void setXOffset(float offset) {
         x += (int)offset;
@@ -154,7 +283,10 @@ public class GLCharArea extends GLShape {
             point.setXOffset((int)offset);
         }
     }
-
+    /**
+     * {@inheritDoc}<br />
+     * 设置 纵向偏移量
+     * */
     @Override
     public void setYOffset(float offset) {
         y += (int)offset;
@@ -318,5 +450,4 @@ public class GLCharArea extends GLShape {
         p3.setX(pre.getX());
         p3.setY(pre.getY() + t.getHeight());
     }
-
 }

@@ -27,20 +27,20 @@ public class TpAlpha {
 	public static boolean tearOut(GLMutiPointShape mShape, float step) {
 		float calc = mShape.getPointAlpha(0) - step;
 		if(calc > 0) {
-			mShape.setAllPointAlpha(calc);
+			mShape.setAlpha(calc);
 			return false;
 		} else {
-			mShape.setAllPointAlpha(0);
+			mShape.setAlpha(0);
 			return true;
 		}
 	}
 	public static boolean tearIn(GLMutiPointShape mShape, float step) {
 		float calc = mShape.getPointAlpha(0) + step;
 		if(calc < 1f) {
-			mShape.setAllPointAlpha(calc);
+			mShape.setAlpha(calc);
 			return false;
 		} else {
-			mShape.setAllPointAlpha(1f);
+			mShape.setAlpha(1f);
 			return true;
 		}
 	}

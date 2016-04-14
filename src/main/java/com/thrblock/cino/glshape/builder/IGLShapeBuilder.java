@@ -21,4 +21,10 @@ public interface IGLShapeBuilder {
 	public GLImage buildGLImage(float x,float y,float width,float height,InputStream imgInputStream,String imgType);
 	public GLCharArea buildGLCharLine(String fontName,float x,float y,String initStr);
 	public GLCharArea buildGLCharLine(String fontName,float x,float y,float w,float h,String initStr);
+	
+	public GLShapeNode createSubNode();
+	public GLShapeNode createNewNode();
+	public void backtrack();
+	public void clearNode();
+	public void setNode(GLShapeNode node);
 }

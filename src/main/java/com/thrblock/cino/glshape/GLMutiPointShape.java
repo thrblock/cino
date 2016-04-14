@@ -25,9 +25,6 @@ public abstract class GLMutiPointShape extends GLShape {
     public void setLineWidth(float lineWidth) {
 		this.lineWidth = lineWidth;
 	}
-    public float getTheta() {
-        return theta;
-    }
 
     public void setAllPointColor(Color c) {
         for(GLPoint point:points) {
@@ -65,35 +62,78 @@ public abstract class GLMutiPointShape extends GLShape {
     	return points[index].getB();
     }
     
-    public void setAllPointAlpha(float alpha) {
+    /**
+     * {@inheritDoc}<br />
+     * 设置 通道，多点图形将设置全部点的通道为alpha<br />
+     * @see #setPointAlpha(int, int)
+     * */
+    @Override
+    public void setAlpha(float alpha) {
     	for(GLPoint point:points) {
             point.setAlpha(alpha);
         }
     }
     
+    /**
+     * {@inheritDoc}<br />
+     * 获得 通道，多点图形将返回第一个点的通道
+     * @see #getPointAlpha(int)
+     * */
+    @Override
+    public float getAlpha() {
+    	return points[0].getAlpha();
+    }
+    
+    /**
+     * 设置指定点的通道
+     * @param index 索引，由0开始
+     * @param alpha 通道
+     */
     public void setPointAlpha(int index,int alpha) {
         if(index >=0 && index < points.length) {
             points[index].setAlpha(alpha);
         }
     }
-    
+    /**
+     * 获得指定点的通道
+     * @param index 索引，由0开始
+     * @return 通道量
+     */
     public float getPointAlpha(int index) {
     	return points[index].getAlpha();
     }
     
+    /**
+     * {@inheritDoc}<br />
+     * 获得 旋转角度
+     * */
+    @Override
+    public float getTheta() {
+        return theta;
+    }
+    
+    /**
+     * {@inheritDoc}<br />
+     * 设置 自旋角度
+     * */
+    @Override
     public void setTheta(float dstTheta) {
+    	setTheta(dstTheta,getCentralX(),getCentralY());
+    }
+    /**
+	 * {@inheritDoc}<br />
+	 * 以x,y为轴旋转图形
+	 */
+	public void setTheta(float dstTheta,float x,float y){
         float offset = dstTheta - this.theta;
-        float cx = getCentralX();
-        float cy = getCentralY();
         for (GLPoint point : points) {
-            float dx = revolveX(point.getX(),point.getY(),cx,cy,offset);
-            float dy = revolveY(point.getX(),point.getY(),cx,cy,offset);
+            float dx = revolveX(point.getX(),point.getY(),x,y,offset);
+            float dy = revolveY(point.getX(),point.getY(),x,y,offset);
             point.setX(dx);
             point.setY(dy);
         }
         this.theta = dstTheta;
-    }
-    
+	}
     public void setAngle(float angle) {
     	this.setTheta((float)(angle * Math.PI / 180));
     }
@@ -104,6 +144,46 @@ public abstract class GLMutiPointShape extends GLShape {
     public float getPointY(int index) {
     	return points[index].getY();
     }
+    
+    /**
+     * {@inheritDoc}<br />
+     * 获得 位置坐标x，多点图形的位置定义为中心
+     * */
+    @Override
+    public float getX() {
+    	return getCentralX();
+    }
+    /**
+     * {@inheritDoc}<br />
+     * 设置 位置坐标x，多点图形的位置定义为中心
+     * */
+    @Override
+    public void setX(float x) {
+        setCentralX(x);
+    }
+    
+    /**
+     * {@inheritDoc}<br />
+     * 获得 位置坐标y，多点图形的位置定义为中心
+     * */
+    @Override
+    public float getY() {
+    	return getCentralY();
+    }
+    /**
+     * {@inheritDoc}<br />
+     * 设置 位置坐标y，多点图形的位置定义为中心
+     * */
+    @Override
+    public void setY(float y) {
+        setCentralY(y);
+    }
+    
+    /**
+     * {@inheritDoc}<br />
+     * 获得 中心位置x
+     * */
+    @Override
     public float getCentralX() {
         float result = 0;
         for (GLPoint point : points) {
@@ -112,10 +192,19 @@ public abstract class GLMutiPointShape extends GLShape {
         return result / points.length;
     }
     
+    /**
+     * {@inheritDoc}<br />
+     * 设置 中心位置x
+     * */
+    @Override
     public void setCentralX(float x) {
         setXOffset(x - getCentralX());
     }
-
+    /**
+     * {@inheritDoc}<br />
+     * 获得 中心位置y
+     * */
+    @Override
     public float getCentralY() {
         float result = 0;
         for (GLPoint point : points) {
@@ -124,32 +213,33 @@ public abstract class GLMutiPointShape extends GLShape {
         return result / points.length;
     }
     
+    /**
+     * {@inheritDoc}<br />
+     * 设置 中心位置y
+     * */
+    @Override
     public void setCentralY(float y) {
     	setYOffset(y - getCentralY());
     }
     
+    /**
+     * {@inheritDoc}<br />
+     * 设置 水平偏移量
+     * */
     @Override
     public void setXOffset(float offset) {
         for (GLPoint point : points) {
             point.setXOffset(offset);
         }
     }
+    /**
+     * {@inheritDoc}<br />
+     * 设置 垂直偏移量
+     * */
     @Override
     public void setYOffset(float offset) {
         for (GLPoint point : points) {
             point.setYOffset(offset);
         }
-    }
-
-    private float revolveX(float x, float y, float cx, float cy, float theta) {
-        float cdx = x - cx;
-        float cdy = y - cy;
-        return (float) (cdx * Math.cos(theta) - cdy * Math.sin(theta)) + cx;
-    }
-
-    private float revolveY(float x, float y, float cx, float cy, float theta) {
-        float cdx = x - cx;
-        float cdy = y - cy;
-        return (float) (cdx * Math.sin(theta) + cdy * Math.cos(theta)) + cy;
     }
 }
