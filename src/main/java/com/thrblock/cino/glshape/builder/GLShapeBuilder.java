@@ -18,7 +18,9 @@ import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLOval;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.glshape.GLRect;
+import com.thrblock.cino.glshape.GLSprite;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
+import com.thrblock.cino.gltexture.IGLTextureContainer.GifMetaData;
 
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component
@@ -142,40 +144,78 @@ public class GLShapeBuilder implements IGLShapeBuilder{
         }
         return charLine;
     }
+    
+    
+    @Override
+    public GLSprite buildeGLSprite(float x,float y,float w,float h,String[][] textureNames,int[] rate) {
+        GLSprite sprite = new GLSprite(textureContainer, x, y, w, h, textureNames, rate);
+        layerContainer.addShapeToSwap(layer, sprite);
+        if(currentNode != null) {
+            currentNode.addSubNode(sprite);
+        }
+        return sprite;
+    }
+    
+    @Override
+    public GLSprite buildeGLSprite(float x,float y,float w,float h,String[] textureNames,int rate) {
+        GLSprite sprite = new GLSprite(textureContainer, x, y, w, h, new String[][]{textureNames},new int[]{rate});
+        layerContainer.addShapeToSwap(layer, sprite);
+        if(currentNode != null) {
+            currentNode.addSubNode(sprite);
+        }
+        return sprite;
+    }
+    
+    @Override
+    public GLSprite buildeGLSprite(float x,float y,File gifFile) {
+        String name = String.valueOf(gifFile.hashCode());
+        GifMetaData metaData = textureContainer.registerGifAsTexture(name, gifFile);
+        int frameSkip = metaData.getRate() * 10 * 60 / 1000;
+        return buildeGLSprite(x,y,metaData.getWidths()[0],metaData.getHeights()[0],new String[][]{metaData.getTextureGroup()},new int[]{frameSkip});
+    }
+    
 
 	@Override
-	public GLShapeNode createNewNode() {
-		currentNode = new GLShapeNode();
-		return currentNode;
-	}
-	
-	@Override
-	public GLShapeNode createSubNode() {
-		if(currentNode == null) {
-			currentNode = new GLShapeNode();
-		} else {
-			GLShapeNode nNode = new GLShapeNode();
-			nNode.setParent(currentNode);
-			currentNode.addSubNode(nNode);
-			currentNode = nNode;
-		}
-		return currentNode;
+	public GLSprite buildeGLSprite(float x, float y, InputStream gifStream) {
+		String name = String.valueOf(gifStream.hashCode());
+        GifMetaData metaData = textureContainer.registerGifAsTexture(name, gifStream);
+        int frameSkip = metaData.getRate() * 10 * 60 / 1000;
+        return buildeGLSprite(x,y,metaData.getWidths()[0],metaData.getHeights()[0],new String[][]{metaData.getTextureGroup()},new int[]{frameSkip});
 	}
 
-	@Override
-	public void clearNode() {
-		currentNode = null;
-	}
+    @Override
+    public GLShapeNode createNewNode() {
+        currentNode = new GLShapeNode();
+        return currentNode;
+    }
+    
+    @Override
+    public GLShapeNode createSubNode() {
+        if(currentNode == null) {
+            currentNode = new GLShapeNode();
+        } else {
+            GLShapeNode nNode = new GLShapeNode();
+            nNode.setParent(currentNode);
+            currentNode.addSubNode(nNode);
+            currentNode = nNode;
+        }
+        return currentNode;
+    }
 
-	@Override
-	public void setNode(GLShapeNode node) {
-		currentNode = node;
-	}
+    @Override
+    public void clearNode() {
+        currentNode = null;
+    }
 
-	@Override
-	public void backtrack() {
-		if(currentNode != null) {
-			currentNode = currentNode.getParent();
-		}
-	}
+    @Override
+    public void setNode(GLShapeNode node) {
+        currentNode = node;
+    }
+
+    @Override
+    public void backtrack() {
+        if(currentNode != null) {
+            currentNode = currentNode.getParent();
+        }
+    }
 }

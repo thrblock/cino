@@ -14,6 +14,13 @@ public class GLSprite extends GLImage {
 		this.textureName = textureName;
 		this.rate = rate;
 		this.crtTextureIndex = new int[textureName.length];
+		this.vertX();//使用了不同于图片的纹理加载器，绑定的定点有所不同
+	}
+	
+	public void setTextureGroupIndex(int index) {
+		if(index >= 0 && index < textureName.length) {
+			this.currentTextureGroup = index;
+		}
 	}
 	
 	private boolean skipFrag() {

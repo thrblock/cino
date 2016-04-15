@@ -9,6 +9,7 @@ import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLOval;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.glshape.GLRect;
+import com.thrblock.cino.glshape.GLSprite;
 
 public interface IGLShapeBuilder {
 	public void setLayer(int layerIndex);
@@ -21,6 +22,11 @@ public interface IGLShapeBuilder {
 	public GLImage buildGLImage(float x,float y,float width,float height,InputStream imgInputStream,String imgType);
 	public GLCharArea buildGLCharLine(String fontName,float x,float y,String initStr);
 	public GLCharArea buildGLCharLine(String fontName,float x,float y,float w,float h,String initStr);
+	
+	public GLSprite buildeGLSprite(float x, float y, float w, float h, String[] textureNames, int rate);
+	public GLSprite buildeGLSprite(float x,float y,float w,float h,String[][] textureNames,int[] rate);
+	public GLSprite buildeGLSprite(float x,float y,File gifFile);
+	public GLSprite buildeGLSprite(float x,float y,InputStream gifFile);
 	
 	public GLShapeNode createSubNode();
 	public GLShapeNode createNewNode();

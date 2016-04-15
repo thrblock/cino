@@ -37,7 +37,7 @@ public class GLFontTexture {
 				texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
 				texture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST);
 				tarray[c - min] = texture;
-			};
+			}
 		}
 	}
 }
