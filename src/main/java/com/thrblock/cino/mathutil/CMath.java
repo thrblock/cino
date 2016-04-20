@@ -13,6 +13,11 @@ public class CMath {
         float vecx = tgtX - srcX;
         float vecy = tgtY - srcY;
         double cos = vecx / Math.sqrt(vecx * vecx + vecy * vecy);
+        if(cos > 1) {
+        	cos = 1;
+        } else if(cos < -1) {
+        	cos = -1;
+        }
         double theta = Math.acos(cos);
         if(tgtY > srcY) {
             return (float)theta;
