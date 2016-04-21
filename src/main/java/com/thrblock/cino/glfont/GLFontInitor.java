@@ -2,8 +2,8 @@ package com.thrblock.cino.glfont;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public abstract class GLFontInitor {
 	@Autowired
 	private IGLTextureContainer textureContainer;
 	public GLFontInitor() {
-		logger = LogManager.getLogger(getClass());
+		logger = LoggerFactory.getLogger(getClass());
 	}
 	@PostConstruct
 	public void init() {

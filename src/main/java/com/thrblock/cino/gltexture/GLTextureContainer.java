@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Semaphore;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
@@ -27,7 +27,7 @@ import com.thrblock.cino.glshape.builder.GifBuilder.GifData;
 
 @Component
 public class GLTextureContainer implements IGLTextureContainer {
-    private static final Logger LOG = LogManager.getLogger(GLTextureContainer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GLTextureContainer.class);
     
     public static class StreamPair {
         private final String imgType;

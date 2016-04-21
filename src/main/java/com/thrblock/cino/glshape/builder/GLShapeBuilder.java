@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ import com.thrblock.cino.gltexture.IGLTextureContainer.GifMetaData;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component
 public class GLShapeBuilder implements IGLShapeBuilder{
-    private static final Logger LOG = LogManager.getLogger(GLShapeBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GLShapeBuilder.class);
     private int layer = 0;
     private GLShapeNode currentNode = null;
     @Autowired

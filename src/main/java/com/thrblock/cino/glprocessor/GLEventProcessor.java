@@ -2,8 +2,8 @@ package com.thrblock.cino.glprocessor;
 
 import java.util.Iterator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ import com.thrblock.cino.gltexture.IGLTextureContainer;
 
 @Component
 public class GLEventProcessor implements GLEventListener {
-    private static final Logger LOG = LogManager.getLogger(GLEventProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);
     
     @Autowired
     private IGLFragmentContainer fragmentContainer;

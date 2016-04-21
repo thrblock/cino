@@ -5,13 +5,13 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MouseControl implements AWTEventListener,IMouseControl {
-    private static final Logger LOG = LogManager.getLogger(MouseControl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MouseControl.class);
     private int x;
     private int y;
     public MouseControl(){

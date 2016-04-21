@@ -107,6 +107,9 @@ public class TpMotivation {
 		float spd;
 		if(dist < smoothRange) {
 			spd = dist * speed / smoothRange;
+			if(spd <= speedMini) {
+				spd = speedMini;
+			}
 		} else {
 			spd = speed;
 		}
