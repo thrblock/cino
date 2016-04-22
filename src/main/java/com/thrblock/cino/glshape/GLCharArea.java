@@ -38,6 +38,7 @@ public class GLCharArea extends GLShape {
     private String fontName;
     private final ArrayList<GLPoint> points;
     private boolean recalcPoint = true;
+    private boolean recalcOffset = true;
     private float r = 1.0f;
     private float g = 1.0f;
     private float b = 1.0f;
@@ -65,12 +66,12 @@ public class GLCharArea extends GLShape {
 
     public void setHorAlia(int horAlia) {
         this.horAlia = horAlia;
-        resize();
+        reOffset();
     }
     
     public void setVerAlia(int verAlia) {
         this.verAlia = verAlia;
-        resize();
+        reOffset();
     }
     
     /**
@@ -79,7 +80,7 @@ public class GLCharArea extends GLShape {
      */
     public void setWidth(float width) {
         this.width = (int)width;
-        resize();
+        reOffset();
     }
     
     /**
@@ -88,7 +89,7 @@ public class GLCharArea extends GLShape {
      */
     public void setHeight(float height) {
         this.height = (int)height;
-        resize();
+        reOffset();
     }
     /**
      * {@inheritDoc}<br />
@@ -233,8 +234,7 @@ public class GLCharArea extends GLShape {
      * @param str 文字字符串
      */
     public void setFontString(String str) {
-        this.str = str.toCharArray();
-        resize();
+    	setFontString(str.toCharArray());
     }
 
     /**
@@ -245,6 +245,7 @@ public class GLCharArea extends GLShape {
     public void setFontString(char[] str) {
         this.str = str;
         resize();
+        reOffset();
     }
 
     public String getFontString() {
@@ -257,6 +258,10 @@ public class GLCharArea extends GLShape {
     public void resize() {
         this.theta = 0;
         recalcPoint = true;
+    }
+    
+    public void reOffset() {
+    	recalcOffset = true;
     }
 
     public void setAlpha(float alpha) {
@@ -313,7 +318,10 @@ public class GLCharArea extends GLShape {
                 recalc(tx);
             }
             recalcPoint = false;
+        }
+        if(recalcOffset) {
             recalcOffset();
+            recalcOffset = false;
         }
         gl.glColor4f(r, g, b, alpha);
         for (int i = 0; i < local.length; i++) {
@@ -386,6 +394,8 @@ public class GLCharArea extends GLShape {
     private void recalcWithLimit(GLFontTexture tx) {
         char[] local = this.str;
         GLPoint pre = points.get(0);
+        pre.setX(x);
+        pre.setY(y);
         if (points.size() < local.length * 4) {
             for (int i = points.size(); i < local.length * 4; i++) {
                 GLPoint npt = new GLPoint(pre.getX(), pre.getY());
@@ -417,6 +427,8 @@ public class GLCharArea extends GLShape {
     private void recalc(GLFontTexture tx) {
         char[] local = this.str;
         GLPoint pre = points.get(0);
+        pre.setX(x);
+        pre.setY(y);
         if (points.size() < local.length * 4) {
             for (int i = points.size(); i < local.length * 4; i++) {
                 GLPoint npt = new GLPoint(pre.getX(), pre.getY());
