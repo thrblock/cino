@@ -50,6 +50,7 @@ public class CrudeLinkedList<T> {
 		@Override
 		public void remove() {
 			current.prev.next = current.next;
+			current.next.prev = current.prev;
 		}
 		
 		public void reset() {
