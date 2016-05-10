@@ -1,9 +1,7 @@
 package com.thrblock.cino.glprocessor;
 
-import java.util.Iterator;
-
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +15,7 @@ import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
+import com.thrblock.cino.structureutil.CrudeLinkedList;
 
 @Component
 public class GLEventProcessor implements GLEventListener {
@@ -41,10 +40,11 @@ public class GLEventProcessor implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         textureContainer.parseTexture(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        for(GLLayer layer:layerContainer) {
+        for(int i = 0;i < layerContainer.size();i++) {
+            GLLayer layer = layerContainer.getLayer(i);
             gl2.glBlendFunc(layer.getMixA(),layer.getMixB());
             layer.viewOffset(gl2);
-            Iterator<GLShape> shapeIter = layer.iterator();
+            CrudeLinkedList<GLShape>.CrudeIter shapeIter = layer.iterator();
             while(shapeIter.hasNext()) {
                 GLShape shape = shapeIter.next();
                 if(shape.isVisible()) {
@@ -54,6 +54,7 @@ public class GLEventProcessor implements GLEventListener {
                     shapeIter.remove();
                 }
             }
+            shapeIter.reset();
         }
         gl2.glFlush();
         fragmentContainer.allFragment();

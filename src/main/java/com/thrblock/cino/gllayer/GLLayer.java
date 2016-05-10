@@ -1,6 +1,5 @@
 package com.thrblock.cino.gllayer;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -8,6 +7,7 @@ import java.util.concurrent.Semaphore;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glshape.GLShape;
+import com.thrblock.cino.structureutil.CrudeLinkedList;
 
 /**
  * 绘制层<br />
@@ -15,12 +15,13 @@ import com.thrblock.cino.glshape.GLShape;
  * 一个绘制层包含了该层次的图形对象，并提供遍历支持
  * @author thrblock
  */
-public class GLLayer implements Iterable<GLShape> {
+public class GLLayer {
 	private float viewXOffset;
 	private float viewYOffset;
 	private int mixA = GL.GL_SRC_ALPHA;
 	private int mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
-	private List<GLShape> shapeList = new LinkedList<>();
+	private CrudeLinkedList<GLShape> shapeList = new CrudeLinkedList<>();
+	private CrudeLinkedList<GLShape>.CrudeIter crudeIter = shapeList.genCrudeIter();
 	private List<GLShape> swap = new LinkedList<>();
 	private Semaphore swapSp = new Semaphore(1);
 	
@@ -62,13 +63,15 @@ public class GLLayer implements Iterable<GLShape> {
 	public void swap() {
 		if(!swap.isEmpty()) {
 			swapSp.acquireUninterruptibly();
-			shapeList.addAll(swap);
+			for(GLShape sp:swap) {
+				shapeList.add(sp);
+			}
 			swap.clear();
 			swapSp.release();
 		}
 	}
-	@Override
-	public Iterator<GLShape> iterator() {
-		return shapeList.iterator();
+	
+	public CrudeLinkedList<GLShape>.CrudeIter iterator() {
+		return crudeIter;
 	}
 }

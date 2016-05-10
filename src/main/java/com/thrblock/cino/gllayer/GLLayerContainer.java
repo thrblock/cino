@@ -1,11 +1,10 @@
 package com.thrblock.cino.gllayer;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.glshape.GLShape;
@@ -55,8 +54,13 @@ public class GLLayerContainer implements IGLLayerContainer {
 	}
 
 	@Override
-	public Iterator<GLLayer> iterator() {
-		return layerList.iterator();
+	public int size() {
+		return layerList.size();
 	}
+
+//	@Override
+//	public Iterator<GLLayer> iterator() {
+//		return layerList.iterator();
+//	}
 
 }

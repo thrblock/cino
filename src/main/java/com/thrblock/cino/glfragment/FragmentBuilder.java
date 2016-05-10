@@ -14,8 +14,8 @@ public class FragmentBuilder {
 		return result;
 	}
 	
-	public AutoMachine buildAutoMachine() {
-		AutoMachine result = new AutoMachine();
+	public Automata buildAutoMachine() {
+		Automata result = new Automata();
 		container.addFragment(result);
 		return result;
 	}
