@@ -374,7 +374,7 @@ public class GLCharArea extends GLShape {
         
         if(horAlia == HOR_LEFT) {
             offsetX = 0;
-        } else if(horAlia == HOR_LEFT) {
+        } else if(horAlia == HOR_RIGHT) {
             offsetX = width - rw;
         } else {
             offsetX = (width - rw) / 2;

@@ -11,13 +11,14 @@ public abstract class AbstractGLFragment implements IGLFragment {
     @Autowired
     private IGLFragmentContainer container;
     
+    protected AbstractGLFragment(){
+    }
+    
     @PostConstruct
     private void addToContainer() {
         container.addFragment(this);
     }
     
-    protected AbstractGLFragment(){
-    }
     @Override
     public boolean isDestory() {
         return destory;

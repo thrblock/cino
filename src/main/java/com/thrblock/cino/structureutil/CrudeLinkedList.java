@@ -2,6 +2,7 @@ package com.thrblock.cino.structureutil;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * 简单链表<br />
@@ -49,7 +50,7 @@ public class CrudeLinkedList<T> implements Iterable<T>{
     public class CrudeIter implements Iterator<T>{
         private Node begin;
         private Node current = null;
-        {
+        private CrudeIter() {
             begin = new Node();
             begin.next = head;
             current = begin;
@@ -62,6 +63,9 @@ public class CrudeLinkedList<T> implements Iterable<T>{
         @Override
         public T next() {
             current = current.next;
+            if(current.object == null) {
+                throw new NoSuchElementException();
+            }
             return current.object;
         }
         
