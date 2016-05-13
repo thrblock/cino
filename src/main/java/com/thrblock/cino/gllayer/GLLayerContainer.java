@@ -58,9 +58,4 @@ public class GLLayerContainer implements IGLLayerContainer {
 		return layerList.size();
 	}
 
-//	@Override
-//	public Iterator<GLLayer> iterator() {
-//		return layerList.iterator();
-//	}
-
 }

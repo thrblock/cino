@@ -63,9 +63,7 @@ public class GLLayer {
 	public void swap() {
 		if(!swap.isEmpty()) {
 			swapSp.acquireUninterruptibly();
-			for(GLShape sp:swap) {
-				shapeList.add(sp);
-			}
+			shapeList.addAll(swap);
 			swap.clear();
 			swapSp.release();
 		}
