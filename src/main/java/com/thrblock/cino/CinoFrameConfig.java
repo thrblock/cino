@@ -1,5 +1,6 @@
 package com.thrblock.cino;
 
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
@@ -220,6 +221,10 @@ public class CinoFrameConfig {
      */
     public JFrame buildFrame() {
         JFrame frame = new JFrame();
+        return buildFrame(frame,frame.getContentPane(),true);
+    }
+    
+    public JFrame buildFrame(JFrame frame,Container container,boolean pack) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GLCapabilities glcaps = new GLCapabilities(GLProfile.getDefault());
         glcaps.setDoubleBuffered(doubleBuffer);
@@ -227,14 +232,15 @@ public class CinoFrameConfig {
         canvas.addGLEventListener(glEventListener);
         if(fullScreen) {
             frame.setUndecorated(true);
-            frame.getContentPane().add(canvas);
+            container.add(canvas);
             graphicsDevice.setFullScreenWindow(frame);
         } else {
             frame.setResizable(flexible);
             canvas.setPreferredSize(new Dimension(screenWidth, screenHeight));
-            frame.getContentPane().add(canvas);
-            frame.pack();
-            
+            container.add(canvas);
+            if(pack) {
+                frame.pack();
+            }
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
         }
@@ -248,7 +254,6 @@ public class CinoFrameConfig {
             });
         } else {
             FPSAnimator animator = new FPSAnimator(canvas,framesPerSecond, true);
-            
             SwingUtilities.invokeLater(() -> {
                 frame.setVisible(true);
                 animator.start();
