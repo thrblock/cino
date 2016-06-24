@@ -28,7 +28,7 @@ public interface IGLShapeBuilder {
 	public GLSprite buildeGLSprite(float x,float y,File gifFile);
 	public GLSprite buildeGLSprite(float x,float y,InputStream gifFile);
 	
-	public GLShapeNode createSubNode();
+	public GLShapeNode createNode();
 	public GLShapeNode createNewNode();
 	public void backtrack();
 	public void clearNode();

@@ -190,7 +190,7 @@ public class GLShapeBuilder implements IGLShapeBuilder{
     }
     
     @Override
-    public GLShapeNode createSubNode() {
+    public GLShapeNode createNode() {
         if(currentNode == null) {
             currentNode = new GLShapeNode();
         } else {

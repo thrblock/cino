@@ -3,20 +3,11 @@ package com.thrblock.cino.glshape;
 public class GLRect extends GLPolygonShape {
 	public GLRect(float x,float y,float width,float height) {
 		super(new GLPoint[]{
-				new GLPoint(x,y),
-				new GLPoint(x + width,y),
-				new GLPoint(x + width,y + height),
-				new GLPoint(x,y + height)});
-	}
-	
-	public void setX(float x) {
-		float offset = x - points[0].getX();
-		setXOffset(offset);
-	}
-	
-	public void setY(float y) {
-		float offset = y - points[0].getY();
-		setYOffset(offset);
+				new GLPoint(x - width / 2,y - height / 2),
+				new GLPoint(x + width / 2,y - height / 2),
+				new GLPoint(x + width / 2,y + height / 2),
+				new GLPoint(x - width / 2,y + height / 2)
+				});
 	}
 	
 	public float getWidth() {

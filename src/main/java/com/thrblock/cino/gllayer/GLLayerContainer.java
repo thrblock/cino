@@ -13,9 +13,12 @@ import com.thrblock.cino.glshape.GLShape;
 public class GLLayerContainer implements IGLLayerContainer {
 	private static final Logger LOG = LoggerFactory.getLogger(GLLayerContainer.class);
 	private List<GLLayer> layerList = new CopyOnWriteArrayList<>();
-	
+	private GLLayer topLayer = new GLLayer();
 	@Override
 	public GLLayer getLayer(int index) {
+		if(index == -1) {
+			return topLayer;
+		}
 		if(layerList.size() <= index) {
 			LOG.warn("layer not found:" + index);
 			for(int i = layerList.size();i <= index;i++) {
@@ -35,6 +38,10 @@ public class GLLayerContainer implements IGLLayerContainer {
 	
 	@Override
 	public void addShapeToSwap(int index,GLShape shape) {
+		if(index == -1) {
+			topLayer.addShapeToSwap(shape);
+			return;
+		}
 		if(layerList.size() <= index) {
 			LOG.warn("layer not found:" + index);
 			for(int i = layerList.size();i <= index;i++) {

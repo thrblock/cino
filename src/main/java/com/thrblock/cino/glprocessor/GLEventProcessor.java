@@ -41,24 +41,28 @@ public class GLEventProcessor implements GLEventListener {
         textureContainer.parseTexture(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         for(int i = 0;i < layerContainer.size();i++) {
-            GLLayer layer = layerContainer.getLayer(i);
-            gl2.glBlendFunc(layer.getMixA(),layer.getMixB());
-            layer.viewOffset(gl2);
-            CrudeLinkedList<GLShape>.CrudeIter shapeIter = layer.iterator();
-            while(shapeIter.hasNext()) {
-                GLShape shape = shapeIter.next();
-                if(shape.isVisible()) {
-                    shape.drawShape(gl2);
-                }
-                if(shape.isDestory()) {
-                    shapeIter.remove();
-                }
-            }
-            shapeIter.reset();
+            drawLayer(layerContainer.getLayer(i));
         }
+        drawLayer(layerContainer.getLayer(-1));
         gl2.glFlush();
         fragmentContainer.allFragment();
         layerContainer.swap();
+    }
+
+    private void drawLayer(GLLayer layer) {
+        gl2.glBlendFunc(layer.getMixA(),layer.getMixB());
+        layer.viewOffset(gl2);
+        CrudeLinkedList<GLShape>.CrudeIter shapeIter = layer.iterator();
+        while(shapeIter.hasNext()) {
+            GLShape shape = shapeIter.next();
+            if(shape.isVisible()) {
+                shape.drawShape(gl2);
+            }
+            if(shape.isDestory()) {
+                shapeIter.remove();
+            }
+        }
+        shapeIter.reset();
     }
 
 
