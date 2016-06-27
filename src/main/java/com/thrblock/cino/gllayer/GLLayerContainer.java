@@ -58,6 +58,7 @@ public class GLLayerContainer implements IGLLayerContainer {
 		for(GLLayer layer:layerList) {
 			layer.swap();
 		}
+		topLayer.swap();
 	}
 
 	@Override
