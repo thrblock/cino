@@ -1,4 +1,4 @@
-package com.thrblock.cino.mathutil;
+package com.thrblock.cino.util.math;
 
 public class CMath {
     /**

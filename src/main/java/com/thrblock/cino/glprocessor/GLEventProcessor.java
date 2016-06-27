@@ -15,7 +15,7 @@ import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
-import com.thrblock.cino.structureutil.CrudeLinkedList;
+import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 @Component
 public class GLEventProcessor implements GLEventListener {

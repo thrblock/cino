@@ -1,7 +1,7 @@
 package com.thrblock.cino.glshape.templete;
 
 import com.thrblock.cino.glshape.builder.GLNode;
-import com.thrblock.cino.mathutil.CMath;
+import com.thrblock.cino.util.math.CMath;
 
 public class TpMotivation {
 	/**

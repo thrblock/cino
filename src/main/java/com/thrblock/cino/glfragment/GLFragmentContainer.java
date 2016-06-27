@@ -6,7 +6,7 @@ import java.util.concurrent.Semaphore;
 
 import org.springframework.stereotype.Component;
 
-import com.thrblock.cino.structureutil.CrudeLinkedList;
+import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 @Component
 public class GLFragmentContainer implements IGLFragmentContainer{

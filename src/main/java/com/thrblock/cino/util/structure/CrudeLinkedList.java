@@ -1,4 +1,4 @@
-package com.thrblock.cino.structureutil;
+package com.thrblock.cino.util.structure;
 
 import java.util.Collection;
 import java.util.Iterator;

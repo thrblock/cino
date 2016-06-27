@@ -7,7 +7,7 @@ import java.util.concurrent.Semaphore;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glshape.GLShape;
-import com.thrblock.cino.structureutil.CrudeLinkedList;
+import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
  * 绘制层<br />
