@@ -9,15 +9,17 @@ import com.thrblock.cino.glfont.GLFontTexture;
 
 public interface IGLTextureContainer {
 	public Texture getTexture(String name);
+	public void parseTexture(GL2 gl);
+	public GLFontTexture getGLFontTexture(String name);
+	
 	public void registerTexture(String name,InputStream srcStream);
 	public void registerTexture(String name,String imgType,InputStream srcStream);
 	public void registerTexture(String name,File imgFile);
+	
 	public GifMetaData registerGifAsTexture(String name,File gifFile);
 	public GifMetaData registerGifAsTexture(String name,InputStream srcStream);
-	public void parseTexture(GL2 gl);
 	
 	public void registerFont(String name,GLFontTexture fontTexture);
-	public GLFontTexture getGLFontTexture(String name);
 	
 	public static class GifMetaData {
 		private int[] widths;
