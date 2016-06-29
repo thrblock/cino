@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
+/**
+ * GLFragmentContainer 片段逻辑容器，为各类片段逻辑提供线程安全的插入、删除、遍历操作
+ * @author lizepu
+ */
 @Component
 public class GLFragmentContainer implements IGLFragmentContainer{
     private CrudeLinkedList<IGLFragment> frags = new CrudeLinkedList<>();

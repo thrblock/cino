@@ -1,6 +1,8 @@
 package com.thrblock.cino.util.math;
 
 public class CMath {
+    private CMath() {
+    }
     /**
      * 以src点为原点，向量(1,0)沿+X轴至+Y轴方向旋转至目标点所需转动的角度
      * @param srcX 原点横坐标
@@ -14,9 +16,9 @@ public class CMath {
         float vecy = tgtY - srcY;
         double cos = vecx / Math.sqrt(vecx * vecx + vecy * vecy);
         if(cos > 1) {
-        	cos = 1;
+            cos = 1;
         } else if(cos < -1) {
-        	cos = -1;
+            cos = -1;
         }
         double theta = Math.acos(cos);
         if(tgtY > srcY) {
@@ -27,8 +29,8 @@ public class CMath {
     }
     
     public static float getDistance(float x1,float y1,float x2,float y2) {
-    	float s1 = x2 - x1;
-    	float s2 = y2 - y1;
-    	return (float)Math.sqrt(s1 * s1 + s2 * s2);
+        float s1 = x2 - x1;
+        float s2 = y2 - y1;
+        return (float)Math.sqrt(s1 * s1 + s2 * s2);
     }
 }

@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  * 提供迭代器重置<br />
  * 默认迭代方式不支持并发遍历<br />
  * - 适合在帧逻辑中 省去频繁的迭代器实例化<-但实际效果有待于进一步测试,总之一秒实例化60个迭代器还是让人火大
- * @author Administrator
+ * @author lizepu
  *
  * @param <T>
  */

@@ -15,6 +15,11 @@ import com.thrblock.cino.util.io.SmartConfig;
  */
 @Component
 public class CinoContextConfig {
+    /**
+     * 将cino-frame配置纳入spring容器管理 可使用注解‘Value’进行引用
+     * @return PropertyPlaceholderConfigurer spring管理的properties
+     * @throws IOException 当配置文件缺失时
+     */
     @Bean
     public static PropertyPlaceholderConfigurer cinoFramePropertie() throws IOException {
         PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
