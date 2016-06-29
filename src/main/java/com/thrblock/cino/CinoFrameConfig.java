@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GLCapabilities;
@@ -48,44 +49,54 @@ public class CinoFrameConfig {
      */
     private GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     
+    @Value("${cino.frame.title:title}")
+    private String frameTitle = "title";
     /**
      * 开启双缓冲
      */
+    @Value("${cino.frame.doublebuffer:true}")
     private boolean doubleBuffer = true;
     /**
      * 开启垂直同步
      */
+    @Value("${cino.frame.vsync:false}")
     private boolean vsync = false;
     /**
      * 是否全屏
      */
+    @Value("${cino.frame.fullscreen:false}")
     private boolean fullScreen = false;
     /**
      * FPS 每秒绘制速率，垂直同步开启时无效
      */
+    @Value("${cino.frame.fps:60}")
     private int framesPerSecond = 60;
     /**
      * 窗体是否可变，全屏时无效
      */
+    @Value("${cino.frame.flexible:false}")
     private boolean flexible = false;
     /**
      * 隐藏鼠标
      */
+    @Value("${cino.frame.hidemouse:true}")
     private boolean hideMouse = true;
     /**
      * 当前缩放模式
      */
+    @Value("${cino.frame.flexmode:"+SCALE+"}")
     private int flexMode = SCALE;
     
     /**
      * 渲染位置宽度 （像素）
      */
+    @Value("${cino.frame.screen.width:800}")
     private int screenWidth = 800;
     /**
      * 渲染位置高度（像素）
      */
+    @Value("${cino.frame.screen.height:600}")
     private int screenHeight = 600;
-    
     
     /**
      * 是否隐藏鼠标
@@ -221,6 +232,7 @@ public class CinoFrameConfig {
      */
     public JFrame buildFrame() {
         JFrame frame = new JFrame();
+        frame.setTitle(frameTitle);
         return buildFrame(frame,frame.getContentPane(),true);
     }
     
