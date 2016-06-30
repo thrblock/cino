@@ -17,6 +17,11 @@ import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
+/**
+ * GLEventProcessor 捕捉OpenGL绘制事件并进行处理，是各类组件中同步逻辑的调用者
+ * @author lizepu
+ *
+ */
 @Component
 public class GLEventProcessor implements GLEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);

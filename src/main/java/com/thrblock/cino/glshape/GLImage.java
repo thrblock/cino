@@ -13,6 +13,10 @@ public class GLImage extends GLRect {
     private String textureName;
     private boolean resize = false;
     private IGLTextureContainer textureContainer;
+    private final float[] alph = {1f,0,0,1f};
+    private final float[] beta = {0,1f,1f,0};
+    private final float[] gama = {1f,1f,0,0};
+    private final float[] zeta = {0,0,1f,1f};
     public GLImage(IGLTextureContainer textureContainer,float x, float y, float width, float height,String textureName) {
         super(x, y, width, height);
         this.textureName = textureName;
@@ -75,72 +79,31 @@ public class GLImage extends GLRect {
     }
     
     private void normalTexCoord(GL2 gl) {
-        gl.glColor4f(points[0].getR(), points[0].getG(),points[0].getB(),points[0].getAlpha());
-        gl.glTexCoord2f(0.0f,1.0f);
-        gl.glVertex2f(points[0].getX(),points[0].getY());
-        
-        gl.glColor4f(points[1].getR(), points[1].getG(),points[1].getB(),points[1].getAlpha());
-        gl.glTexCoord2f(1.0f,1.0f);
-        gl.glVertex2f(points[1].getX(),points[1].getY());
-        
-        gl.glColor4f(points[2].getR(), points[2].getG(),points[2].getB(),points[2].getAlpha());
-        gl.glTexCoord2f(1.0f,0.0f);
-        gl.glVertex2f(points[2].getX(),points[2].getY());
-        
-        gl.glColor4f(points[3].getR(), points[3].getG(),points[3].getB(),points[3].getAlpha());
-        gl.glTexCoord2f(0.0f,0.0f);
-        gl.glVertex2f(points[3].getX(),points[3].getY());
+        for(int i = 0;i < 4;i++) {
+            gl.glColor4f(points[i].getR(), points[i].getG(),points[i].getB(),points[i].getAlpha());
+            gl.glTexCoord2f(beta[i],gama[i]);
+            gl.glVertex2f(points[i].getX(),points[i].getY());
+        }
     }
     private void xyvertTexCoord(GL2 gl) {
-        gl.glColor4f(points[0].getR(), points[0].getG(),points[0].getB(),points[0].getAlpha());
-        gl.glTexCoord2f(1.0f,0.0f);
-        gl.glVertex2f(points[0].getX(),points[0].getY());
-        
-        gl.glColor4f(points[1].getR(), points[1].getG(),points[1].getB(),points[1].getAlpha());
-        gl.glTexCoord2f(0.0f,0.0f);
-        gl.glVertex2f(points[1].getX(),points[1].getY());
-        
-        gl.glColor4f(points[2].getR(), points[2].getG(),points[2].getB(),points[2].getAlpha());
-        gl.glTexCoord2f(0.0f,1.0f);
-        gl.glVertex2f(points[2].getX(),points[2].getY());
-        
-        gl.glColor4f(points[3].getR(), points[3].getG(),points[3].getB(),points[3].getAlpha());
-        gl.glTexCoord2f(1.0f,1.0f);
-        gl.glVertex2f(points[3].getX(),points[3].getY());
+        for(int i = 0;i < 4;i++) {
+            gl.glColor4f(points[i].getR(), points[i].getG(),points[i].getB(),points[i].getAlpha());
+            gl.glTexCoord2f(alph[i],zeta[i]);
+            gl.glVertex2f(points[i].getX(),points[i].getY());
+        }
     }
     private void xvertTexCoord(GL2 gl) {
-        gl.glColor4f(points[0].getR(), points[0].getG(),points[0].getB(),points[0].getAlpha());
-        
-        gl.glTexCoord2f(0.0f,0.0f);
-        gl.glVertex2f(points[0].getX(),points[0].getY());
-        
-        gl.glColor4f(points[1].getR(), points[1].getG(),points[1].getB(),points[1].getAlpha());
-        gl.glTexCoord2f(1.0f,0.0f);
-        gl.glVertex2f(points[1].getX(),points[1].getY());
-        
-        gl.glColor4f(points[2].getR(), points[2].getG(),points[2].getB(),points[2].getAlpha());
-        gl.glTexCoord2f(1.0f,1.0f);
-        gl.glVertex2f(points[2].getX(),points[2].getY());
-        
-        gl.glColor4f(points[3].getR(), points[3].getG(),points[3].getB(),points[3].getAlpha());
-        gl.glTexCoord2f(0.0f,1.0f);
-        gl.glVertex2f(points[3].getX(),points[3].getY());
+        for(int i = 0;i < 4;i++) {
+            gl.glColor4f(points[i].getR(), points[i].getG(),points[i].getB(),points[i].getAlpha());
+            gl.glTexCoord2f(beta[i],zeta[i]);
+            gl.glVertex2f(points[i].getX(),points[i].getY());
+        }
     }
     private void yvertTexCoord(GL2 gl) {
-        gl.glColor4f(points[0].getR(), points[0].getG(),points[0].getB(),points[0].getAlpha());
-        gl.glTexCoord2f(1.0f,1.0f);
-        gl.glVertex2f(points[0].getX(),points[0].getY());
-        
-        gl.glColor4f(points[1].getR(), points[1].getG(),points[1].getB(),points[1].getAlpha());
-        gl.glTexCoord2f(0.0f,1.0f);
-        gl.glVertex2f(points[1].getX(),points[1].getY());
-        
-        gl.glColor4f(points[2].getR(), points[2].getG(),points[2].getB(),points[2].getAlpha());
-        gl.glTexCoord2f(0.0f,0.0f);
-        gl.glVertex2f(points[2].getX(),points[2].getY());
-        
-        gl.glColor4f(points[3].getR(), points[3].getG(),points[3].getB(),points[3].getAlpha());
-        gl.glTexCoord2f(1.0f,0.0f);
-        gl.glVertex2f(points[3].getX(),points[3].getY());
+        for(int i = 0;i < 4;i++) {
+            gl.glColor4f(points[i].getR(), points[i].getG(),points[i].getB(),points[i].getAlpha());
+            gl.glTexCoord2f(alph[i],gama[i]);
+            gl.glVertex2f(points[i].getX(),points[i].getY());
+        }
     }
 }

@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.glshape.GLShape;
 
+/**
+ * GLLayerContainer 绘制层容器<br />
+ * 会按照提供的需求索引动态的拓展绘制层结构 <br />
+ * 提供特殊索引-1代表顶层绘制层结构，使用此索引的图形对象会处于其它全部层的上方 <br />
+ * @author lizepu
+ */
 @Component
 public class GLLayerContainer implements IGLLayerContainer {
 	private static final Logger LOG = LoggerFactory.getLogger(GLLayerContainer.class);
@@ -28,12 +34,6 @@ public class GLLayerContainer implements IGLLayerContainer {
 			}
 		}
 		return layerList.get(index);
-	}
-	
-	@Override
-	public int addLayer(GLLayer layer) {
-		layerList.add(layer);
-		return layerList.size() - 1;
 	}
 	
 	@Override

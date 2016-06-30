@@ -9,13 +9,35 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.thrblock.cino.glfont.GLFontTexture;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 
+/**
+ * 文字区域 图形对象，可以定义一个矩形文字区域，进行预定义字体的展示，设置颜色、缩进等样式
+ * @author lizepu
+ */
 public class GLCharArea extends GLShape {
+    /**
+     * 左对齐
+     */
     public static final int HOR_LEFT = 0;
+    /**
+     * 右对齐
+     */
     public static final int HOR_RIGHT = 1;
+    /**
+     * 水平居中
+     */
     public static final int HOR_CENTRAL = 2;
     
+    /**
+     * 顶部对齐
+     */
     public static final int VER_UP = 0;
+    /**
+     * 底部对齐
+     */
     public static final int VER_BOTTOM = 1;
+    /**
+     * 中部对齐
+     */
     public static final int VER_CENTRAL = 2;
     
     /**
@@ -46,10 +68,30 @@ public class GLCharArea extends GLShape {
     
     private float theta = 0;
 
+    /**
+     * 构造一个文字区域
+     * @param textureContainer 纹理管理容器实例
+     * @param fontName 字体名称
+     * @param x 区域左上x坐标
+     * @param y 区域左上y坐标
+     * @param w 区域宽度
+     * @param h 区域高度
+     * @param initStr 初始文字显示
+     */
     public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y,float w,float h, String initStr) {
         this(textureContainer,fontName, x, y, w, h, initStr.toCharArray());
     }
 
+    /**
+     * 构造一个文字区域
+     * @param textureContainer 纹理管理容器实例
+     * @param fontName 字体名称
+     * @param x 区域左上x坐标
+     * @param y 区域左上y坐标
+     * @param w 区域宽度
+     * @param h 区域高度
+     * @param charmap 映射字符数组，对字符数组的改变将直接反映在显示上
+     */
     public GLCharArea(IGLTextureContainer textureContainer,String fontName, float x, float y,float w,float h, char[] charmap) {
         this.textureContainer = textureContainer;
         this.fontName = fontName;
@@ -64,11 +106,25 @@ public class GLCharArea extends GLShape {
         points.add(new GLPoint(this.x, this.y));
     }
 
+    /**
+     * 设置水平方式
+     * @param horAlia 水平对齐方式
+     * @see #HOR_LEFT
+     * @see #HOR_CENTRAL
+     * @see #HOR_RIGHT
+     */
     public void setHorAlia(int horAlia) {
         this.horAlia = horAlia;
         reOffset();
     }
     
+    /**
+     * 设置垂直对齐方式
+     * @param verAlia 垂直对齐方式
+     * @see #VER_BOTTOM
+     * @see #VER_CENTRAL
+     * @see #VER_UP
+     */
     public void setVerAlia(int verAlia) {
         this.verAlia = verAlia;
         reOffset();
@@ -212,18 +268,34 @@ public class GLCharArea extends GLShape {
         this.y = ny;
 	}
 	
+    /**
+     * 获得文字区域的宽度限制
+     * @return 宽度
+     */
     public float getWidthLimit() {
         return widthLimit;
     }
 
+    /**
+     * 设置文字区域的宽度限制
+     * @param widthLimit 宽度限制
+     */
     public void setWidthLimit(float widthLimit) {
         this.widthLimit = (int)widthLimit;
     }
 
+    /**
+     * 设置字体库使用名称
+     * @param fontName 字体库名称
+     */
     public void setFontName(String fontName) {
         this.fontName = fontName;
     }
 
+    /**
+     * 获得当前字体库名称
+     * @return 字体库名称
+     */
     public String getFontName() {
         return fontName;
     }
@@ -248,6 +320,10 @@ public class GLCharArea extends GLShape {
         reOffset();
     }
 
+    /**
+     * 获得当前文字内容
+     * @return 当前文字内容
+     */
     public String getFontString() {
         return new String(str);
     }
@@ -260,14 +336,19 @@ public class GLCharArea extends GLShape {
         recalcPoint = true;
     }
     
-    public void reOffset() {
+    private void reOffset() {
     	recalcOffset = true;
     }
 
+    @Override
     public void setAlpha(float alpha) {
         this.alpha = alpha;
     }
 
+    /**
+     * 设置文字颜色
+     * @param c 文字颜色
+     */
     public void setColor(Color c) {
         this.r = c.getRed() / 255f;
         this.g = c.getGreen() / 255f;
@@ -370,7 +451,8 @@ public class GLCharArea extends GLShape {
         float rw = maxDx - minDx;
         float rh = maxDy - minDy;
         
-        float offsetX,offsetY;
+        float offsetX;
+        float offsetY;
         
         if(horAlia == HOR_LEFT) {
             offsetX = 0;
