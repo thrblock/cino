@@ -138,6 +138,9 @@ public class GLCharArea extends GLShape {
      */
     public void setWidth(float width) {
         this.width = (int)width;
+        if(this.width != -1) {
+            setWidthLimit(this.width);
+        }
         reOffset();
     }
     
