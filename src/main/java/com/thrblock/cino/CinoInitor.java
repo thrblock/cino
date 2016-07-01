@@ -12,6 +12,7 @@ public class CinoInitor {
     private static AbstractApplicationContext context;
     private CinoInitor(){
     }
+    
     /**
      * 获得context 当未加载时进行加载<br />
      * <b>不建议在多个类中进行重复调用，若需要context 请使用Spring依赖注入</b><br />
@@ -24,5 +25,5 @@ public class CinoInitor {
             context.registerShutdownHook();
         }
         return context;
-    } 
+    }
 }
