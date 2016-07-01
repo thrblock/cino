@@ -2,64 +2,124 @@ package com.thrblock.cino.glshape;
 
 import java.awt.Color;
 
+/**
+ * 多点图形对象（抽象） 定义了包含多个点的图形
+ * @author lizepu
+ *
+ */
 public abstract class GLMutiPointShape extends GLShape {
     protected float lineWidth = 1.0f;
     protected final GLPoint[] points;
     private float theta = 0;
+    /**
+     * 使用点数组构造一个多点图形对象
+     * @param points 点数组
+     */
     public GLMutiPointShape(GLPoint... points) {
         this.points = points;
     }
     
+    /**
+     * 获得顶点的最大索引值
+     * @return 顶点最大索引值
+     */
     public int maxPointIndex() {
-    	return points.length - 1;
+        return points.length - 1;
     }
     
+    /**
+     * 获得顶点数量
+     * @return 顶点数量
+     */
     public int getPointNumber() {
-    	return points.length;
+        return points.length;
     }
     
+    /**
+     * 获得线宽度
+     * @return 线的宽度
+     */
     public float getLineWidth() {
-		return lineWidth;
-	}
+        return lineWidth;
+    }
 
+    /**
+     * 设置线宽度
+     * @param lineWidth 线的宽度
+     */
     public void setLineWidth(float lineWidth) {
-		this.lineWidth = lineWidth;
-	}
+        this.lineWidth = lineWidth;
+    }
 
+    /**
+     * 设置所有点的颜色
+     * @param c 颜色对象
+     */
     public void setAllPointColor(Color c) {
         for(GLPoint point:points) {
             point.setColor(c);
         }
     }
     
+    /**
+     * 设置指定索引点的颜色
+     * @param index 点索引
+     * @param c 颜色对象
+     */
     public void setPointColor(int index,Color c) {
         if(index >=0 && index < points.length) {
             points[index].setColor(c);
         }
     }
     
+    /**
+     * 设置指定索引点的颜色R分量
+     * @param index 点索引
+     * @param r 颜色的R分量 0~255
+     */
     public void setPointR(int index,int r) {
-    	points[index].setR(r);
+        points[index].setR(r);
     }
     
+    /**
+     * 获得指定索引点的R分量
+     * @param index 点索引
+     * @return R分量 0~255
+     */
     public float getPointR(int index) {
-    	return points[index].getR();
+        return points[index].getR();
     }
-    
+    /**
+     * 设置指定索引点的颜色G分量
+     * @param index 点索引
+     * @param g 颜色的G分量 0~255
+     */
     public void setPointG(int index,int g) {
-    	points[index].setG(g);
+        points[index].setG(g);
     }
-    
+    /**
+     * 获得指定索引点的G分量
+     * @param index 点索引
+     * @return G分量 0~255
+     */
     public float getPointG(int index) {
-    	return points[index].getG();
+        return points[index].getG();
     }
-    
+    /**
+     * 设置指定索引点的颜色B分量
+     * @param index 点索引
+     * @param b 颜色的B分量 0~255
+     */
     public void setPointB(int index,int b) {
-    	points[index].setB(b);
+        points[index].setB(b);
     }
-    
+    /**
+     * 获得指定索引点的B分量
+     * @param index 点索引
+     * @return B分量 0~255
+     */
     public float getPointB(int index) {
-    	return points[index].getB();
+        return points[index].getB();
     }
     
     /**
@@ -69,7 +129,7 @@ public abstract class GLMutiPointShape extends GLShape {
      * */
     @Override
     public void setAlpha(float alpha) {
-    	for(GLPoint point:points) {
+        for(GLPoint point:points) {
             point.setAlpha(alpha);
         }
     }
@@ -81,11 +141,11 @@ public abstract class GLMutiPointShape extends GLShape {
      * */
     @Override
     public float getAlpha() {
-    	return points[0].getAlpha();
+        return points[0].getAlpha();
     }
     
     /**
-     * 设置指定点的通道
+     * 设置指顶点的通道
      * @param index 索引，由0开始
      * @param alpha 通道
      */
@@ -95,12 +155,12 @@ public abstract class GLMutiPointShape extends GLShape {
         }
     }
     /**
-     * 获得指定点的通道
+     * 获得指顶点的通道
      * @param index 索引，由0开始
      * @return 通道量
      */
     public float getPointAlpha(int index) {
-    	return points[index].getAlpha();
+        return points[index].getAlpha();
     }
     
     /**
@@ -118,13 +178,13 @@ public abstract class GLMutiPointShape extends GLShape {
      * */
     @Override
     public void setTheta(float dstTheta) {
-    	setTheta(dstTheta,getCentralX(),getCentralY());
+        setTheta(dstTheta,getCentralX(),getCentralY());
     }
     /**
-	 * {@inheritDoc}<br />
-	 * 以x,y为轴旋转图形
-	 */
-	public void setTheta(float dstTheta,float x,float y){
+     * {@inheritDoc}<br />
+     * 以x,y为轴旋转图形
+     */
+    public void setTheta(float dstTheta,float x,float y){
         float offset = dstTheta - this.theta;
         for (GLPoint point : points) {
             float dx = revolveX(point.getX(),point.getY(),x,y,offset);
@@ -133,16 +193,30 @@ public abstract class GLMutiPointShape extends GLShape {
             point.setY(dy);
         }
         this.theta = dstTheta;
-	}
+    }
+    /**
+     * 设置自旋角度（角度制）
+     * @param angle 角度
+     */
     public void setAngle(float angle) {
-    	this.setTheta((float)(angle * Math.PI / 180));
+        this.setTheta((float)(angle * Math.PI / 180));
     }
 
+    /**
+     * 获得指定顶点的x坐标
+     * @param index 索引
+     * @return 指定的x坐标
+     */
     public float getPointX(int index) {
-    	return points[index].getX();
+        return points[index].getX();
     }
+    /**
+     * 获得指定顶点的y坐标
+     * @param index 索引
+     * @return 指定的y坐标
+     */
     public float getPointY(int index) {
-    	return points[index].getY();
+        return points[index].getY();
     }
     
     /**
@@ -151,7 +225,7 @@ public abstract class GLMutiPointShape extends GLShape {
      * */
     @Override
     public float getX() {
-    	return getCentralX();
+        return getCentralX();
     }
     /**
      * {@inheritDoc}<br />
@@ -168,7 +242,7 @@ public abstract class GLMutiPointShape extends GLShape {
      * */
     @Override
     public float getY() {
-    	return getCentralY();
+        return getCentralY();
     }
     /**
      * {@inheritDoc}<br />
@@ -219,7 +293,7 @@ public abstract class GLMutiPointShape extends GLShape {
      * */
     @Override
     public void setCentralY(float y) {
-    	setYOffset(y - getCentralY());
+        setYOffset(y - getCentralY());
     }
     
     /**

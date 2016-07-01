@@ -18,6 +18,7 @@ public class LinkedGLFragment extends AbstractGLFragment {
         Node next;
     }
     private Node node = new Node();
+    private Node initNode = node;
     private Node current = node;
     
     protected LinkedGLFragment(){
@@ -29,6 +30,7 @@ public class LinkedGLFragment extends AbstractGLFragment {
                 current = current.next;
             }
         } else {
+            this.current = initNode;
             disable();
         }
     }

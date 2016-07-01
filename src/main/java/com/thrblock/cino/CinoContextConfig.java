@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import com.thrblock.cino.util.io.SmartConfig;
 
@@ -13,7 +13,7 @@ import com.thrblock.cino.util.io.SmartConfig;
  * cino spring 上下文配置
  * @author lizepu
  */
-@Component
+@Configuration
 public class CinoContextConfig {
     /**
      * 将cino-frame配置纳入spring容器管理 可使用注解‘Value’进行引用

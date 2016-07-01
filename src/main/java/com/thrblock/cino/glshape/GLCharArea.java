@@ -101,7 +101,9 @@ public class GLCharArea extends GLShape {
         this.y = (int)y;
         this.width = (int)w;
         this.height = (int)h;
-        
+        if(width > 1) {
+        	setWidthLimit(w);
+        }
         points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4 : 16);
         points.add(new GLPoint(this.x, this.y));
     }

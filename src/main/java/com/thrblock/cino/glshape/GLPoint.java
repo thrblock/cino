@@ -5,6 +5,10 @@ import java.awt.Color;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
+/**
+ * 图形对象 点，这是仅包含一个点的图形对象
+ * @author lizepu
+ */
 public class GLPoint extends GLShape {
     private float pointSize = 1f;
     private float x;
@@ -15,49 +19,92 @@ public class GLPoint extends GLShape {
     private float g = 1.0f;
     private float b = 1.0f;
     private float theta = 0;
+    /**
+     * 使用坐标构造一个图形对象
+     * @param x 顶点横坐标
+     * @param y 顶点纵坐标
+     */
     public GLPoint(float x,float y) {
         this.x = x;
         this.y = y;
     }
     
+    /**
+     * 获得顶点大小参数
+     * @return 顶点大小
+     */
     public float getPointSize() {
         return pointSize;
     }
 
+    /**
+     * 设置顶点大小参数
+     * @param pointSize 顶点大小
+     */
     public void setPointSize(float pointSize) {
         this.pointSize = pointSize;
     }
 
+    /**
+     * 设置顶点颜色
+     * @param c 颜色
+     */
     public void setColor(Color c) {
         this.r = c.getRed() / 255f;
         this.g = c.getGreen() / 255f;
         this.b = c.getBlue() / 255f;
     }
     
+    /**
+     * 设置颜色分量R
+     * @param r
+     */
     public void setR(float r) {
 		this.r = r;
 	}
-
+    /**
+     * 设置颜色分量G
+     * @param g
+     */
 	public void setG(float g) {
 		this.g = g;
 	}
-
+	/**
+     * 设置颜色分量B
+     * @param b
+     */
 	public void setB(float b) {
 		this.b = b;
 	}
 
+	/**
+	 * 获得颜色R分量
+	 * @return r分量
+	 */
 	public float getR() {
         return r;
     }
 
+	/**
+	 * 获得颜色G分量
+	 * @return g分量
+	 */
     public float getG() {
         return g;
     }
 
+    /**
+	 * 获得颜色B分量
+	 * @return b分量
+	 */
     public float getB() {
         return b;
     }
 
+    /**
+     * 获得当前颜色对象
+     * @return 颜色对象
+     */
     public Color getColor() {
         return new Color(r,g,b);
     }
@@ -141,22 +188,43 @@ public class GLPoint extends GLShape {
         gl.glEnd();
     }
     
+    /**
+     * 获得与另一点的距离平方值
+     * @param point 另一点
+     * @return 距离的平方值
+     */
     public float getDistanceSquare(GLPoint point) {
         float xl = x - point.x;
         float yl = y - point.y;
         return xl * xl + yl * yl;
     }
     
+    /**
+     * 获得与另一点的距离平方值
+     * @param ax 另一点的x坐标
+     * @param ay 另一点的y坐标
+     * @return 距离的平方值
+     */
     public float getDistanceSquare(float ax,float ay) {
         float xl = x - ax;
         float yl = y - ay;
         return xl * xl + yl*yl;
     }
     
+    /**
+     * 获得与另一点的距离值
+     * @param point 另一点
+     * @return 距离
+     */
     public float getDistance(GLPoint point) {
         return (float)Math.sqrt(getDistanceSquare(point));
     }
-    
+    /**
+     * 获得与另一点的距离值
+     * @param ax 另一点的x坐标
+     * @param ay 另一点的y坐标
+     * @return 距离
+     */
     public float getDistance(float ax,float ay) {
         return (float)Math.sqrt(getDistanceSquare(ax,ay));
     }
