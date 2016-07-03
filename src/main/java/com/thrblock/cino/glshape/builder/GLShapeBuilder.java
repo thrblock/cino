@@ -22,6 +22,10 @@ import com.thrblock.cino.glshape.GLSprite;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 import com.thrblock.cino.gltexture.IGLTextureContainer.GifMetaData;
 
+/**
+ * 图形构造器
+ * @author lizepu
+ */
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component
 public class GLShapeBuilder implements IGLShapeBuilder{

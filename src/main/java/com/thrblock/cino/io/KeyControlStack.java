@@ -10,11 +10,18 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * 键盘堆栈控制器,维护着一个键盘监听器栈结构，会把按键事件传给栈的顶层
+ * @author lizepu
+ */
 @Component
 public class KeyControlStack implements AWTEventListener, IKeyControlStack {
     private boolean[] keyStatus = new boolean[1024];
     private Deque<KeyListener> listenerStack = new ConcurrentLinkedDeque<>();
 
+    /**
+     * 构造一个键盘堆栈控制器
+     */
     public KeyControlStack() {
         Toolkit.getDefaultToolkit().addAWTEventListener(this,AWTEvent.KEY_EVENT_MASK);
     }

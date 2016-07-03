@@ -25,17 +25,35 @@ import com.thrblock.cino.glfont.GLFontTexture;
 import com.thrblock.cino.glshape.builder.GifBuilder;
 import com.thrblock.cino.glshape.builder.GifBuilder.GifData;
 
+/**
+ * 纹理容器管理器
+ * @author lizepu
+ */
 @Component
 public class GLTextureContainer implements IGLTextureContainer {
     private static final Logger LOG = LoggerFactory.getLogger(GLTextureContainer.class);
     
+    /**
+     * 流-类型 数据，储存了流与类型的关系数据
+     * @author lizepu
+     */
     public static class StreamPair {
         private final String imgType;
         private final InputStream stream;
+        /**构造一个流-类型数据
+         * @param imgType 类型
+         * @param stream 流
+         */
         public StreamPair(String imgType,InputStream stream) {
             this.imgType = imgType;
             this.stream = stream;
         }
+        /**
+         * 使用OpenGL 对象得到纹理
+         * @param gl OpenGL 对象
+         * @return 纹理
+         * @throws IOException 当IO异常时
+         */
         public Texture getTexture(GL2 gl) throws IOException {
             Texture texture = TextureIO.newTexture(stream,false,imgType);
             texture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);

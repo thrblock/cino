@@ -1,5 +1,11 @@
 package com.thrblock.cino.glshape.builder;
 
+/**
+ * 一个抽象节点，一个节点大可代表一个场景，小可代表一个图形<br />
+ * 节点所具有的意义是实际构造过程中定义的
+ * @author lizepu
+ *
+ */
 public interface GLNode {
 	/**
 	 * 显示节点

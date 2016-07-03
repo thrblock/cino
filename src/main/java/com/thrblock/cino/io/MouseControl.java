@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
+/**
+ * 鼠标控制器
+ * @author lizepu
+ */
 @Component
 public class MouseControl implements AWTEventListener,IMouseControl {
     private static final Logger LOG = LoggerFactory.getLogger(MouseControl.class);

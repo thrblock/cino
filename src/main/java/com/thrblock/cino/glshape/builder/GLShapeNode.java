@@ -3,18 +3,34 @@ package com.thrblock.cino.glshape.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GLShapeNode 图形节点 GLNode的纯结构实现
+ * @author lizepu
+ */
 public class GLShapeNode implements GLNode{
     private static final GLNode GL_NOP = new GLNop();//放置basic为空
     private GLNode basic = GL_NOP;
     private List<GLNode> subList = new ArrayList<>();
     private GLShapeNode parent;
     
+    /**
+     * 获得父节点
+     * @return 父节点
+     */
     public GLShapeNode getParent() {
         return parent;
     }
+    /**
+     * 设置父节点
+     * @param parent 父节点
+     */
     public void setParent(GLShapeNode parent) {
         this.parent = parent;
     }
+    /**
+     * 增加一个子节点
+     * @param node 子节点
+     */
     public void addSubNode(GLNode node) {
         if(basic == GL_NOP) {
             basic = node;

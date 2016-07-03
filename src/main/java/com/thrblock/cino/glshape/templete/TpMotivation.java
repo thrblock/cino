@@ -2,7 +2,12 @@ package com.thrblock.cino.glshape.templete;
 
 import com.thrblock.cino.glshape.builder.GLNode;
 import com.thrblock.cino.util.math.CMath;
-
+/**
+ * 一些关于图形坐标参数的模板方法，用于早期动画实现<br />
+ * 静态方法，不推荐使用，今后有高可能性被替换<br />
+ * "不可以 这不面向对象"
+ * @author lizepu
+ */
 public class TpMotivation {
     private TpMotivation() {
     }

@@ -28,6 +28,14 @@ public class CMath {
         }
     }
     
+    /**
+     * 获得两点的距离
+     * @param x1 点1横坐标
+     * @param y1 点1纵坐标
+     * @param x2 点2横坐标
+     * @param y2 点2纵坐标
+     * @return 两点距离
+     */
     public static float getDistance(float x1,float y1,float x2,float y2) {
         float s1 = x2 - x1;
         float s2 = y2 - y1;

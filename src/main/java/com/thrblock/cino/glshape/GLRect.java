@@ -1,6 +1,6 @@
 package com.thrblock.cino.glshape;
 
-import com.thrblock.cino.glshape.builder.GLNode;
+import com.thrblock.cino.glshape.proxy.RectPositionProxy;
 
 /**
  * 一个矩形图形对象
@@ -71,66 +71,11 @@ public class GLRect extends GLPolygonShape {
         }
     }
     
-    public PositionProxy getPositionProxy (){
-        return new PositionProxy();
-    }
-    
-    public class PositionProxy {
-        public void sameCentrerOf(GLNode another) {
-            setCentralX(another.getCentralX());
-            setCentralY(another.getCentralY());
-        }
-        
-        public void leftOf(GLRect another,float margin) {
-            leftOf(another);
-            setXOffset(-margin);
-        }
-        
-        public void leftOf(GLRect another) {
-            float cx = another.getCentralX() - another.getWidth() / 2 - getWidth() / 2;
-            setCentralX(cx);
-            setCentralY(another.getCentralY());
-        }
-        
-        public void rightOf(GLRect another,float margin) {
-            rightOf(another);
-            setXOffset(margin);
-        }
-        
-        public void rightOf(GLRect another) {
-            float cx = another.getCentralX() + another.getWidth() / 2 + getWidth() / 2;
-            setCentralX(cx);
-            setCentralY(another.getCentralY());
-        }
-        
-        public void topOf(GLRect another,float margin) {
-            topOf(another);
-            setYOffset(-margin);
-        }
-        
-        public void topOf(GLRect another) {
-            float cy = another.getCentralY() - another.getWidth() / 2 - getWidth() / 2;
-            setCentralX(another.getCentralX());
-            setCentralY(cy);
-        }
-        
-        public void bottomOf(GLRect another,float margin) {
-            bottomOf(another);
-            setYOffset(margin);
-        }
-        
-        public void bottomOf(GLRect another) {
-            float cy = another.getCentralY() + another.getWidth() / 2 + getWidth() / 2;
-            setCentralX(another.getCentralX());
-            setCentralY(cy);
-        }
-        
-        public void marginLeft(float margin) {
-            setCentralX(getWidth() / 2 + margin);
-        }
-        
-        public void marginTop(float margin) {
-            setCentralY(getHeight() / 2 + margin);
-        }
+    /**
+     * 获得 矩形位置操作代理类
+     * @return 矩形位置操作代理类
+     */
+    public RectPositionProxy proxyRectPosition (){
+        return new RectPositionProxy(this);
     }
 }

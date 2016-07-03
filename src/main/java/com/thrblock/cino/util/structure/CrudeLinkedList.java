@@ -19,6 +19,9 @@ public class CrudeLinkedList<T> implements Iterable<T>{
     private Node tail = null;
     private CrudeIter defaultIter = new CrudeIter();
     
+    /**给链表增加一个元素
+     * @param t
+     */
     public void add(T t) {
         if(head == null) {
             head = new Node();
@@ -33,12 +36,20 @@ public class CrudeLinkedList<T> implements Iterable<T>{
         }
     }
     
+    /**
+     * 将集合内的元素全部加入
+     * @param c 集合
+     */
     public void addAll(Collection<? extends T> c) {
         for(T t:c) {
             add(t);
         }
     }
     
+    /**
+     * 创建一个迭代器
+     * @return 迭代器
+     */
     public CrudeIter genCrudeIter() {
         return new CrudeIter();
     }
@@ -47,6 +58,10 @@ public class CrudeLinkedList<T> implements Iterable<T>{
         Node next;
         Node prev;
     }
+    /**
+     * 简单链表的迭代器
+     * @author lizepu
+     */
     public class CrudeIter implements Iterator<T>{
         private Node begin;
         private Node current = null;
@@ -75,6 +90,9 @@ public class CrudeLinkedList<T> implements Iterable<T>{
             current.next.prev = current.prev;
         }
         
+        /**
+         * 重置迭代器状态，使之重新迭代
+         */
         public void reset() {
             begin.next = head;
             current = begin;
