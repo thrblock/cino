@@ -1,25 +1,24 @@
-package com.thrblock.cino.glshape.templete;
+package com.thrblock.cino.glshape.proxy;
 
 import com.thrblock.cino.glshape.builder.GLNode;
 import com.thrblock.cino.util.math.CMath;
+
 /**
- * 一些关于图形坐标参数的模板方法，用于早期动画实现<br />
- * 静态方法，不推荐使用，今后有高可能性被替换<br />
- * "不可以 这不面向对象"
+ * 节点动作代理
  * @author lizepu
  */
-@Deprecated
-public class TpMotivation {
-    private TpMotivation() {
+public class NodeMotivationProxy {
+    private GLNode node;
+    public NodeMotivationProxy(GLNode node) {
+        this.node = node;
     }
     /**
      * 向屏幕上方匀速飞出（y轴负向）
-     * @param node GLNode实体
      * @param speed 飞行速度 像素/帧 大于0
      * @param yLimit 中心Y坐标极限
      * @return 代表是否到达极限的布尔值
      */
-    public static boolean flyUp(GLNode node,float speed,float yLimit) {
+    public boolean flyUp(float speed,float yLimit) {
         float next = node.getCentralY() - speed;
         if(next > yLimit) {
             node.setCentralY(next);
@@ -32,12 +31,11 @@ public class TpMotivation {
     
     /**
      * 向屏幕下方匀速飞出（y轴正向）
-     * @param node GLNode实体
      * @param speed 飞行速度 像素/帧 大于0
      * @param yLimit 中心Y坐标极限
      * @return 代表是否到达极限的布尔值
      */
-    public static boolean driveDown(GLNode node,float speed,float yLimit) {
+    public boolean driveDown(float speed,float yLimit) {
         float next = node.getCentralY() + speed;
         if(next < yLimit) {
             node.setCentralY(next);
@@ -50,12 +48,11 @@ public class TpMotivation {
     
     /**
      * 向屏幕左侧匀速飞出（x轴负向）
-     * @param node GLNode实体
      * @param speed 飞行速度 像素/帧 大于0
      * @param xLimit 中心X坐标极限
      * @return 代表是否到达极限的布尔值
      */
-    public static boolean moveLeft(GLNode node,float speed,float xLimit) {
+    public boolean moveLeft(float speed,float xLimit) {
         float next = node.getCentralX() - speed;
         if(next > xLimit) {
             node.setCentralX(next);
@@ -68,12 +65,11 @@ public class TpMotivation {
     
     /**
      * 向屏幕右侧匀速飞出（x轴负向）
-     * @param node GLNode实体
      * @param speed 飞行速度 像素/帧 大于0
      * @param xLimit 中心X坐标极限
      * @return 代表是否到达极限的布尔值
      */
-    public static boolean moveRight(GLNode node,float speed,float xLimit) {
+    public boolean moveRight(float speed,float xLimit) {
         float next = node.getCentralX() + speed;
         if(next < xLimit) {
             node.setCentralX(next);
@@ -86,13 +82,12 @@ public class TpMotivation {
     
     /**
      * 以匀速移动节点
-     * @param node 要移动的节点
      * @param dstX 目标点x
      * @param dstY 目标点y
      * @param speed 速度 单位 像素/帧 横正
      * @return 是否移动到位置的布尔值
      */
-    public static boolean moveTo(GLNode node,float dstX,float dstY,float speed) {
+    public boolean moveTo(float dstX,float dstY,float speed) {
         float dist = CMath.getDistance(node.getCentralX(),node.getCentralY(),dstX,dstY);
         if(dist > speed) {
             float theta = CMath.getQuadrantTheta(node.getCentralX(),node.getCentralY(),dstX, dstY);
@@ -106,11 +101,27 @@ public class TpMotivation {
         }
     }
     
-    public static boolean moveToSmoothly(GLNode node,float dstX,float dstY,float speed) {
-        return moveToSmoothly(node, dstX, dstY, speed, speed * 5, speed * 0.2f);
+    /**
+     * 到指定点的平滑移动
+     * @param dstX 指定点x
+     * @param dstY 指定点y
+     * @param speed 速度
+     * @return 是否完成移动的布尔值
+     */
+    public boolean moveToSmoothly(float dstX,float dstY,float speed) {
+        return moveToSmoothly(dstX, dstY, speed, speed * 5, speed * 0.2f);
     }
     
-    public static boolean moveToSmoothly(GLNode node,float dstX,float dstY,float speed,float smoothRange,float speedMini) {
+    /**
+     * 到指定点的平滑移动
+     * @param dstX 指定点x
+     * @param dstY 指定点y
+     * @param speed 速度
+     * @param smoothRange 平滑范围，指距离目标点范围小于此值时，启用平滑，默认为速度大小的5倍
+     * @param speedMini 最低速度，指平滑过程的最低速度，默认为速度值的0.2倍
+     * @return 是否完成平滑的布尔值
+     */
+    public boolean moveToSmoothly(float dstX,float dstY,float speed,float smoothRange,float speedMini) {
         float dist = CMath.getDistance(node.getCentralX(),node.getCentralY(),dstX,dstY);
         float spd;
         if(dist < smoothRange) {

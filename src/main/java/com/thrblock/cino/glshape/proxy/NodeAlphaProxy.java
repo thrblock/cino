@@ -1,24 +1,22 @@
-package com.thrblock.cino.glshape.templete;
+package com.thrblock.cino.glshape.proxy;
 
 import com.thrblock.cino.glshape.builder.GLNode;
 
 /**
- * 一些关于图形混合模式系数的模板方法，用于早期动画实现<br />
- * 静态方法，不推荐使用，今后有高可能性被替换<br />
- * "不可以 这不面向对象"
+ * GLNode节点的通道操作类
  * @author lizepu
  */
-@Deprecated
-public class TpAlpha {
-    private TpAlpha() {
-    }
-    /**
+public class NodeAlphaProxy {
+	private GLNode node;
+	public NodeAlphaProxy(GLNode node) {
+		this.node = node;
+	}
+	/**
      * 淡出
-     * @param node 节点
      * @param step 每帧淡出量
      * @return 是否完成淡出的布尔值
      */
-    public static boolean tearOut(GLNode node, float step) {
+    public boolean tearOut(float step) {
         float calc = node.getAlpha() - step;
         if(calc > 0) {
             node.setAlpha(calc);
@@ -30,11 +28,10 @@ public class TpAlpha {
     }
     /**
      * 淡入
-     * @param node 节点
      * @param step 每帧淡入量
      * @return 是否完成淡入的布尔值
      */
-    public static boolean tearIn(GLNode node, float step) {
+    public boolean tearIn(float step) {
         float calc = node.getAlpha() + step;
         if(calc < 1f) {
             node.setAlpha(calc);
