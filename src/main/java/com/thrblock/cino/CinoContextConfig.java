@@ -21,7 +21,7 @@ public class CinoContextConfig {
      * @throws IOException 当配置文件缺失时
      */
     @Bean
-    public static PropertyPlaceholderConfigurer cinoFramePropertie() throws IOException {
+    public PropertyPlaceholderConfigurer cinoFramePropertie() throws IOException {
         PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
         SmartConfig frameConfig = new SmartConfig("frame.smt");
         Properties prop = new Properties();
