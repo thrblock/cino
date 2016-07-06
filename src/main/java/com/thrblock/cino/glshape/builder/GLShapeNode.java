@@ -146,26 +146,36 @@ public class GLShapeNode implements GLNode{
         subList.forEach(e -> e.setTheta(dstTheta,x,y));
     }
 }
+/**
+ * GLNop 是GLNode的空白实现<br />
+ * 当一个ShapeBuilder构造任何图形之前，其base由Nop充当。
+ * @author lizepu
+ */
 class GLNop implements GLNode {
 
     @Override
     public void show() {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void hide() {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void destory() {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void setX(float x) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void setY(float y) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
@@ -190,14 +200,17 @@ class GLNop implements GLNode {
 
     @Override
     public void setCentralX(float x) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void setCentralY(float y) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void setAlpha(float alpha) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
@@ -207,10 +220,12 @@ class GLNop implements GLNode {
 
     @Override
     public void setXOffset(float offset) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void setYOffset(float offset) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
@@ -220,10 +235,12 @@ class GLNop implements GLNode {
 
     @Override
     public void setTheta(float dstTheta) {
+        //Nop 不会对任何操作进行实际处理
     }
 
     @Override
     public void setTheta(float dstTheta, float x, float y) {
+        //Nop 不会对任何操作进行实际处理
     }
     
 }

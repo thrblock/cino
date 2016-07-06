@@ -14,14 +14,16 @@ public class GLImage extends GLRect {
     private static final int MODE_NORMAL = 0b00;
     private static final int MODE_X_VERT = 0b01;
     private static final int MODE_Y_VERT = 0b10;
+    
+    private static final float[] alph = {1f,0,0,1f};
+    private static final float[] beta = {0,1f,1f,0};
+    private static final float[] gama = {1f,1f,0,0};
+    private static final float[] zeta = {0,0,1f,1f};
+    
     private int mode = MODE_NORMAL;
     private String textureName;
     private boolean resize = false;
     private IGLTextureContainer textureContainer;
-    private final float[] alph = {1f,0,0,1f};
-    private final float[] beta = {0,1f,1f,0};
-    private final float[] gama = {1f,1f,0,0};
-    private final float[] zeta = {0,0,1f,1f};
     /**
      * 构造一个贴图图形对象
      * @param textureContainer 纹理管理容器

@@ -1,5 +1,10 @@
 package com.thrblock.cino.util.math;
 
+/**
+ * 这里放置了一些数学相关方法<br />
+ * 不推荐使用静态方法，必要时，会把特定用途的方法移植为OO格式
+ * @author lizepu
+ */
 public class CMath {
     private CMath() {
     }

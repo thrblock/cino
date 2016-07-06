@@ -41,9 +41,19 @@ public class SmartConfig {
         LOG.info("source:" + source);
     }
 
+    /**
+     * 获得smt指向的对应字符流
+     * @return smt所指的字符流
+     * @throws IOException 当IO出错时
+     */
     public Reader getConfigAsReader() throws IOException {
         return new InputStreamReader(getConfigAsInputStream(),ENCODING);
     }
+    /**
+     * 获得smt指向的对应字节流
+     * @return smt所指的字节流
+     * @throws IOException 当IO出错时
+     */
     public InputStream getConfigAsInputStream() throws IOException {
         if(checkMstStructure()) {
             if(location != null) {
