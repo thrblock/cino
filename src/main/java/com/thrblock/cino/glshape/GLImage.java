@@ -103,7 +103,7 @@ public class GLImage extends GLRect {
                 resize = false;
             }
         }
-        
+        gl.glEnable(GL.GL_TEXTURE_2D);
         gl.glBegin(GL2.GL_QUADS);
         if(mode == MODE_NORMAL) {
             normalTexCoord(gl);
@@ -117,6 +117,7 @@ public class GLImage extends GLRect {
         
         gl.glEnd();
         gl.glBindTexture(GL.GL_TEXTURE_2D,0);
+        gl.glDisable(GL.GL_TEXTURE_2D);
     }
     
     private void normalTexCoord(GL2 gl) {

@@ -287,4 +287,9 @@ public class GLPoint extends GLShape {
 		this.x = nx;
 		this.y = ny;
 	}
+	
+	@Override
+	public String toString() {
+		return "GLPoint[" + x + "," + y + "]";
+	}
 }

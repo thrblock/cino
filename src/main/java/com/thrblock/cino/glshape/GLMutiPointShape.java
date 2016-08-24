@@ -316,4 +316,15 @@ public abstract class GLMutiPointShape extends GLShape {
             point.setYOffset(offset);
         }
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("GLMutiPoint[");
+        for(GLPoint point:this.points) {
+            builder.append("("+point.getX()+","+point.getY()+");");
+        }
+        builder.append(']');
+        return builder.toString();
+    }
 }

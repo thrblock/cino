@@ -41,8 +41,8 @@ public interface IGLShapeBuilder {
 	public GLLine buildGLLine(float x1,float y1,float x2,float y2);
 	/**
 	 * 构造一个矩形
-	 * @param x 中心左边x
-	 * @param y 中心左边y
+	 * @param x 中心坐标x
+	 * @param y 中心坐标y
 	 * @param width 宽度
 	 * @param height 高度
 	 * @return 矩形图形

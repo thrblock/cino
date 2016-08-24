@@ -1,6 +1,7 @@
 #SMT BEGIN
 #OSMAPPING WIN ./cino-frame.properties
 #OSMAPPING NUX ./cino-frame.properties
+#OSMAPPING MAC ./cino-frame.properties
 #SMT END
 cino.frame.title=title
 cino.frame.doublebuffer=true

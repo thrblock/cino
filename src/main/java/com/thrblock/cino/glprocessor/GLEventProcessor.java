@@ -38,23 +38,23 @@ public class GLEventProcessor implements GLEventListener {
     @Autowired
     CinoFrameConfig config;
     
-    private GL gl;
-    private GL2 gl2;
     private boolean reshaped = false;
     @Override
     public void display(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        GL2 gl2 = gl.getGL2();
         textureContainer.parseTexture(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         for(int i = 0;i < layerContainer.size();i++) {
-            drawLayer(layerContainer.getLayer(i));
+            drawLayer(layerContainer.getLayer(i),gl2);
         }
-        drawLayer(layerContainer.getLayer(-1));
+        drawLayer(layerContainer.getLayer(-1),gl2);
         gl2.glFlush();
         fragmentContainer.allFragment();
         layerContainer.swap();
     }
 
-    private void drawLayer(GLLayer layer) {
+    private void drawLayer(GLLayer layer,GL2 gl2) {
         gl2.glBlendFunc(layer.getMixA(),layer.getMixB());
         layer.viewOffset(gl2);
         CrudeLinkedList<GLShape>.CrudeIter shapeIter = layer.iterator();
@@ -73,13 +73,13 @@ public class GLEventProcessor implements GLEventListener {
 
     @Override
     public void init(GLAutoDrawable drawable) {
+        GL gl = drawable.getGL();
+        GL2 gl2 = gl.getGL2();
         LOG.info("GL init");
         Thread.currentThread().setName("GL_Draw");
-        gl = drawable.getGL();
         if(config.isVsync()) {
             gl.setSwapInterval(1);
         }
-        gl2 = gl.getGL2();
 
         gl2.glEnable(GL.GL_MULTISAMPLE);
 
@@ -97,12 +97,14 @@ public class GLEventProcessor implements GLEventListener {
         gl2.glEnable(GL.GL_LINE_SMOOTH);
         gl2.glHint(GL.GL_LINE_SMOOTH, GL.GL_NICEST);
 
-        gl2.glEnable(GL.GL_TEXTURE_2D);
+        //gl2.glEnable(GL.GL_TEXTURE_2D);
     }
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int w,
             int h) {
+        GL gl = drawable.getGL();
+        GL2 gl2 = gl.getGL2();
         config.setScreenWidth(w);
         config.setScreenHeight(h);
         if(!reshaped || config.getFlexMode() == CinoFrameConfig.FIX) {

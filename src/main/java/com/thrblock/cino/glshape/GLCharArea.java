@@ -138,7 +138,7 @@ public class GLCharArea extends GLShape {
      */
     public void setWidth(float width) {
         this.width = (int)width;
-        if(this.width != -1) {
+        if(this.width > -1) {
             setWidthLimit(this.width);
         }
         reOffset();
@@ -409,6 +409,7 @@ public class GLCharArea extends GLShape {
             recalcOffset();
             recalcOffset = false;
         }
+        gl.glEnable(GL.GL_TEXTURE_2D);
         gl.glColor4f(r, g, b, alpha);
         for (int i = 0; i < local.length; i++) {
             if (local[i] == '\n') {
@@ -436,6 +437,7 @@ public class GLCharArea extends GLShape {
             gl.glEnd();
             gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
         }
+        gl.glDisable(GL.GL_TEXTURE_2D);
     }
 
     private void recalcOffset() {
