@@ -229,6 +229,7 @@ public class CinoFrameConfig {
 
     /**
      * 按照配置 构造JFrame
+     * @return 满足配置的jframe
      */
     public JFrame buildFrame() {
         JFrame frame = new JFrame();
@@ -236,6 +237,13 @@ public class CinoFrameConfig {
         return buildFrame(frame,frame.getContentPane(),true);
     }
     
+    /**
+     * 按照配置 已固定步骤初始化一个JFrame
+     * @param frame 提供的jframe
+     * @param container awt container
+     * @param pack 是否按照建议的大小重新布局组件
+     * @return 满足条件的jframe实例
+     */
     public JFrame buildFrame(JFrame frame,Container container,boolean pack) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GLCapabilities glcaps = new GLCapabilities(GLProfile.getDefault());

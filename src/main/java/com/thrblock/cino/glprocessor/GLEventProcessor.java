@@ -97,7 +97,6 @@ public class GLEventProcessor implements GLEventListener {
         gl2.glEnable(GL.GL_LINE_SMOOTH);
         gl2.glHint(GL.GL_LINE_SMOOTH, GL.GL_NICEST);
 
-        //gl2.glEnable(GL.GL_TEXTURE_2D);
     }
 
     @Override

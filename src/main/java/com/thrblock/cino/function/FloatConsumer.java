@@ -6,5 +6,9 @@ package com.thrblock.cino.function;
  */
 @FunctionalInterface
 public interface FloatConsumer {
+    /**
+     * 消费一个float
+     * @param v 要消费的float值
+     */
     void accept(float v);
 }
