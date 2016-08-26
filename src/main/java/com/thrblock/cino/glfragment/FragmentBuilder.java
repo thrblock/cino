@@ -11,7 +11,15 @@ import org.springframework.stereotype.Component;
 public class FragmentBuilder {
     @Autowired
     private IGLFragmentContainer container;
-    
+
+    /**
+     * 使用指定的片段容器
+     * @param container 指定的片段容器
+     */
+    public void setContainer(IGLFragmentContainer container) {
+        this.container = container;
+    }
+
     /**
      * 构造一个代理片段逻辑
      * @param pure 纯粹的片段逻辑
