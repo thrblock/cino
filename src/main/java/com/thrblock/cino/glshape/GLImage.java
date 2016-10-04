@@ -58,7 +58,7 @@ public class GLImage extends GLRect {
     /**
      * 设置纹理名称，新的名称所关联的纹理将会反映在绘图中
      * @param textureName 纹理名称
-     * @resize resize 是否根据纹理大小调整宽高
+     * @param resize 是否根据纹理大小调整宽高
      */
     public void setTextureName(String textureName,boolean resize) {
         this.textureName = textureName;

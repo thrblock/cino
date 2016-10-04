@@ -8,6 +8,10 @@ import com.thrblock.cino.glshape.builder.GLNode;
  */
 public class NodeAlphaProxy {
 	private GLNode node;
+	/**
+	 * 构造一个节点通道操作代理
+	 * @param node 要代理的节点
+	 */
 	public NodeAlphaProxy(GLNode node) {
 		this.node = node;
 	}

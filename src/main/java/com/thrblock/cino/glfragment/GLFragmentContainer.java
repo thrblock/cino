@@ -18,8 +18,14 @@ public class GLFragmentContainer implements IGLFragmentContainer{
     private CrudeLinkedList<IGLFragment>.CrudeIter fragIt = frags.genCrudeIter();
     private List<IGLFragment> swap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
+    private boolean pause = false;
+    private GLFragmentContainer(){
+    }
     @Override
     public void allFragment() {
+        if(pause) {
+            return;
+        }
         while(fragIt.hasNext()) {
             IGLFragment frag = fragIt.next();
             if(frag.isDestory()) {
@@ -41,5 +47,42 @@ public class GLFragmentContainer implements IGLFragmentContainer{
         swapSp.acquireUninterruptibly();
         swap.add(frag);
         swapSp.release();
+    }
+    
+    /**
+     * 暂停此容器的片段逻辑
+     */
+    public void pause() {
+        pause = true;
+    }
+    
+    /**
+     * 恢复瓷容器片段逻辑的执行
+     */
+    public void remuse() {
+        pause = false;
+    }
+    
+    /**
+     * 构造子集
+     * @return 子集容器，树状容器结构适合游戏暂停效果的实现，你可以有选择的暂停某个子集或是根来实现暂停效果
+     */
+    public GLFragmentContainer generateSubContainer() {
+        GLFragmentContainer result = new GLFragmentContainer();
+        this.addFragment(new IGLFragment(){
+            @Override
+            public void fragment() {
+                result.allFragment();
+            }
+            @Override
+            public boolean isEnable() {
+                return !result.pause;
+            }
+            @Override
+            public boolean isDestory() {
+                return false;
+            }
+        });
+        return result;
     }
 }

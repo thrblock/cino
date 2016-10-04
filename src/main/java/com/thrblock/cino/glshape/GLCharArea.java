@@ -10,7 +10,7 @@ import com.thrblock.cino.glfont.GLFontTexture;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 
 /**
- * 文字区域 图形对象，可以定义一个矩形文字区域，进行预定义字体的展示，设置颜色、缩进等样式
+ * 文字区域 以单个字符为基础结构进行的字库构建，图形对象，可以定义一个矩形文字区域，进行预定义字体的展示，设置颜色、缩进等样式
  * @author lizepu
  */
 public class GLCharArea extends GLShape {

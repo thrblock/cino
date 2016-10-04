@@ -14,6 +14,7 @@ import com.thrblock.cino.glfragment.IGLFragmentContainer;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
+import com.thrblock.cino.gltexture.GLTextRenderer;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
@@ -37,6 +38,9 @@ public class GLEventProcessor implements GLEventListener {
     
     @Autowired
     CinoFrameConfig config;
+    
+    @Autowired
+    GLTextRenderer renderer;
     
     private boolean reshaped = false;
     @Override
@@ -97,7 +101,7 @@ public class GLEventProcessor implements GLEventListener {
         gl2.glEnable(GL.GL_LINE_SMOOTH);
         gl2.glHint(GL.GL_LINE_SMOOTH, GL.GL_NICEST);
 
-        //gl2.glEnable(GL.GL_TEXTURE_2D);
+        renderer.init();
     }
 
     @Override

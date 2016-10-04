@@ -17,7 +17,19 @@ public abstract class AbstractGLFragment implements IGLFragment {
     @Autowired
     private IGLFragmentContainer container;
     
+    /**
+     * for spring ioc use only
+     */
     protected AbstractGLFragment(){
+    }
+    
+    /**
+     * 构造一个片段，使用指定的片段容器
+     * @param refContainer
+     */
+    public AbstractGLFragment(IGLFragmentContainer refContainer) {
+        this.container = refContainer;
+        addToContainer();
     }
     
     @PostConstruct
