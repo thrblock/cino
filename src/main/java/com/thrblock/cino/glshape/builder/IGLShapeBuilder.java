@@ -10,7 +10,6 @@ import com.thrblock.cino.glshape.GLOval;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.glshape.GLSprite;
-import com.thrblock.cino.glshape.GLTextArea;
 
 /**
  * 图形构造器（抽象）<br />
@@ -110,7 +109,6 @@ public interface IGLShapeBuilder {
 	 * @return 文字区域对象
 	 */
 	public GLCharArea buildGLCharLine(String fontName,float x,float y,float w,float h,String initStr);
-	public GLTextArea buildGLTextArea(float x,float y,float w,float h);
 	/**
 	 * 创建一个精灵对象
 	 * @param x 中心坐标x

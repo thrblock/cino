@@ -19,8 +19,6 @@ import com.thrblock.cino.glshape.GLOval;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.glshape.GLSprite;
-import com.thrblock.cino.glshape.GLTextArea;
-import com.thrblock.cino.gltexture.GLTextRenderer;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 import com.thrblock.cino.gltexture.IGLTextureContainer.GifMetaData;
 
@@ -39,9 +37,6 @@ public class GLShapeBuilder implements IGLShapeBuilder{
     
     @Autowired
     IGLTextureContainer textureContainer;
-    
-    @Autowired
-    GLTextRenderer renderer;
     
     @Override
     public void setLayer(int layerIndex) {
@@ -152,16 +147,6 @@ public class GLShapeBuilder implements IGLShapeBuilder{
             currentNode.addSubNode(charLine);
         }
         return charLine;
-    }
-    
-    @Override
-    public GLTextArea buildGLTextArea(float x,float y,float w,float h) {
-        GLTextArea textArea = new GLTextArea(renderer, x, y, w, h);
-        layerContainer.addShapeToSwap(layer, textArea);
-        if(currentNode != null) {
-            currentNode.addSubNode(textArea);
-        }
-        return textArea;
     }
     
     @Override
