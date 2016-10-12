@@ -16,18 +16,29 @@ public class LoopedGLFragment extends AbstractGLFragment {
     private static class Node{
         ConditionGLFragment fragment;
         Node next;
+        int fixedDelay = 0;
+        int currentDelay = 0;
     }
-    private Node node = null;
+    private Node node = new Node();
+    private Node initNode = node;
+    private Node current = node;
+    {
+        node.next = node;
+    }
     protected LoopedGLFragment(){
     }
     @Override
     public void fragment() {
-        if(node != null) {
-            if(node.fragment.fragmentCondition()) {
-                node = node.next;
+        if(current.currentDelay > 0) {
+            current.currentDelay --;
+        } else if(current.fragment != null) {
+            if(current.fragment.fragmentCondition()) {
+                current.currentDelay = current.fixedDelay;
+                current = current.next;
             }
         } else {
-            disable();
+            current.currentDelay = current.fixedDelay;
+            current = initNode;
         }
     }
     
@@ -38,7 +49,7 @@ public class LoopedGLFragment extends AbstractGLFragment {
      */
     public LoopedGLFragment add(IPureFragment frag) {
         ConditionGLFragment condition = new ConditionGLFragment(new OneceGLFragment(frag));
-        add(()->condition.fragmentCondition());
+        add(condition::fragmentCondition);
         return this;
     }
     
@@ -48,17 +59,22 @@ public class LoopedGLFragment extends AbstractGLFragment {
      * @return 自身实例，已使用链式调用
      */
     public LoopedGLFragment add(IConditionFragment frag) {
-        ConditionGLFragment condition = new ConditionGLFragment(frag);
-        if(node == null) {
-            node = new Node();
-            node.next = node;
-            node.fragment = condition;
-        } else {
-            Node nextNode = new Node();
-            nextNode.next = node.next;
-            node.next = nextNode;
-            nextNode.fragment = condition;
-        }
+        node.fragment = new ConditionGLFragment(frag);
+        Node nextNode = new Node();
+        nextNode.next = node.next;
+        node.next = nextNode;
+        node = node.next;
+        return this;
+    }
+    
+    /**
+     * 加入一段片段延时 单位 帧数，例如FPS设定为60时，count ＝ 60即为延时1秒
+     * @param count 要延时的帧数
+     * @return 实体自身，方便使用链式构造
+     */
+    public LoopedGLFragment delay(int count) {
+        node.fixedDelay = count;
+        node.currentDelay = node.fixedDelay;
         return this;
     }
 }

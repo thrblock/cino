@@ -16,20 +16,25 @@ public class LinkedGLFragment extends AbstractGLFragment {
     private static class Node{
         ConditionGLFragment fragment;
         Node next;
+        int fixedDelay = 0;
+        int currentDelay = 0;
     }
     private Node node = new Node();
     private Node initNode = node;
     private Node current = node;
-    
     protected LinkedGLFragment(){
     }
     @Override
     public void fragment() {
-        if(current.fragment != null) {
+        if(current.currentDelay > 0) {
+            current.currentDelay --;
+        } else if(current.fragment != null) {
             if(current.fragment.fragmentCondition()) {
+                current.currentDelay = current.fixedDelay;
                 current = current.next;
             }
         } else {
+            current.currentDelay = current.fixedDelay;
             this.current = initNode;
             disable();
         }
@@ -41,9 +46,8 @@ public class LinkedGLFragment extends AbstractGLFragment {
      * @return 实体自身，以使用add构造链式结构
      */
     public LinkedGLFragment add(IPureFragment frag) {
-        node.fragment = new ConditionGLFragment(new OneceGLFragment(frag));
-        node.next = new Node();
-        node = node.next;
+        ConditionGLFragment condition =  new ConditionGLFragment(new OneceGLFragment(frag));
+        add(condition::fragmentCondition);
         return this;
     }
     
@@ -56,6 +60,17 @@ public class LinkedGLFragment extends AbstractGLFragment {
         node.fragment = new ConditionGLFragment(frag);
         node.next = new Node();
         node = node.next;
+        return this;
+    }
+    
+    /**
+     * 加入一段片段延时 单位 帧数，例如FPS设定为60时，count ＝ 60即为延时1秒
+     * @param count 要延时的帧数
+     * @return 实体自身，方便使用链式构造
+     */
+    public LinkedGLFragment delay(int count) {
+        node.fixedDelay = count;
+        node.currentDelay = node.fixedDelay;
         return this;
     }
 }
