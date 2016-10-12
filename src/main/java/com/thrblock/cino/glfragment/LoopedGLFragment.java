@@ -22,10 +22,8 @@ public class LoopedGLFragment extends AbstractGLFragment {
     private Node node = new Node();
     private Node initNode = node;
     private Node current = node;
-    {
-        node.next = node;
-    }
     protected LoopedGLFragment(){
+        node.next = node;
     }
     @Override
     public void fragment() {

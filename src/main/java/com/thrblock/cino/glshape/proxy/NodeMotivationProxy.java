@@ -81,7 +81,7 @@ public class NodeMotivationProxy {
     }
     
     /**
-     * 以匀速移动节点
+     * 将对象中心以匀速移动节点
      * @param dstX 目标点x
      * @param dstY 目标点y
      * @param speed 速度 单位 像素/帧 横正
