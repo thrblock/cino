@@ -286,6 +286,7 @@ public class GLPoint extends GLShape {
 		float ny = revolveY(x, y, cx, cy, offset);
 		this.x = nx;
 		this.y = ny;
+		this.theta = dstTheta;
 	}
 	
 	@Override
