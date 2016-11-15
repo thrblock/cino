@@ -14,6 +14,7 @@ import com.thrblock.cino.glfragment.IGLFragmentContainer;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
+import com.thrblock.cino.gltexture.CharTextureGenerater;
 import com.thrblock.cino.gltexture.IGLTextureContainer;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
@@ -36,7 +37,10 @@ public class GLEventProcessor implements GLEventListener {
     private IGLTextureContainer textureContainer;
     
     @Autowired
-    CinoFrameConfig config;
+    private CharTextureGenerater charTextureContainer;
+    
+    @Autowired
+    private CinoFrameConfig config;
     
     private boolean reshaped = false;
     @Override
@@ -44,6 +48,7 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         textureContainer.parseTexture(gl2);
+        charTextureContainer.parseTexture(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         for(int i = 0;i < layerContainer.size();i++) {
             drawLayer(layerContainer.getLayer(i),gl2);
@@ -105,12 +110,15 @@ public class GLEventProcessor implements GLEventListener {
         GL2 gl2 = gl.getGL2();
         config.setScreenWidth(w);
         config.setScreenHeight(h);
+        
+        int orthW = w <= 0?1:w/2;
+        int orthH = h <= 0?1:h/2;
         if(!reshaped || config.getFlexMode() == CinoFrameConfig.FIX) {
             reshaped = true;
             gl2.glViewport(0, 0, w, h);
             gl2.glMatrixMode(GL2.GL_PROJECTION);
             gl2.glLoadIdentity();
-            gl2.glOrtho(0,w <= 0?1:w,h <= 0?1:h,0,0,1.0f);
+            gl2.glOrtho(-orthW,orthW,-orthH,orthH,0,1.0f);
             LOG.info("GL reshape:" + x + "," + y + "," + w + "," + h);
         }
     }
