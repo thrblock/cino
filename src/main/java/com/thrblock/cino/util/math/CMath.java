@@ -24,7 +24,8 @@ public class CMath {
     public static float getQuadrantTheta(float srcX,float srcY,float tgtX,float tgtY) {
         float vecx = tgtX - srcX;
         float vecy = tgtY - srcY;
-        double cos = vecx / Math.sqrt(vecx * vecx + vecy * vecy);
+        double sqrt = Math.sqrt(vecx * vecx + vecy * vecy);
+        double cos = sqrt <= 1.4E-45?1:vecx / sqrt;
         if(cos > 1) {
             cos = 1;
         } else if(cos < -1) {
