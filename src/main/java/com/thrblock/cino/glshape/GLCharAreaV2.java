@@ -57,7 +57,6 @@ public class GLCharAreaV2 extends GLShape {
     
     
     private CharTextureGenerater textureContainer;
-    private float widthLimit = -1f;
     private char[] str;
     private Font f;
     private final ArrayList<GLPoint> points;
@@ -74,8 +73,8 @@ public class GLCharAreaV2 extends GLShape {
      * 构造一个文字区域
      * @param textureContainer 纹理管理容器实例
      * @param fontName 字体名称
-     * @param x 区域左上x坐标
-     * @param y 区域左上y坐标
+     * @param x 区域中心坐标
+     * @param y 区域中心坐标
      * @param w 区域宽度
      * @param h 区域高度
      * @param initStr 初始文字显示
@@ -88,8 +87,8 @@ public class GLCharAreaV2 extends GLShape {
      * 构造一个文字区域
      * @param textureContainer 纹理管理容器实例
      * @param fontName 字体名称
-     * @param x 区域左上x坐标
-     * @param y 区域左上y坐标
+     * @param x 区域中心坐标
+     * @param y 区域中心坐标
      * @param w 区域宽度
      * @param h 区域高度
      * @param charmap 映射字符数组，对字符数组的改变将直接反映在显示上
@@ -103,9 +102,6 @@ public class GLCharAreaV2 extends GLShape {
         this.y = y;
         this.width = w;
         this.height = h;
-        if(width > 1) {
-            setWidthLimit(w);
-        }
         points = new ArrayList<>(charmap.length * 4 > 16 ? charmap.length * 4 : 16);
         points.add(new GLPoint(this.x, this.y));
     }
@@ -140,9 +136,6 @@ public class GLCharAreaV2 extends GLShape {
      */
     public void setWidth(float width) {
         this.width = width;
-        if(this.width > -1) {
-            setWidthLimit(this.width);
-        }
         reOffset();
     }
     
@@ -156,7 +149,7 @@ public class GLCharAreaV2 extends GLShape {
     }
     /**
      * {@inheritDoc}<br />
-     * 获得 位置量x，定义为区域的左上定点的横坐标
+     * 获得 位置量x，定义为区域的中心横坐标
      * */
     @Override
     public float getX() {
@@ -164,7 +157,7 @@ public class GLCharAreaV2 extends GLShape {
     }
     /**
      * {@inheritDoc}<br />
-     * 获得 位置量y，定义为区域的左上定点的纵坐标
+     * 获得 位置量y，定义为区域的中心纵坐标
      * */
     @Override
     public float getY() {
@@ -172,7 +165,7 @@ public class GLCharAreaV2 extends GLShape {
     }
     /**
      * {@inheritDoc}<br />
-     * 设置 位置量x，定义为区域的左上定点的横坐标
+     * 设置 位置量x，定义为区域的中心横坐标
      * */
     @Override
     public void setX(float x) {
@@ -181,7 +174,7 @@ public class GLCharAreaV2 extends GLShape {
     }
     /**
      * {@inheritDoc}<br />
-     * 设置 位置量y，定义为区域的左上定点的纵坐标
+     * 设置 位置量y，定义为区域的中心纵坐标
      * */
     @Override
     public void setY(float y) {
@@ -192,26 +185,23 @@ public class GLCharAreaV2 extends GLShape {
     /**
      * {@inheritDoc}<br />
      * 获得 中心位置x，定义为区域的中心位置<br />
-     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
      * */
     @Override
     public float getCentralX() {
-        return x + width / 2;
+        return x;
     }
 
     /**
      * {@inheritDoc}<br />
      * 获得 中心位置y，定义为区域的中心位置<br />
-     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
      * */
     @Override
     public float getCentralY() {
-        return y + height / 2;
+        return y;
     }
     /**
      * {@inheritDoc}<br />
      * 设置 中心位置x，定义为区域的中心位置<br />
-     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
      * */
     @Override
     public void setCentralX(float x) {
@@ -222,7 +212,6 @@ public class GLCharAreaV2 extends GLShape {
     /**
      * {@inheritDoc}<br />
      * 设置 中心位置y，定义为区域的中心位置<br />
-     * 注意，当文字不需要对齐功能时，区域的width与height可能与实际文字显示不符
      * */
     @Override
     public void setCentralY(float y) {
@@ -275,21 +264,7 @@ public class GLCharAreaV2 extends GLShape {
         this.y = ny;
     }
     
-    /**
-     * 获得文字区域的宽度限制
-     * @return 宽度
-     */
-    public float getWidthLimit() {
-        return widthLimit;
-    }
 
-    /**
-     * 设置文字区域的宽度限制
-     * @param widthLimit 宽度限制
-     */
-    public void setWidthLimit(float widthLimit) {
-        this.widthLimit = widthLimit;
-    }
 
     /**
      * 设置字体库使用名称
@@ -317,7 +292,7 @@ public class GLCharAreaV2 extends GLShape {
     }
 
     /**
-     * 设置文字
+     * 使用char数组设置文字，外部对此数组的修改将直接反映在显示上
      * 注意，重置文字后旋转特性将丢失
      * @param str 文字字符数组
      */
@@ -351,7 +326,6 @@ public class GLCharAreaV2 extends GLShape {
         this.y = (int)y;
         this.width = (int)width;
         this.height = (int)height;
-        this.widthLimit = (int)widthLimit;
         recalcPoint = true;
         reOffset();
     }
@@ -413,11 +387,7 @@ public class GLCharAreaV2 extends GLShape {
             return;
         }
         if (recalcPoint) {
-            if (widthLimit > 0) {
-                recalcWithLimit(fg,gl);
-            } else {
-                recalc(fg,gl);
-            }
+            recalcWithLimit(fg,gl);
             recalcPoint = false;
         }
         if(recalcOffset) {
@@ -498,8 +468,8 @@ public class GLCharAreaV2 extends GLShape {
     private void recalcWithLimit(FontGenNode tx,GL gl) {
         char[] local = this.str;
         GLPoint pre = points.get(0);
-        pre.setX(x);
-        pre.setY(y);
+        pre.setX(x - width / 2);
+        pre.setY(y + height / 2);
         if (points.size() < local.length * 4) {
             for (int i = points.size(); i < local.length * 4; i++) {
                 GLPoint npt = new GLPoint(pre.getX(), pre.getY());
@@ -515,33 +485,13 @@ public class GLCharAreaV2 extends GLShape {
                     crtWidth = 0;
                     pre = linePoint;
                     linePoint = points.get(i * 4 + 3);
-                } else if (crtWidth + t.getWidth() > widthLimit) {
+                } else if (crtWidth + t.getWidth() > width) {
                     crtWidth = t.getWidth();
                     pre = linePoint;
                     linePoint = points.get(i * 4 + 3);
                 } else {
                     crtWidth += t.getWidth();
                 }
-                positionPoints(pre, i, t, local);
-            }
-            pre = points.get(i * 4 + 1);
-        }
-    }
-
-    private void recalc(FontGenNode tx,GL gl) {
-        char[] local = this.str;
-        GLPoint pre = points.get(0);
-        pre.setX(x);
-        pre.setY(y);
-        if (points.size() < local.length * 4) {
-            for (int i = points.size(); i < local.length * 4; i++) {
-                GLPoint npt = new GLPoint(pre.getX(), pre.getY());
-                points.add(npt);
-            }
-        }
-        for (int i = 0; i < local.length; i++) {
-            Texture t = tx.genTexture(gl, local[i]);
-            if (t != null) {
                 positionPoints(pre, i, t, local);
             }
             pre = points.get(i * 4 + 1);

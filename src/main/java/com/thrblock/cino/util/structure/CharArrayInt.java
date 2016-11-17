@@ -51,6 +51,10 @@ public class CharArrayInt {
         setByInt(current + value);
     }
     
+    public void addOne() {
+        addByInt(1);
+    }
+    
     /**
      * 获得char数组
      * @return char数组

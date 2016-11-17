@@ -55,8 +55,8 @@ public class GLLayerContainer implements IGLLayerContainer {
 	
 	@Override
 	public void swap() {
-		for(GLLayer layer:layerList) {
-			layer.swap();
+		for(int i = 0;i < layerList.size();i++) {
+			layerList.get(i).swap();
 		}
 		topLayer.swap();
 	}

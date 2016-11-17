@@ -142,7 +142,16 @@ public class GLShapeBuilder {
 		return charLine;
 	}
 
-	public GLCharAreaV2 buildGLCharLineV2(Font f, float x, float y, float w, float h, String initStr) {
+	public GLCharAreaV2 buildGLCharArea(Font f, float x, float y, float w, float h, String initStr) {
+		GLCharAreaV2 charLine = new GLCharAreaV2(charTexture, f, x, y, w, h, initStr);
+		layerContainer.addShapeToSwap(layer, charLine);
+		if (currentNode != null) {
+			currentNode.addSubNode(charLine);
+		}
+		return charLine;
+	}
+	
+	public GLCharAreaV2 buildGLCharArea(Font f, float x, float y, float w, float h, char[] initStr) {
 		GLCharAreaV2 charLine = new GLCharAreaV2(charTexture, f, x, y, w, h, initStr);
 		layerContainer.addShapeToSwap(layer, charLine);
 		if (currentNode != null) {

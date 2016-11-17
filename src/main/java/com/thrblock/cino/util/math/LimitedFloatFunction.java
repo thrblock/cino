@@ -1,6 +1,6 @@
 package com.thrblock.cino.util.math;
 
-import com.thrblock.cino.function.FloatFunction;
+import com.thrblock.cino.function.FloatUnaryOperator;
 
 /**
  * 使用定义域限制一个（连续）函数<br />
@@ -8,28 +8,28 @@ import com.thrblock.cino.function.FloatFunction;
  * @author user
  *
  */
-public class LimitedFloatFunction implements FloatFunction {
+public class LimitedFloatFunction implements FloatUnaryOperator {
     private float domainMin;
     private float domainMax;
-    private FloatFunction func;
+    private FloatUnaryOperator func;
     /**
      * 构造一个限制函数
      * @param ffunction 非限制函数
      * @param domainMin 最小定义域（包含）
      * @param domainMax 最大定义域（包含）
      */
-    public LimitedFloatFunction(FloatFunction ffunction,float domainMin,float domainMax) {
+    public LimitedFloatFunction(FloatUnaryOperator ffunction,float domainMin,float domainMax) {
         this.domainMin = domainMin;
         this.domainMax = domainMax;
         func = ffunction;
     }
     
     @Override
-    public float apply(float v) {
+    public float applyAsFloat(float v) {
         if(v < domainMin ||v > domainMax) {
             throw new IllegalArgumentException("input out of domain:" + v);
         }
-        return func.apply(v);
+        return func.applyAsFloat(v);
     }
 
     /**

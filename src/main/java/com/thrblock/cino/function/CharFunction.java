@@ -1,15 +1,16 @@
 package com.thrblock.cino.function;
-
 /**
- * 输入float并得到float的方法
+ * 输入int并得到指定结果的方法
+ * @param <R> 期待的返回值结果
  * @author lizepu
  */
 @FunctionalInterface
-public interface FloatFunction {
+public interface CharFunction<R> {
+
     /**
      * 根据输入得到结果
      * @param v 输入
      * @return 结果
      */
-    float apply(float v);
+    R apply(char value);
 }

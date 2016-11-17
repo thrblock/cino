@@ -1,7 +1,7 @@
 package com.thrblock.cino.gltexture;
 
+import java.awt.Canvas;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
+import com.thrblock.cino.function.CharFunction;
 
 /**
  * 
@@ -24,9 +25,7 @@ import com.jogamp.opengl.GL;
 @Component
 public class CharTextureGenerater {
     private static final Logger LOG = LoggerFactory.getLogger(CharTextureGenerater.class);
-    
-    private static final BufferedImage BUFFERED_IMAGE = new BufferedImage(1, 1,BufferedImage.TYPE_INT_ARGB);
-    private static final Graphics2D G2D = (Graphics2D) BUFFERED_IMAGE.getGraphics();
+    private static final Canvas CANVAS = new Canvas();
     
     private Map<Font,FontGenNode> fontMap = new HashMap<>();
     
@@ -39,7 +38,7 @@ public class CharTextureGenerater {
         }
         @Override
         public int hashCode() {
-            return f.hashCode() ^ preLoad.hashCode();
+            return f.hashCode() ^ Arrays.hashCode(preLoad);
         }
         
         @Override
@@ -52,7 +51,7 @@ public class CharTextureGenerater {
         }
     }
     
-    private Set<FontPair> swap = new HashSet<FontPair>();
+    private Set<FontPair> swap = new HashSet<>();
     private Semaphore sp = new Semaphore(1);
     
     /**
@@ -63,9 +62,19 @@ public class CharTextureGenerater {
     public FontGenNode getFontGenNode(Font f) {
         if(!fontMap.containsKey(f)) {
             LOG.info("Generate FontGenNode for font:" + f.toString());
-            fontMap.put(f, new FontGenNode(G2D.getFontMetrics(f)));
+            fontMap.put(f, new FontGenNode(CANVAS.getFontMetrics(f)));
         }
         return fontMap.get(f);
+    }
+    
+    /**
+     * 注册一个自定义字体
+     * @param f 自创字体
+     * @param imgGenerator char 到 bufferedImage 的映射方式
+     */
+    public void registerFont(Font f,CharFunction<BufferedImage> imgGenerator) {
+        LOG.info("Generate FontGenNode for font:" + f.toString());
+        fontMap.put(f, new FontGenNode(CANVAS.getFontMetrics(f),imgGenerator));
     }
     
     /**
