@@ -5,9 +5,12 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.thrblock.cino.CinoFrameConfig;
 
 /**
  * 鼠标控制器
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MouseControl implements AWTEventListener,IMouseControl {
     private static final Logger LOG = LoggerFactory.getLogger(MouseControl.class);
+    @Autowired
+    private CinoFrameConfig frameConfig;
     private int x;
     private int y;
     public MouseControl(){
@@ -27,8 +32,8 @@ public class MouseControl implements AWTEventListener,IMouseControl {
         if(event instanceof MouseEvent) {
             MouseEvent e = (MouseEvent)event;
             if(e.getID() == MouseEvent.MOUSE_MOVED) {
-                this.x = e.getX();
-                this.y = e.getY();
+                this.x = e.getX() - frameConfig.getScreenWidth() / 2;
+                this.y = -e.getY() + frameConfig.getScreenHeight() / 2;
             }
         }
     }

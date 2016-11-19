@@ -1,12 +1,12 @@
 package com.thrblock.cino.util.math;
 
-import com.thrblock.cino.function.FloatFunction;
+import com.thrblock.cino.function.FloatUnaryOperator;
 
 /**
  * @author user
  * 
  */
-public class LimitedFloatProjector implements FloatFunction {
+public class LimitedFloatProjector implements FloatUnaryOperator {
     private LimitedFloatFunction func;
     private float fmin = Float.MAX_VALUE;
     private float fmax = Float.MIN_VALUE;
@@ -40,7 +40,7 @@ public class LimitedFloatProjector implements FloatFunction {
         this.fmin = Float.MAX_VALUE;
         this.fmax = Float.MIN_VALUE;
         for(float i = func.getDomainMin();i < func.getDomainMax();i += detStep) {
-            float v = func.apply(i);
+            float v = func.applyAsFloat(i);
             if(v > fmax) {
                 fmax = v;
             }
@@ -73,7 +73,7 @@ public class LimitedFloatProjector implements FloatFunction {
     }
     
     @Override
-    public float apply(float v) {
+    public float applyAsFloat(float v) {
         float vAlpha;
         if(projectDomain) {
             vAlpha = (v - func.getDomainMin()) / domainAlpha + domainMin;
@@ -81,11 +81,11 @@ public class LimitedFloatProjector implements FloatFunction {
             vAlpha = v;
         }
         if(projectRangeMX) {
-            return (func.apply(vAlpha) - fmin) * rangeAlpha + rangeMin;
+            return (func.applyAsFloat(vAlpha) - fmin) * rangeAlpha + rangeMin;
         } else if(projectRangeScale) {
-            return func.apply(vAlpha) * scaleAlpha;
+            return func.applyAsFloat(vAlpha) * scaleAlpha;
         } else {
-            return func.apply(vAlpha);
+            return func.applyAsFloat(vAlpha);
         }
     }
 }
