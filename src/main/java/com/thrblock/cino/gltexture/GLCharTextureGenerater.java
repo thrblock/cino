@@ -23,9 +23,10 @@ import com.thrblock.cino.function.CharFunction;
  *
  */
 @Component
-public class CharTextureGenerater {
-    private static final Logger LOG = LoggerFactory.getLogger(CharTextureGenerater.class);
+public class GLCharTextureGenerater {
+    private static final Logger LOG = LoggerFactory.getLogger(GLCharTextureGenerater.class);
     private static final Canvas CANVAS = new Canvas();
+    private static final String COMMONS_ASCII = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`~!@#$%^&*()-_=+[]{}\\|;',./:\"<>?";
     
     private Map<Font,FontGenNode> fontMap = new HashMap<>();
     
@@ -95,6 +96,14 @@ public class CharTextureGenerater {
      */
     public void loadBatch(Font f,String src) {
         this.loadBatch(f, src.toCharArray());
+    }
+    
+    /**
+     * 加载标准ASCII字符集
+     * @param f
+     */
+    public void loadCommon(Font f) {
+        this.loadBatch(f, COMMONS_ASCII);
     }
     
     /**

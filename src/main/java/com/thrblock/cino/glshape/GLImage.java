@@ -3,7 +3,7 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
-import com.thrblock.cino.gltexture.IGLTextureContainer;
+import com.thrblock.cino.gltexture.GLTextureContainer;
 
 /**
  * 贴图图形对象 是一个矩形的贴图
@@ -23,7 +23,7 @@ public class GLImage extends GLRect {
     private int mode = MODE_NORMAL;
     private String textureName;
     private boolean resize = false;
-    private IGLTextureContainer textureContainer;
+    private GLTextureContainer textureContainer;
     /**
      * 构造一个贴图图形对象
      * @param textureContainer 纹理管理容器
@@ -33,7 +33,7 @@ public class GLImage extends GLRect {
      * @param height 高度
      * @param textureName 纹理名称
      */
-    public GLImage(IGLTextureContainer textureContainer,float x, float y, float width, float height,String textureName) {
+    public GLImage(GLTextureContainer textureContainer,float x, float y, float width, float height,String textureName) {
         super(x, y, width, height);
         this.textureName = textureName;
         this.textureContainer = textureContainer;

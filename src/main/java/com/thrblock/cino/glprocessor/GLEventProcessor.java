@@ -14,8 +14,8 @@ import com.thrblock.cino.glfragment.IGLFragmentContainer;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
-import com.thrblock.cino.gltexture.CharTextureGenerater;
-import com.thrblock.cino.gltexture.IGLTextureContainer;
+import com.thrblock.cino.gltexture.GLCharTextureGenerater;
+import com.thrblock.cino.gltexture.GLTextureContainer;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
@@ -34,10 +34,10 @@ public class GLEventProcessor implements GLEventListener {
     private IGLLayerContainer layerContainer;
     
     @Autowired
-    private IGLTextureContainer textureContainer;
+    private GLTextureContainer textureContainer;
     
     @Autowired
-    private CharTextureGenerater charTextureContainer;
+    private GLCharTextureGenerater charTextureContainer;
     
     @Autowired
     private CinoFrameConfig config;
