@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import org.slf4j.Logger;
@@ -58,14 +56,6 @@ public class FontGenNode {
         return charBuffer;
     }
 
-	private BufferedImage reverse(BufferedImage charBuffer) {
-		AffineTransform at = new AffineTransform();
-        at.concatenate(AffineTransform.getScaleInstance(1, -1));
-        at.concatenate(AffineTransform.getTranslateInstance(0, -charBuffer.getHeight()));
-        AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-        return op.filter(charBuffer, null);
-	}
-    
     /**
      * 创建文字纹理，当存在时直接由数组给出
      * @param gl GL对象
@@ -73,9 +63,9 @@ public class FontGenNode {
      * @return 纹理对象
      */
     public Texture genTexture(GL gl,char c) {
+        checkRange(c);
         if(textures[c] == null) {
-            checkRange(c);
-            textures[c] = AWTTextureIO.newTexture(gl.getGLProfile(), reverse(imgGenerator.apply(c)), false);
+            textures[c] = AWTTextureIO.newTexture(gl.getGLProfile(), BufferedImageUtil.reverse(imgGenerator.apply(c)), false);
             textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
             textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST);
         }
