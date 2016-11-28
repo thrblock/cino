@@ -3,6 +3,8 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glshape.builder.GLNode;
+import com.thrblock.cino.shader.GLProgram;
+import com.thrblock.cino.shader.GLProgramHandler;
 
 /**
  * 图形对象(抽象) 定义了抽象图形对象
@@ -14,6 +16,8 @@ public abstract class GLShape implements GLNode{
     private boolean destory = false;
     private int mixAlpha = GL.GL_SRC_ALPHA;
     private int mixBeta = GL.GL_ONE_MINUS_SRC_ALPHA;
+    protected GLProgram program;
+    protected GLProgramHandler programHandler;
     /**
      * 获得混合模式系数A
      * @return 混合模式系数A
@@ -68,6 +72,20 @@ public abstract class GLShape implements GLNode{
     public boolean isDestory() {
         return destory;
     }
+    
+    /**
+     * 使用指定的OpenGL程序
+     * @param program OpenGL程序
+     */
+    public void useGLProgram(GLProgram program) {
+        this.program = program;
+    }
+    
+    public void useGLProgram(GLProgram program,GLProgramHandler handler) {
+        this.program = program;
+        this.programHandler = handler;
+    }
+    
     protected float revolveX(float x, float y, float cx, float cy, float theta) {
         float cdx = x - cx;
         float cdy = y - cy;
@@ -80,8 +98,32 @@ public abstract class GLShape implements GLNode{
         return (float) (cdx * Math.sin(theta) + cdy * Math.cos(theta)) + cy;
     }
     /**
+     * 绘制前处理
+     * @param gl
+     */
+    public void beforeDraw(GL2 gl) {
+        if(program != null&&!program.isLinkError()) {
+            if(!program.isLinked()) {
+                program.initByGLContext(gl);
+            }
+            gl.glUseProgram(program.getProgramCode());
+            if(programHandler != null) {
+                programHandler.settingUniform(program,gl);
+            }
+        }
+    }
+    /**
      * 图形对象的绘制方法
      * @param gl OpenGL 绘制对象
      */
     public abstract void drawShape(GL2 gl);
+    /**
+     * 绘制后处理
+     * @param gl
+     */
+    public void afterDraw(GL2 gl){
+        if(program != null&&!program.isLinkError()) {
+            gl.glUseProgram(0);
+        }
+    }
 }

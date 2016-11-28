@@ -11,6 +11,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.glfragment.IGLFragmentContainer;
+import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
@@ -40,6 +41,9 @@ public class GLEventProcessor implements GLEventListener {
     private GLCharTextureGenerater charTextureContainer;
     
     @Autowired
+    private GLInitor contextInitor;
+    
+    @Autowired
     private CinoFrameConfig config;
     
     private boolean reshaped = false;
@@ -47,6 +51,7 @@ public class GLEventProcessor implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
+        contextInitor.glInitializing(gl);
         textureContainer.parseTexture(gl2);
         charTextureContainer.parseTexture(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -66,7 +71,9 @@ public class GLEventProcessor implements GLEventListener {
         while(shapeIter.hasNext()) {
             GLShape shape = shapeIter.next();
             if(shape.isVisible()) {
+                shape.beforeDraw(gl2);
                 shape.drawShape(gl2);
+                shape.afterDraw(gl2);
             }
             if(shape.isDestory()) {
                 shapeIter.remove();

@@ -7,6 +7,7 @@ import com.jogamp.opengl.GL;
  * @author thrblock
  *
  */
+@FunctionalInterface
 public interface GLInitializable {
     /**
      * 由OpenGL上下文加载
