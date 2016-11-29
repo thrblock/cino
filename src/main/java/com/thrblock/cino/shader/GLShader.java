@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 /**
@@ -87,7 +88,7 @@ public class GLShader {
             
             IntBuffer intBuffer = IntBuffer.allocate(1);
             gl2.glGetShaderiv(shaderCode, GL2.GL_COMPILE_STATUS, intBuffer);
-            if (intBuffer.get(0) != 1) {
+            if (intBuffer.get(0) != GL.GL_TRUE) {
                 gl2.glGetShaderiv(shaderCode, GL2.GL_INFO_LOG_LENGTH, intBuffer);
                 int size = intBuffer.get(0);
                 if (size > 0) {

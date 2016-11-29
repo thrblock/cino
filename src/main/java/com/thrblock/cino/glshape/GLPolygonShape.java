@@ -102,8 +102,7 @@ public abstract class GLPolygonShape extends GLMutiPointShape{
             gl.glColor4f(point.getR(), point.getG(),point.getB(),point.getAlpha());
             gl.glVertex2f(point.getX(),point.getY());
         }
-        gl.glLineWidth(1.0f);
         gl.glEnd();
+        gl.glLineWidth(1.0f);
     }
-    
 }

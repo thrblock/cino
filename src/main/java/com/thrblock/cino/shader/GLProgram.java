@@ -47,7 +47,7 @@ public class GLProgram implements GLInitializable {
         IntBuffer intBuffer = IntBuffer.allocate(1);
         gl2.glGetProgramiv(programCode, GL2.GL_LINK_STATUS, intBuffer);
 
-        if (intBuffer.get(0) != 1) {
+        if (intBuffer.get(0) != GL.GL_TRUE) {
             linkError = true;
             gl2.glGetProgramiv(programCode, GL2.GL_INFO_LOG_LENGTH, intBuffer);
             int size = intBuffer.get(0);

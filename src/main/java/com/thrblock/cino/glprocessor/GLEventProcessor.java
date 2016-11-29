@@ -92,22 +92,26 @@ public class GLEventProcessor implements GLEventListener {
         if(config.isVsync()) {
             gl.setSwapInterval(1);
         }
-
         gl2.glEnable(GL.GL_MULTISAMPLE);
 
         gl2.glEnable(GL.GL_BLEND);
         gl2.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
-
+        
+        gl2.glEnable(GL2.GL_ALPHA_TEST);
         gl2.glAlphaFunc(GL.GL_GREATER, 0);
-        gl2.glEnable(GL.GL_ALPHA);
-
+        
         gl2.glPointSize(1);
         gl2.glEnable(GL2.GL_POINT_SMOOTH);
-        gl2.glHint(GL2.GL_POINT_SMOOTH, GL.GL_NICEST);
-
+        gl2.glHint(GL2.GL_POINT_SMOOTH_HINT, GL.GL_NICEST);
+        
         gl2.glLineWidth(1);
         gl2.glEnable(GL.GL_LINE_SMOOTH);
-        gl2.glHint(GL.GL_LINE_SMOOTH, GL.GL_NICEST);
+        gl2.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
+        
+        int glErrorCode = gl.glGetError();
+        if(glErrorCode != GL.GL_NO_ERROR) {
+            LOG.warn("GL Error Status:" + glErrorCode);
+        }
     }
 
     @Override
