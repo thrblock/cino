@@ -81,6 +81,11 @@ public abstract class GLShape implements GLNode{
         this.program = program;
     }
     
+    /**
+     * 使用指定的OpenGL程序
+     * @param program
+     * @param handler
+     */
     public void useGLProgram(GLProgram program,GLProgramHandler handler) {
         this.program = program;
         this.programHandler = handler;
@@ -108,7 +113,7 @@ public abstract class GLShape implements GLNode{
             }
             gl.glUseProgram(program.getProgramCode());
             if(programHandler != null) {
-                programHandler.settingUniform(program,gl);
+                programHandler.setUniformValue(program,gl);
             }
         }
     }
