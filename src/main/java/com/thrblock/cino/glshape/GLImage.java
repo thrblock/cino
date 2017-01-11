@@ -3,7 +3,7 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
-import com.thrblock.cino.gltexture.GLTextureContainer;
+import com.thrblock.cino.gltexture.GLTexture;
 
 /**
  * 贴图图形对象 是一个矩形的贴图
@@ -21,9 +21,8 @@ public class GLImage extends GLRect {
     private static final float[] zeta = {0,0,1f,1f};
     
     private int mode = MODE_NORMAL;
-    private String textureName;
+    private GLTexture gltexture;
     private boolean resize = false;
-    private GLTextureContainer textureContainer;
     /**
      * 构造一个贴图图形对象
      * @param textureContainer 纹理管理容器
@@ -33,35 +32,34 @@ public class GLImage extends GLRect {
      * @param height 高度
      * @param textureName 纹理名称
      */
-    public GLImage(GLTextureContainer textureContainer,float x, float y, float width, float height,String textureName) {
+    public GLImage(float x, float y, float width, float height,GLTexture texture) {
         super(x, y, width, height);
-        this.textureName = textureName;
-        this.textureContainer = textureContainer;
+        this.gltexture = texture;
     }
     
     /**
-     * 获得 当前纹理名称
-     * @return 纹理名称
+     * 获得 当前纹理
+     * @return 纹理
      */
-    public String getTextureName() {
-        return textureName;
+    public GLTexture getTexture() {
+        return gltexture;
     }
 
     /**
      * 设置纹理名称，新的名称所关联的纹理将会反映在绘图中
      * @param textureName 纹理名称
      */
-    public void setTextureName(String textureName) {
-        setTextureName(textureName,false);
+    public void setTexture(GLTexture texture) {
+        setTexture(texture,false);
     }
     
     /**
      * 设置纹理名称，新的名称所关联的纹理将会反映在绘图中
-     * @param textureName 纹理名称
+     * @param texture 纹理
      * @param resize 是否根据纹理大小调整宽高
      */
-    public void setTextureName(String textureName,boolean resize) {
-        this.textureName = textureName;
+    public void setTexture(GLTexture texture,boolean resize) {
+        this.gltexture = texture;
         this.resize = resize;
     }
 
@@ -94,7 +92,7 @@ public class GLImage extends GLRect {
     }
     @Override
     public void drawShape(GL2 gl) {
-        Texture texture = textureContainer.getTexture(textureName);
+        Texture texture = this.gltexture.getTexture(gl);
         if(texture != null) {
             texture.bind(gl);
             if(resize) {

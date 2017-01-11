@@ -15,8 +15,6 @@ import com.thrblock.cino.util.io.SmartConfig;
  */
 @Configuration
 public class CinoContextConfig {
-    private CinoContextConfig() {
-    }
     /**
      * 将cino-frame配置纳入spring容器管理 可使用注解‘Value’进行引用
      * @return PropertyPlaceholderConfigurer spring管理的properties

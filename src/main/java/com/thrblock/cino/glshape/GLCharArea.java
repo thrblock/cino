@@ -1,14 +1,12 @@
 package com.thrblock.cino.glshape;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
-import com.thrblock.cino.gltexture.GLCharTextureGenerater;
-import com.thrblock.cino.gltexture.FontGenNode;
+import com.thrblock.cino.gltexture.GLFont;
 
 /**
  * 文字区域 以单个字符为基础结构进行的字库构建，图形对象，可以定义一个矩形文字区域，进行预定义字体的展示，设置颜色、缩进等样式
@@ -55,9 +53,8 @@ public class GLCharArea extends GLShape {
     private float height;
     
     
-    private GLCharTextureGenerater textureContainer;
     private char[] str;
-    private Font f;
+    private GLFont f;
     private final ArrayList<GLPoint> points;
     private boolean recalcPoint = true;
     private boolean recalcOffset = true;
@@ -70,30 +67,27 @@ public class GLCharArea extends GLShape {
 
     /**
      * 构造一个文字区域
-     * @param textureContainer 纹理管理容器实例
-     * @param fontName 字体名称
+     * @param f 字体名称
      * @param x 区域中心坐标
      * @param y 区域中心坐标
      * @param w 区域宽度
      * @param h 区域高度
      * @param initStr 初始文字显示
      */
-    public GLCharArea(GLCharTextureGenerater textureContainer,Font f, float x, float y,float w,float h, String initStr) {
-        this(textureContainer,f, x, y, w, h, initStr.toCharArray());
+    public GLCharArea(GLFont f, float x, float y,float w,float h, String initStr) {
+        this(f, x, y, w, h, initStr.toCharArray());
     }
 
     /**
      * 构造一个文字区域
-     * @param textureContainer 纹理管理容器实例
-     * @param fontName 字体名称
+     * @param f 字体名称
      * @param x 区域中心坐标
      * @param y 区域中心坐标
      * @param w 区域宽度
      * @param h 区域高度
      * @param charmap 映射字符数组，对字符数组的改变将直接反映在显示上
      */
-    public GLCharArea(GLCharTextureGenerater textureContainer,Font f, float x, float y,float w,float h, char[] charmap) {
-        this.textureContainer = textureContainer;
+    public GLCharArea(GLFont f, float x, float y,float w,float h, char[] charmap) {
         this.f = f;
         this.str = charmap;
         
@@ -269,7 +263,7 @@ public class GLCharArea extends GLShape {
      * 设置字体库使用名称
      * @param fontName 字体库名称
      */
-    public void setFontName(Font f) {
+    public void setFontName(GLFont f) {
         this.f = f;
     }
 
@@ -277,7 +271,7 @@ public class GLCharArea extends GLShape {
      * 获得当前字体库名称
      * @return 字体库名称
      */
-    public Font getFont() {
+    public GLFont getFont() {
         return f;
     }
 
@@ -381,12 +375,8 @@ public class GLCharArea extends GLShape {
     @Override
     public void drawShape(GL2 gl) {
         char[] local = this.str;
-        FontGenNode fg = textureContainer.getFontGenNode(f);
-        if (fg == null) {
-            return;
-        }
         if (recalcPoint) {
-            recalcWithLimit(fg,gl);
+            recalcWithLimit(gl);
             recalcPoint = false;
         }
         if(recalcOffset) {
@@ -399,7 +389,7 @@ public class GLCharArea extends GLShape {
             if (local[i] == '\n') {
                 continue;
             }
-            Texture t = fg.genTexture(gl, local[i]);
+            Texture t = f.getCharTexture(gl, local[i]);
             t.bind(gl);
             gl.glBegin(GL2.GL_QUADS);
             GLPoint p0 = points.get(i * 4 + 0);
@@ -464,7 +454,7 @@ public class GLCharArea extends GLShape {
         setPointYOffset(-offsetY);
     }
 
-    private void recalcWithLimit(FontGenNode tx,GL gl) {
+    private void recalcWithLimit(GL gl) {
         char[] local = this.str;
         GLPoint pre = points.get(0);
         pre.setX(x - width / 2);
@@ -478,7 +468,7 @@ public class GLCharArea extends GLShape {
         GLPoint linePoint = points.get(3);
         int crtWidth = 0;
         for (int i = 0; i < local.length; i++) {
-            Texture t = tx.genTexture(gl, local[i]);
+            Texture t = f.getCharTexture(gl, local[i]);
             if (t != null) {
                 if (local[i] == '\n') {
                     crtWidth = 0;

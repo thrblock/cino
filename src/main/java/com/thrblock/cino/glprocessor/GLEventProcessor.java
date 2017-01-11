@@ -15,8 +15,6 @@ import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
 import com.thrblock.cino.glshape.GLShape;
-import com.thrblock.cino.gltexture.GLCharTextureGenerater;
-import com.thrblock.cino.gltexture.GLTextureContainer;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
@@ -35,12 +33,6 @@ public class GLEventProcessor implements GLEventListener {
     private IGLLayerContainer layerContainer;
     
     @Autowired
-    private GLTextureContainer textureContainer;
-    
-    @Autowired
-    private GLCharTextureGenerater charTextureContainer;
-    
-    @Autowired
     private GLInitor contextInitor;
     
     @Autowired
@@ -52,8 +44,6 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         contextInitor.glInitializing(gl);
-        textureContainer.parseTexture(gl2);
-        charTextureContainer.parseTexture(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         for(int i = 0;i < layerContainer.size();i++) {
             drawLayer(layerContainer.getLayer(i),gl2);

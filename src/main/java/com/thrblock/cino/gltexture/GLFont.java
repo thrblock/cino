@@ -1,4 +1,4 @@
-package com.thrblock.cino.gltexture.init;
+package com.thrblock.cino.gltexture;
 
 import java.awt.Canvas;
 import java.awt.Font;
@@ -6,7 +6,6 @@ import java.awt.Font;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.util.texture.Texture;
 import com.thrblock.cino.glinitable.GLInitializable;
-import com.thrblock.cino.gltexture.FontGenNode;
 
 /**
  * 字体字库对应的实体累，此类规定的使用的字体、预加载的内容以及将char类型映射到OpenGL Texture的方法过程
@@ -19,6 +18,7 @@ public class GLFont implements GLInitializable {
 	
 	/**
 	 * 基于awt字体对象 实例化GLFont
+	 * 此对象代表着字体及伴随此字体设置对应的纹理
 	 * @param f awt字体对象
 	 */
 	public GLFont(Font f) {

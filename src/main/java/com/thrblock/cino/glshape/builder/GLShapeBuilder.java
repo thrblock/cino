@@ -1,12 +1,5 @@
 package com.thrblock.cino.glshape.builder;
 
-import java.awt.Font;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -19,8 +12,8 @@ import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLOval;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.gltexture.GLCharTextureGenerater;
-import com.thrblock.cino.gltexture.GLTextureContainer;
+import com.thrblock.cino.gltexture.GLFont;
+import com.thrblock.cino.gltexture.GLTexture;
 
 /**
  * 图形构造器
@@ -30,18 +23,10 @@ import com.thrblock.cino.gltexture.GLTextureContainer;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component
 public class GLShapeBuilder {
-	private static final Logger LOG = LoggerFactory.getLogger(GLShapeBuilder.class);
 	private int layer = 0;
 	private GLShapeNode currentNode = null;
 	@Autowired
 	IGLLayerContainer layerContainer;
-
-	@Autowired
-	GLTextureContainer textureContainer;
-	
-	@Autowired
-	GLCharTextureGenerater charTexture;
-	
 	/**
 	 * 设置此构造器的图像层索引，该构造器所构造的图形会处于索引层次
 	 * @param layerIndex 图像层索引
@@ -126,57 +111,8 @@ public class GLShapeBuilder {
 	 * @param textureName 使用的贴图纹理
 	 * @return 贴图对象
 	 */
-	public GLImage buildGLImage(float x, float y, float width, float height, String textureName) {
-		GLImage image = new GLImage(textureContainer, x, y, width, height, textureName);
-		layerContainer.addShapeToSwap(layer, image);
-		if (currentNode != null) {
-			currentNode.addSubNode(image);
-		}
-		return image;
-	}
-
-	/**
-	 * 创建一个贴图对象
-	 * @param x 中心坐标x
-	 * @param y 中心坐标y
-	 * @param width 宽度
-	 * @param height 高度
-	 * @param imgFile 图像文件，使用其文件系统的范式名称作为纹理名称
-	 * @return 贴图对象
-	 */
-	public GLImage buildGLImage(float x, float y, float width, float height, File imgFile) {
-		String textureName;
-		try {
-			textureName = imgFile.getCanonicalPath();
-		} catch (IOException e) {
-			textureName = imgFile.getAbsolutePath();
-			LOG.warn("IOException in build GLImage:" + e);
-			LOG.warn("error in get canonical name of file:" + imgFile + ", the texture may be unable to reuse");
-		}
-		textureContainer.registerTexture(textureName, imgFile);
-		GLImage image = new GLImage(textureContainer, x, y, width, height, textureName);
-		layerContainer.addShapeToSwap(layer, image);
-		if (currentNode != null) {
-			currentNode.addSubNode(image);
-		}
-		return image;
-	}
-
-	/**
-	 * 创建一个贴图对象
-	 * @param x 中心坐标x
-	 * @param y 中心坐标y
-	 * @param width 宽度
-	 * @param height 高度
-	 * @param imgInputStream 图像输入流，<b>使用此种方式不会复用纹理</b>
-	 * @param imgType 图像类型，如"png"
-	 * @return 贴图对象
-	 */
-	public GLImage buildGLImage(float x, float y, float width, float height, InputStream imgInputStream,
-			String imgType) {
-		String textureName = imgInputStream.toString();
-		textureContainer.registerTexture(textureName, imgType, imgInputStream);
-		GLImage image = new GLImage(textureContainer, x, y, width, height, textureName);
+	public GLImage buildGLImage(float x, float y, float width, float height, GLTexture texture) {
+		GLImage image = new GLImage(x, y, width, height, texture);
 		layerContainer.addShapeToSwap(layer, image);
 		if (currentNode != null) {
 			currentNode.addSubNode(image);
@@ -195,8 +131,8 @@ public class GLShapeBuilder {
 	 * @param initStr 初始文字
 	 * @return GLCharArea 文字区对象
 	 */
-	public GLCharArea buildGLCharArea(Font f, float x, float y, float w, float h, String initStr) {
-		GLCharArea charLine = new GLCharArea(charTexture, f, x, y, w, h, initStr);
+	public GLCharArea buildGLCharArea(GLFont f, float x, float y, float w, float h, String initStr) {
+		GLCharArea charLine = new GLCharArea(f, x, y, w, h, initStr);
 		layerContainer.addShapeToSwap(layer, charLine);
 		if (currentNode != null) {
 			currentNode.addSubNode(charLine);
@@ -214,8 +150,8 @@ public class GLShapeBuilder {
 	 * @param initStr
 	 * @return
 	 */
-	public GLCharArea buildGLCharArea(Font f, float x, float y, float w, float h, char[] initStr) {
-		GLCharArea charLine = new GLCharArea(charTexture, f, x, y, w, h, initStr);
+	public GLCharArea buildGLCharArea(GLFont f, float x, float y, float w, float h, char[] initStr) {
+		GLCharArea charLine = new GLCharArea(f, x, y, w, h, initStr);
 		layerContainer.addShapeToSwap(layer, charLine);
 		if (currentNode != null) {
 			currentNode.addSubNode(charLine);
