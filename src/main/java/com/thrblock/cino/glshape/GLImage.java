@@ -25,7 +25,6 @@ public class GLImage extends GLRect {
     private boolean resize = false;
     /**
      * 构造一个贴图图形对象
-     * @param textureContainer 纹理管理容器
      * @param x 中心坐标x
      * @param y 中心坐标y
      * @param width 宽度
@@ -46,8 +45,8 @@ public class GLImage extends GLRect {
     }
 
     /**
-     * 设置纹理名称，新的名称所关联的纹理将会反映在绘图中
-     * @param textureName 纹理名称
+     * 设置纹理，新的纹理将会反映在绘图中
+     * @param texture 纹理
      */
     public void setTexture(GLTexture texture) {
         setTexture(texture,false);

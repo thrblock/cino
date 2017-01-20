@@ -1,4 +1,4 @@
-package com.thrblock.cino.glshape.builder;
+package com.thrblock.cino.util.io;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
