@@ -30,11 +30,11 @@ public class CinoDirector implements ICinoDirector {
     public void pushScene(ICinoScene scene) {
         ICinoScene pre = sceneStack.peek();
         if(pre != null) {
-            pre.covered();
+            pre.sceneCovered();
         }
         sceneStack.push(scene);
         keyStack.pushKeyListener(scene);
-        scene.enable();
+        scene.sceneEnable();
     }
 
     @Override
@@ -47,8 +47,8 @@ public class CinoDirector implements ICinoDirector {
     public void popScene() {
         ICinoScene scene = sceneStack.pop();
         keyStack.popKeyListener();
-        scene.destory();
-        sceneStack.peek().recover();
+        scene.sceneDestroy();
+        sceneStack.peek().sceneRecover();
     }
 
     @Override

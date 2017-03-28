@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.util.structure.CrudeLinkedList;
@@ -19,10 +21,16 @@ public class GLFragmentContainer implements IGLFragmentContainer{
     private List<IGLFragment> swap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
     private boolean pause = false;
+    private boolean destroy = false;
     private GLFragmentContainer(){
     }
     @Override
     public void allFragment() {
+        if(destroy) {
+            this.frags = new CrudeLinkedList<>();
+            this.fragIt = frags.genCrudeIter();
+            return;
+        }
         if(pause) {
             return;
         }
@@ -80,9 +88,14 @@ public class GLFragmentContainer implements IGLFragmentContainer{
             }
             @Override
             public boolean isDestory() {
-                return false;
+                return result.destroy;
             }
         });
         return result;
+    }
+    
+    @PreDestroy @Override
+    public void destroy() {
+        this.destroy = true;
     }
 }

@@ -1,6 +1,6 @@
 package com.thrblock.cino.function;
 /**
- * 输入int并得到指定结果的方法
+ * 输入char并得到指定结果的方法
  * @param <R> 期待的返回值结果
  * @author lizepu
  */

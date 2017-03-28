@@ -33,7 +33,6 @@ public abstract class AbstractCinoScene implements ICinoScene {
     @Autowired
     protected CinoFrameConfig frame;
     
-    
     /**
      * 导演，控制不同场景间的切换
      */
@@ -78,6 +77,7 @@ public abstract class AbstractCinoScene implements ICinoScene {
     @PostConstruct
     private void postConstruct() throws Exception {
         sceneFrag = rootFrag.generateSubContainer();
+        sceneFrag.pause();
         fragBuilder.setContainer(sceneFrag);
         sceneRoot = shapeBuilder.createNode();
         init();
@@ -102,11 +102,47 @@ public abstract class AbstractCinoScene implements ICinoScene {
     }
     
     @Override
-    public void recover() {
+    public void sceneEnable() {
         enable();
     }
     
     @Override
+    public void sceneDestroy() {
+        destroy();
+    }
+    
+    @Override
+    public void sceneRecover() {
+        recover();
+    }
+    
+    @Override
+    public void sceneCovered() {
+        covered();
+    }
+    
+    /**
+     * 置于栈顶时调用
+     */
+    public void enable() {
+    }
+    
+    /**
+     * 销毁时调用
+     */
+    public void destroy() {
+    }
+    
+    /**
+     * 由于其它场景入栈导致失去栈顶时调用
+     */
     public void covered() {
+    }
+    
+    /**
+     * 由于其它场景出栈导致重新成为栈顶时调用
+     */
+    public void recover() {
+        enable();
     }
 }

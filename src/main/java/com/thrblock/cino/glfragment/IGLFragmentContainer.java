@@ -14,4 +14,9 @@ public interface IGLFragmentContainer {
      * @param frag 片段逻辑
      */
     public void addFragment(IGLFragment frag);
+    
+    /**
+     * 销毁全部片段
+     */
+    public void destroy();
 }

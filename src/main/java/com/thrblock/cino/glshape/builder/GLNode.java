@@ -21,7 +21,7 @@ public interface GLNode {
     /**
      * 销毁节点
      */
-    public void destory();
+    public void destroy();
     
     /**
      * 设置位置坐标 x,具体效果依赖于GLNode实现类

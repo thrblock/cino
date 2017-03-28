@@ -51,9 +51,9 @@ public class GLShapeNode implements GLNode{
     }
 
     @Override
-    public void destory() {
-        basic.destory();
-        subList.forEach(e -> e.destory());
+    public void destroy() {
+        basic.destroy();
+        subList.forEach(e -> e.destroy());
     }
 
     @Override
@@ -164,7 +164,7 @@ class GLNop implements GLNode {
     }
 
     @Override
-    public void destory() {
+    public void destroy() {
         //Nop 不会对任何操作进行实际处理
     }
 

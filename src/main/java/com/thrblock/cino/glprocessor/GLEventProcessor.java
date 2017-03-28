@@ -11,6 +11,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.glfragment.IGLFragmentContainer;
+import com.thrblock.cino.glframe.GLPostProcBuffer;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
@@ -38,18 +39,23 @@ public class GLEventProcessor implements GLEventListener {
     @Autowired
     private CinoFrameConfig config;
     
+    @Autowired
+    private GLPostProcBuffer frameBuffer;
+    
     private boolean reshaped = false;
     @Override
     public void display(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         contextInitor.glInitializing(gl);
+        frameBuffer.bind(gl);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         for(int i = 0;i < layerContainer.size();i++) {
             drawLayer(layerContainer.getLayer(i),gl2);
         }
         drawLayer(layerContainer.getLayer(-1),gl2);
-        gl2.glFlush();
+        frameBuffer.unBindAndDraw(gl);
+        gl.glFlush();
         fragmentContainer.allFragment();
         layerContainer.swap();
     }
@@ -109,6 +115,7 @@ public class GLEventProcessor implements GLEventListener {
             int h) {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
+        
         config.setScreenWidth(w);
         config.setScreenHeight(h);
         

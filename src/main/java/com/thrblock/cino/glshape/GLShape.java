@@ -55,7 +55,7 @@ public abstract class GLShape implements GLNode{
         this.visible = false;
     }
     @Override
-    public void destory() {
+    public void destroy() {
         this.destory = true;
     }
     /**
