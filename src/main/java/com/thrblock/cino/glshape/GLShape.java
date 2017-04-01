@@ -107,13 +107,13 @@ public abstract class GLShape implements GLNode{
      * @param gl
      */
     public void beforeDraw(GL2 gl) {
-        if(program != null&&!program.isLinkError()) {
-            if(!program.isLinked()) {
-                program.initByGLContext(gl);
+        if(program != null) {
+            int programCode = program.getProgramCode(gl);
+            if(!program.isLinkError()) {
+                gl.glUseProgram(programCode);
             }
-            gl.glUseProgram(program.getProgramCode());
             if(programHandler != null) {
-                programHandler.setUniformValue(program,gl);
+                programHandler.setUniformValue(gl);
             }
         }
     }

@@ -11,10 +11,10 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.glfragment.IGLFragmentContainer;
-import com.thrblock.cino.glframe.GLPostProcBuffer;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.IGLLayerContainer;
+import com.thrblock.cino.glpostbuffer.GLPostProcBuffer;
 import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 

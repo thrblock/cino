@@ -1,4 +1,4 @@
-package com.thrblock.cino.glframe;
+package com.thrblock.cino.glpostbuffer;
 
 import java.nio.FloatBuffer;
 
@@ -15,6 +15,10 @@ import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.glshape.GLPoint;
 
+/**
+ * OpenGL PostProcessing Buffer
+ * @author zepu.li
+ */
 @Component
 public class GLPostProcBuffer {
     private static final Logger LOG = LoggerFactory.getLogger(GLPostProcBuffer.class);
@@ -37,6 +41,10 @@ public class GLPostProcBuffer {
     private int frameSizeH;
     @Autowired
     private GLInitor contextInitor;
+    
+    /**
+     * OpenGL PostProcessing Buffer
+     */
     public GLPostProcBuffer() {
         FBO_VECS_BUF.put(FBO_VECS);
     }

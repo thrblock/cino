@@ -64,7 +64,10 @@ public class GLProgram implements GLInitializable {
         }
     }
     
-    public int getProgramCode() {
+    public int getProgramCode(GL gl) {
+        if(!linked && !linkError) {
+            initByGLContext(gl);
+        }
         return programCode;
     }
 

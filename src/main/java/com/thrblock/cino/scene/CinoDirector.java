@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.io.IKeyControlStack;
 
+/**
+ * 导演类
+ * @author zepu.li
+ *
+ */
 @Component
 public class CinoDirector implements ICinoDirector {
     @Autowired

@@ -32,6 +32,10 @@ public class CinoScene extends AbstractCinoScene {
         covered();
     }
     
+    /**
+     * 构造一个片段逻辑 起开关伴随场景自动完成
+     * @param frag
+     */
     public void auto(IPureFragment frag) {
         sceneFrag.addFragment(new IGLFragment(){
             @Override
