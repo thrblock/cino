@@ -1,5 +1,9 @@
 package com.thrblock.cino.glprocessor;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +47,9 @@ public class GLEventProcessor implements GLEventListener {
     private GLPostProcBuffer frameBuffer;
     
     private boolean reshaped = false;
+    
+    private List<BiConsumer<Integer,Integer>> screenChangeListener = new LinkedList<>();
+    
     @Override
     public void display(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
@@ -129,10 +136,19 @@ public class GLEventProcessor implements GLEventListener {
             gl2.glOrtho(-orthW,orthW,-orthH,orthH,0,1.0f);
             LOG.info("GL reshape:" + x + "," + y + "," + w + "," + h);
         }
+        screenChangeListener.forEach(e -> e.accept(w, h));
     }
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
         LOG.info("GL dispose");
+    }
+    
+    /**
+     * 注册窗体大小变化监听器
+     * @param listener
+     */
+    public void addScreenSizeChangeListener(BiConsumer<Integer,Integer> listener) {
+        screenChangeListener.add(listener);
     }
 }
