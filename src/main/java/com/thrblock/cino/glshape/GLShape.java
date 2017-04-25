@@ -3,8 +3,7 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.glshape.builder.GLNode;
-import com.thrblock.cino.shader.GLProgram;
-import com.thrblock.cino.shader.GLProgramHandler;
+import com.thrblock.cino.shader.AbstractGLProgram;
 
 /**
  * 图形对象(抽象) 定义了抽象图形对象
@@ -16,8 +15,7 @@ public abstract class GLShape implements GLNode{
     private boolean destory = false;
     private int mixAlpha = GL.GL_SRC_ALPHA;
     private int mixBeta = GL.GL_ONE_MINUS_SRC_ALPHA;
-    protected GLProgram program;
-    protected GLProgramHandler programHandler;
+    protected AbstractGLProgram program;
     /**
      * 获得混合模式系数A
      * @return 混合模式系数A
@@ -77,18 +75,8 @@ public abstract class GLShape implements GLNode{
      * 使用指定的OpenGL程序
      * @param program OpenGL程序
      */
-    public void useGLProgram(GLProgram program) {
+    public void useGLProgram(AbstractGLProgram program) {
         this.program = program;
-    }
-    
-    /**
-     * 使用指定的OpenGL程序
-     * @param program
-     * @param handler
-     */
-    public void useGLProgram(GLProgram program,GLProgramHandler handler) {
-        this.program = program;
-        this.programHandler = handler;
     }
     
     protected float revolveX(float x, float y, float cx, float cy, float theta) {
@@ -108,13 +96,7 @@ public abstract class GLShape implements GLNode{
      */
     public void beforeDraw(GL2 gl) {
         if(program != null) {
-            int programCode = program.getProgramCode(gl);
-            if(!program.isLinkError()) {
-                gl.glUseProgram(programCode);
-            }
-            if(programHandler != null) {
-                programHandler.setUniformValue(gl);
-            }
+            program.bind(gl);
         }
     }
     /**
@@ -127,8 +109,8 @@ public abstract class GLShape implements GLNode{
      * @param gl
      */
     public void afterDraw(GL2 gl){
-        if(program != null&&!program.isLinkError()) {
-            gl.glUseProgram(0);
+        if(program != null) {
+            program.unBind(gl);
         }
     }
 }

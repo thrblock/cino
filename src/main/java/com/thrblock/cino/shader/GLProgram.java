@@ -12,18 +12,22 @@ import com.thrblock.cino.glinitable.GLInitializable;
 
 /**
  * OpenGL编译程序，包括多个着色器程序
+ * 
  * @author zepu.li
  *
  */
-public class GLProgram implements GLInitializable {
+public class GLProgram extends AbstractGLProgram implements GLInitializable {
     private static final Logger LOG = LoggerFactory.getLogger(GLProgram.class);
     private int programCode = 0;
     private GLShader[] shaders;
     private boolean linked = false;
     private boolean linkError = false;
+
     /**
      * 由复数个着色器构造一个OpenGL程序
-     * @param shaders 着色器数组
+     * 
+     * @param shaders
+     *            着色器数组
      */
     public GLProgram(GLShader... shaders) {
         this.shaders = shaders;
@@ -32,6 +36,7 @@ public class GLProgram implements GLInitializable {
     /**
      * {@inheritDoc}<br />
      * 使用OpenGL上下文编译着色器程序
+     * 
      * @param gl2
      */
     @Override
@@ -43,7 +48,6 @@ public class GLProgram implements GLInitializable {
             gl2.glAttachShader(programCode, shader.shaderCode);
         }
         gl2.glLinkProgram(programCode);
-        gl2.glValidateProgram(programCode);
         IntBuffer intBuffer = IntBuffer.allocate(1);
         gl2.glGetProgramiv(programCode, GL2.GL_LINK_STATUS, intBuffer);
 
@@ -63,9 +67,10 @@ public class GLProgram implements GLInitializable {
             linked = true;
         }
     }
-    
+
+    @Override
     public int getProgramCode(GL gl) {
-        if(!linked && !linkError) {
+        if (!linked && !linkError) {
             initByGLContext(gl);
         }
         return programCode;
@@ -74,8 +79,27 @@ public class GLProgram implements GLInitializable {
     public boolean isLinkError() {
         return linkError;
     }
-    
+
     public boolean isLinked() {
         return linked;
+    }
+
+    @Override
+    public void bind(GL2 gl) {
+        if (!isLinkError()) {
+            gl.glUseProgram(programCode);
+            setUniformValue(gl);
+        }
+    }
+
+    @Override
+    public void unBind(GL2 gl) {
+        if (!isLinkError()) {
+            gl.glUseProgram(0);
+        }
+    }
+    
+    public GLProgramProxy genProxy() {
+        return new GLProgramProxy(this);
     }
 }

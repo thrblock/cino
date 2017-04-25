@@ -5,28 +5,28 @@ import com.thrblock.cino.glfragment.IPureFragment;
 
 public class CinoScene extends AbstractCinoScene {
     @Override
-    public void sceneEnable() {
+    public final void sceneEnable() {
         sceneFrag.remuse();
         sceneRoot.show();
         enable();
     }
     
     @Override
-    public void sceneDestroy() {
+    public final void sceneDestroy() {
         sceneFrag.destroy();
         sceneRoot.destroy();
         destroy();
     }
     
     @Override
-    public void sceneRecover() {
+    public final void sceneRecover() {
         sceneFrag.remuse();
         sceneRoot.show();
         recover();
     }
     
     @Override
-    public void sceneCovered() {
+    public final void sceneCovered() {
         sceneFrag.pause();
         sceneRoot.hide();
         covered();

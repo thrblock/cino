@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
@@ -46,6 +47,9 @@ public class GLEventProcessor implements GLEventListener {
     @Autowired
     private GLPostProcBuffer frameBuffer;
     
+    @Value("${cino.context.enablefbo:false}")
+    private boolean enablefbo = false;
+    
     private boolean reshaped = false;
     
     private List<BiConsumer<Integer,Integer>> screenChangeListener = new LinkedList<>();
@@ -55,13 +59,17 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         contextInitor.glInitializing(gl);
-        frameBuffer.bind(gl);
+        if(enablefbo) {
+            frameBuffer.bind(gl);
+        }
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         for(int i = 0;i < layerContainer.size();i++) {
             drawLayer(layerContainer.getLayer(i),gl2);
         }
         drawLayer(layerContainer.getLayer(-1),gl2);
-        frameBuffer.unBindAndDraw(gl);
+        if(enablefbo) {
+            frameBuffer.unBindAndDraw(gl);
+        }
         gl.glFlush();
         fragmentContainer.allFragment();
         layerContainer.swap();
