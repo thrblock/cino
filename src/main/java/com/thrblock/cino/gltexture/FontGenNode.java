@@ -17,6 +17,7 @@ import com.thrblock.cino.glprocessor.GLEventProcessor;
 
 /**
  * 可生成固定字体的纹理
+ * 
  * @author zepu.li
  */
 public class FontGenNode {
@@ -24,30 +25,37 @@ public class FontGenNode {
     private FontMetrics fm;
     private Texture[] textures = new Texture[128];
     private CharFunction<BufferedImage> imgGenerator;
+
     /**
      * 字体节点
-     * @param fm 文字韵
+     * 
+     * @param fm
+     *            文字韵
      */
     public FontGenNode(FontMetrics fm) {
         this.fm = fm;
         this.imgGenerator = this::genImage;
     }
-    
+
     /**
      * 字体节点
-     * @param fm 文字韵
-     * @param imgGenerator 文字到图像的映射
+     * 
+     * @param fm
+     *            文字韵
+     * @param imgGenerator
+     *            文字到图像的映射
      */
-    public FontGenNode(FontMetrics fm,CharFunction<BufferedImage> imgGenerator) {
+    public FontGenNode(FontMetrics fm, CharFunction<BufferedImage> imgGenerator) {
         this.fm = fm;
         this.imgGenerator = imgGenerator;
     }
 
     private BufferedImage genImage(char c) {
-        BufferedImage charBuffer = new BufferedImage(fm.charWidth(c), fm.getAscent() + fm.getDescent(), BufferedImage.TYPE_INT_ARGB);
+        int fmwidth = fm.charWidth(c) <= 0 ? 1 : fm.charWidth(c);
+        BufferedImage charBuffer = new BufferedImage(fmwidth, fm.getAscent() + fm.getDescent(),
+                BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) charBuffer.getGraphics();
-        RenderingHints rh = new RenderingHints(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHints(rh);
         g2.setFont(fm.getFont());
@@ -58,23 +66,27 @@ public class FontGenNode {
 
     /**
      * 创建文字纹理，当存在时直接由数组给出
-     * @param gl GL对象
-     * @param c 文字
+     * 
+     * @param gl
+     *            GL对象
+     * @param c
+     *            文字
      * @return 纹理对象
      */
-    public Texture genTexture(GL gl,char c) {
+    public Texture genTexture(GL gl, char c) {
         checkRange(c);
-        if(textures[c] == null) {
-            textures[c] = AWTTextureIO.newTexture(gl.getGLProfile(), BufferedImageUtil.reverse(imgGenerator.apply(c)), false);
-            textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER,GL.GL_LINEAR);
-            textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST);
+        if (textures[c] == null) {
+            textures[c] = AWTTextureIO.newTexture(gl.getGLProfile(), BufferedImageUtil.reverse(imgGenerator.apply(c)),
+                    false);
+            textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+            textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
         }
         return textures[c];
     }
-    
+
     private void checkRange(char c) {
-        if(c > textures.length) {// 若超出ASCII标准字符集
-            Texture[] fullArr = new Texture[65535];//用512KB换取O(1)性能
+        if (c > textures.length) {// 若超出ASCII标准字符集
+            Texture[] fullArr = new Texture[65535];// 用512KB换取O(1)性能
             System.arraycopy(textures, 0, fullArr, 0, textures.length);
             this.textures = fullArr;
             LOG.info("texture array expand to 65535 for font:" + fm.getFont().toString());
@@ -83,12 +95,13 @@ public class FontGenNode {
 
     /**
      * 预加载
+     * 
      * @param gl
      * @param arr
      */
-    public void load(GL gl,char[] arr) {
-        for(int i = 0;i < arr.length;i++) {
-            genTexture(gl,arr[i]);
+    public void load(GL gl, char[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            genTexture(gl, arr[i]);
         }
     }
 }

@@ -263,7 +263,7 @@ public class GLCharArea extends GLShape {
      * 设置字体库使用名称
      * @param fontName 字体库名称
      */
-    public void setFontName(GLFont f) {
+    public void setGLFont(GLFont f) {
         this.f = f;
     }
 
@@ -420,7 +420,8 @@ public class GLCharArea extends GLShape {
         
         float maxDy = points.get(0).getY();
         float minDy = maxDy;
-        for(GLPoint p:points) {
+        for(int i = 0;i < str.length * 4;i++) {
+            GLPoint p = points.get(i);
             if(p.getX() > maxDx) {
                 maxDx = p.getX();
             }
@@ -464,6 +465,9 @@ public class GLCharArea extends GLShape {
                 GLPoint npt = new GLPoint(pre.getX(), pre.getY());
                 points.add(npt);
             }
+        }
+        if(points.size() < 4) {
+            return;
         }
         GLPoint linePoint = points.get(3);
         int crtWidth = 0;

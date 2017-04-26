@@ -139,6 +139,18 @@ public class GLShapeBuilder {
 		}
 		return charLine;
 	}
+	/**
+     * 创建一个文字区 初始文字为空串
+     * @param f 字体
+     * @param x 中心坐标x
+     * @param y 中心坐标y
+     * @param w 宽度（水平校准依据）
+     * @param h 高度（垂直校准依据）
+     * @return GLCharArea 文字区对象
+     */
+	public GLCharArea buildGLCharArea(GLFont f, float x, float y, float w, float h) {
+	    return buildGLCharArea(f,x,y,w,h,"");
+	}
 	
 	/**
 	 * 创建文字区
