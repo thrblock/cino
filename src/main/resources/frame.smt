@@ -13,3 +13,4 @@ cino.frame.hidemouse=true
 cino.frame.flexmode=0
 cino.frame.screen.width=800
 cino.frame.screen.height=600
+cino.context.enablefbo=true

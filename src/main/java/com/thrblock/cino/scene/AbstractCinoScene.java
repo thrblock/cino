@@ -74,6 +74,7 @@ public abstract class AbstractCinoScene implements ICinoScene {
      */
     protected GLNode sceneRoot;
     
+    
     @PostConstruct
     private void postConstruct() throws Exception {
         sceneFrag = rootFrag.generateSubContainer();
@@ -145,4 +146,5 @@ public abstract class AbstractCinoScene implements ICinoScene {
     public void recover() {
         enable();
     }
+    
 }

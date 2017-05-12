@@ -45,4 +45,33 @@ public class NodeAlphaProxy {
             return true;
         }
     }
+    
+    /**
+     * alph通道线性过度到指定值
+     * @param step 每帧变化量
+     * @param dst 目标值
+     * @return
+     */
+    public boolean tearTo(float step,float dst) {
+        float crt = node.getAlpha();
+        if(dst > crt) {
+            if(dst - crt < step) {
+                node.setAlpha(dst);
+                return true;
+            } else {
+                node.setAlpha(crt + step);
+                return false;
+            }
+        } else if(dst < crt){
+            if(crt - dst < step) {
+                node.setAlpha(dst);
+                return true;
+            } else {
+                node.setAlpha(crt - step);
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
 }
