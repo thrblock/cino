@@ -14,6 +14,7 @@ import com.thrblock.cino.io.IKeyControlStack;
  *
  */
 @Component
+@Deprecated
 public class CinoDirector implements ICinoDirector {
     @Autowired
     private IKeyControlStack keyStack;

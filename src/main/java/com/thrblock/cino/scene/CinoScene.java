@@ -10,6 +10,7 @@ import com.thrblock.cino.glfragment.IGLFragment;
 import com.thrblock.cino.glfragment.IPureFragment;
 import com.thrblock.cino.glshape.builder.GLNode;
 
+@Deprecated
 public class CinoScene extends AbstractCinoScene {
     private Consumer<GLNode> onEnable = node -> node.show();
     private Consumer<GLNode> onDestroy = node -> node.destroy();

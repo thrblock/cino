@@ -1,6 +1,7 @@
 package com.thrblock.cino.io;
 
 import java.awt.event.KeyListener;
+import java.util.function.BooleanSupplier;
 
 
 /** 
@@ -31,4 +32,10 @@ public interface IKeyControlStack {
 	 * @return 是否被按下的布尔值
 	 */
 	public boolean isKeyDown(int code);
+	
+	/**
+	 * 增加一个忽略KeyEvent的条件
+	 * @param blocker
+	 */
+	public void addBlocker(BooleanSupplier blocker);
 }

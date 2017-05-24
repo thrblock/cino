@@ -17,10 +17,13 @@ import com.thrblock.cino.glshape.builder.GLShapeBuilder;
 import com.thrblock.cino.io.IKeyControlStack;
 /**
  * 场景（抽象层）<br />
- * 场景提供了绘制图像所需的主要成员并提供一系列lifecycle方法
+ * 场景提供了绘制图像所需的主要成员
  * @author lizepu
+ * @deprecated 介于此类的lifecycle设计混乱，考虑放弃使用；
+ * @see com.thrblock.cino.component#CinoComponent
  */
 @Component
+@Deprecated
 public abstract class AbstractCinoScene implements ICinoScene {
     /**
      * 场景日志
