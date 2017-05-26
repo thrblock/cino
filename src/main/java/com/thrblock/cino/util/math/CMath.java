@@ -7,11 +7,22 @@ package com.thrblock.cino.util.math;
  * @author lizepu
  */
 public class CMath {
+    public static final float FLOAT_EQUAL_SENCITIVE = 1.4E-45f;
     /**
      * <img src="doc-files/T1.png"/>
      */
     public static final LimitedFloatFunction FUNC_T1 = new LimitedFloatFunction(i -> (float)Math.abs(Math.log(2f * i) * Math.cos(i)),0.5f,6.25f);
     private CMath() {
+    }
+    
+    /**
+     * float相等性判断
+     * @param a
+     * @param b
+     * @return
+     */
+    public static boolean floatEqual(float a,float b) {
+        return Math.abs(a - b) < FLOAT_EQUAL_SENCITIVE;
     }
     /**
      * 以src点为原点，向量(1,0)沿+X轴至+Y轴方向旋转至目标点所需转动的角度
@@ -25,7 +36,7 @@ public class CMath {
         float vecx = tgtX - srcX;
         float vecy = tgtY - srcY;
         double sqrt = Math.sqrt(vecx * vecx + vecy * vecy);
-        double cos = sqrt <= 1.4E-45?1:vecx / sqrt;
+        double cos = sqrt <= FLOAT_EQUAL_SENCITIVE?1:vecx / sqrt;
         if(cos > 1) {
             cos = 1;
         } else if(cos < -1) {
@@ -48,8 +59,20 @@ public class CMath {
      * @return 两点距离
      */
     public static float getDistance(float x1,float y1,float x2,float y2) {
+        return (float)Math.sqrt(getDistanceSqare(x1,y1,x2,y2));
+    }
+    
+    /**
+     * 获得两点的距离的平方
+     * @param x1 点1横坐标
+     * @param y1 点1纵坐标
+     * @param x2 点2横坐标
+     * @param y2 点2纵坐标
+     * @return 两点距离的平方
+     */
+    public static float getDistanceSqare(float x1,float y1,float x2,float y2) {
         float s1 = x2 - x1;
         float s2 = y2 - y1;
-        return (float)Math.sqrt(s1 * s1 + s2 * s2);
+        return s1 * s1 + s2 * s2;
     }
 }
