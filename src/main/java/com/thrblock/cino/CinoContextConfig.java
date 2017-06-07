@@ -30,4 +30,9 @@ public class CinoContextConfig {
         ppc.setIgnoreUnresolvablePlaceholders(true);
         return ppc;
     }
+    
+    @Override
+    public String toString() {
+        return "CinoConfiguration";
+    }
 }

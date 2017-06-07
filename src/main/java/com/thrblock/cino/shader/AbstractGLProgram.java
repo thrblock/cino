@@ -13,15 +13,33 @@ import com.thrblock.cino.shader.data.GLUniformFloat;
 import com.thrblock.cino.shader.data.GLUniformInt;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
+/**
+ * A GLSL Program
+ * @author zepu.li
+ *
+ */
 public abstract class AbstractGLProgram {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractGLProgram.class);
     private CrudeLinkedList<Consumer<GL2>> uniforms = new CrudeLinkedList<>();
     private CrudeLinkedList<Consumer<GL2>>.CrudeIter uniIter = uniforms.genCrudeIter();
     private Set<String> names = new HashSet<>();
+    /**
+     * bind the program to gl context
+     * @param gl
+     */
     public abstract void bind(GL2 gl);
 
+    /**
+     * unbind the program from gl context
+     * @param gl
+     */
     public abstract void unBind(GL2 gl);
 
+    /**
+     * get glsl code in gl context
+     * @param gl
+     * @return
+     */
     public abstract int getProgramCode(GL gl);
 
     protected void setUniformValue(GL gl) {
@@ -38,6 +56,10 @@ public abstract class AbstractGLProgram {
             LOG.warn("uniform name conflict in shader,the name is:" + name);
         }
     }
+    /**
+     * bind a int data source to uniform int
+     * @param data
+     */
     public void bindDataAsInt(GLUniformInt data) {
         checkName(data.getName());
         uniforms.add(gl2 -> {
@@ -47,6 +69,10 @@ public abstract class AbstractGLProgram {
         });
     }
 
+    /**
+     * bind a float data source to uniform float
+     * @param data
+     */
     public void bindDataAsFloat(GLUniformFloat data) {
         checkName(data.getName());
         uniforms.add(gl2 -> {
@@ -56,6 +82,11 @@ public abstract class AbstractGLProgram {
         });
     }
 
+    /**
+     * bind a float array data source to uniform float array
+     * @param name
+     * @param data
+     */
     public void bindDataAsIntArray(String name, int[] data) {
         checkName(name);
         uniforms.add(gl2 -> {
@@ -65,6 +96,11 @@ public abstract class AbstractGLProgram {
         });
     }
 
+    /**
+     * bind a float array data source to uniform float vec
+     * @param name
+     * @param data
+     */
     public void bindDataAsIntVec(String name, int[] data) {
         checkName(name);
         uniforms.add(gl2 -> {
@@ -86,6 +122,11 @@ public abstract class AbstractGLProgram {
         });
     }
     
+    /**
+     * bind a uniform int array
+     * @param name
+     * @param data
+     */
     public void bindDataAsFloatArray(String name, float[] data) {
         checkName(name);
         uniforms.add(gl2 -> {
@@ -95,6 +136,11 @@ public abstract class AbstractGLProgram {
         });
     }
     
+    /**
+     * bind a uniform float array
+     * @param name
+     * @param data
+     */
     public void bindDataAsFloatVec(String name, float[] data) {
         checkName(name);
         uniforms.add(gl2 -> {

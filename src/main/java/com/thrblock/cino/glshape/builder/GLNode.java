@@ -56,15 +56,18 @@ public interface GLNode {
     public float getCentralY();
     /**
      * 设置 中心坐标x,具体效果依赖于GLNode实现类
+     * @param x 中心坐标x
      */
     public void setCentralX(float x);
     /**
      * 设置 中心坐标x,具体效果依赖于GLNode实现类
+     * @param y 中心坐标y
      */
     public void setCentralY(float y);
     
     /**
      * 设置 通道参数alpha,具体效果依赖于GLNode实现类
+     * @param alpha 通道量
      */
     public void setAlpha(float alpha);
     /**

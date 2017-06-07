@@ -10,6 +10,7 @@ public interface CharFunction<R> {
     /**
      * 根据输入得到结果
      * @param v 输入
+     * @param value
      * @return 结果
      */
     R apply(char value);

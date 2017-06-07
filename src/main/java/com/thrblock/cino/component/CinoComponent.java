@@ -98,11 +98,17 @@ public abstract class CinoComponent implements KeyListener {
         onDeactivited.add(v);
     }
     
+    /**
+     * 激活组件
+     */
     public final void activited() {
         compFrag.remuse();
         onActivited.forEach(e->e.accept());
     }
     
+    /**
+     * 停止组件
+     */
     public final void deactivited() {
         compFrag.pause();
         onDeactivited.forEach(e->e.accept());
