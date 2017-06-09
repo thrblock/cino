@@ -61,4 +61,5 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
         return Arrays.stream(all).filter(method -> AnnotationUtils.findAnnotation(method, annotationClass) != null)
                 .toArray(size -> new Method[size]);
     }
+
 }
