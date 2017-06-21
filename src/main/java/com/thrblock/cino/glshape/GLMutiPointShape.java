@@ -185,7 +185,7 @@ public abstract class GLMutiPointShape extends GLShape {
      * 以x,y为轴旋转图形
      */
     public void setTheta(float dstTheta,float x,float y){
-        float offset = dstTheta - this.theta;
+        float offset = dstTheta - getTheta();
         for (GLPoint point : points) {
             float dx = revolveX(point.getX(),point.getY(),x,y,offset);
             float dy = revolveY(point.getX(),point.getY(),x,y,offset);
@@ -210,6 +210,7 @@ public abstract class GLMutiPointShape extends GLShape {
     public float getPointX(int index) {
         return points[index].getX();
     }
+    
     /**
      * 获得指定顶点的y坐标
      * @param index 索引
