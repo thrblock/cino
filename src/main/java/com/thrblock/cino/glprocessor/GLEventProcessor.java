@@ -17,11 +17,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.glfragment.IGLFragmentContainer;
 import com.thrblock.cino.glinitable.GLInitor;
-import com.thrblock.cino.gllayer.GLLayer;
-import com.thrblock.cino.gllayer.IGLLayerContainer;
-import com.thrblock.cino.glpostbuffer.GLPostProcBuffer;
-import com.thrblock.cino.glshape.GLShape;
-import com.thrblock.cino.util.structure.CrudeLinkedList;
+import com.thrblock.cino.gllayer.GLLayerContainer;
 
 /**
  * GLEventProcessor 捕捉OpenGL绘制事件并进行处理，是各类组件中同步逻辑的调用者
@@ -36,16 +32,13 @@ public class GLEventProcessor implements GLEventListener {
     private IGLFragmentContainer fragmentContainer;
     
     @Autowired
-    private IGLLayerContainer layerContainer;
+    private GLLayerContainer layerContainer;
     
     @Autowired
     private GLInitor contextInitor;
     
     @Autowired
     private CinoFrameConfig config;
-    
-    @Autowired
-    private GLPostProcBuffer frameBuffer;
     
     @Value("${cino.context.enablefbo:false}")
     private boolean enablefbo = false;
@@ -59,40 +52,9 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         contextInitor.glInitializing(gl);
-        if(enablefbo) {
-            frameBuffer.bind(gl);
-        }
-        gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        for(int i = 0;i < layerContainer.size();i++) {
-            drawLayer(layerContainer.getLayer(i),gl2);
-        }
-        drawLayer(layerContainer.getLayer(-1),gl2);
-        if(enablefbo) {
-            frameBuffer.unBindAndDraw(gl);
-        }
-        gl.glFlush();
+        layerContainer.drawAllLayer(gl2);
         fragmentContainer.allFragment();
-        layerContainer.swap();
     }
-
-    private void drawLayer(GLLayer layer,GL2 gl2) {
-        gl2.glBlendFunc(layer.getMixA(),layer.getMixB());
-        layer.viewOffset(gl2);
-        CrudeLinkedList<GLShape>.CrudeIter shapeIter = layer.iterator();
-        while(shapeIter.hasNext()) {
-            GLShape shape = shapeIter.next();
-            if(shape.isVisible()) {
-                shape.beforeDraw(gl2);
-                shape.drawShape(gl2);
-                shape.afterDraw(gl2);
-            }
-            if(shape.isDestory()) {
-                shapeIter.remove();
-            }
-        }
-        shapeIter.reset();
-    }
-
 
     @Override
     public void init(GLAutoDrawable drawable) {

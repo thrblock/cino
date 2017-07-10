@@ -1,6 +1,6 @@
-package com.thrblock.cino.util.structure;
+package com.thrblock.cino.util.math;
 
-import com.thrblock.cino.util.math.CMath;
+import com.thrblock.cino.util.structure.Point2D;
 
 public class Bezier {
     private final Point2D start;

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.thrblock.cino.gllayer.IGLLayerContainer;
+import com.thrblock.cino.gllayer.GLLayerContainer;
 import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLImage;
 import com.thrblock.cino.glshape.GLLine;
@@ -26,7 +26,7 @@ public class GLShapeBuilder {
 	private int layer = 0;
 	private GLShapeNode currentNode = null;
 	@Autowired
-	IGLLayerContainer layerContainer;
+	GLLayerContainer layerContainer;
 	/**
 	 * 设置此构造器的图像层索引，该构造器所构造的图形会处于索引层次
 	 * @param layerIndex 图像层索引

@@ -118,12 +118,22 @@ public class GLLayer {
             swapSp.release();
         }
     }
-    
     /**
-     * 提供此层次图形的迭代器
-     * @return GLShape迭代器
+     * 绘制此层次
+     * @param gl2
      */
-    public CrudeLinkedList<GLShape>.CrudeIter iterator() {
-        return crudeIter;
+    public void draw(GL2 gl2) {
+        while(crudeIter.hasNext()) {
+            GLShape shape = crudeIter.next();
+            if(shape.isVisible()) {
+                shape.beforeDraw(gl2);
+                shape.drawShape(gl2);
+                shape.afterDraw(gl2);
+            }
+            if(shape.isDestory()) {
+                crudeIter.remove();
+            }
+        }
+        crudeIter.reset();
     }
 }
