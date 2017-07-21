@@ -18,6 +18,7 @@ import com.thrblock.cino.glfragment.ForeverFragment;
 import com.thrblock.cino.glfragment.FragmentBuilder;
 import com.thrblock.cino.glfragment.GLFragmentContainer;
 import com.thrblock.cino.glfragment.IPureFragment;
+import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.builder.GLNode;
 import com.thrblock.cino.glshape.builder.GLShapeBuilder;
 import com.thrblock.cino.io.IKeyControlStack;
@@ -66,6 +67,12 @@ public abstract class CinoComponent implements KeyListener {
      */
     @Autowired
     protected FragmentBuilder fragBuilder;
+    
+    /**
+     * 帧缓冲管理器
+     */
+    @Autowired
+    protected IGLFrameBufferObjectManager fboManager;
     
     /**
      * sceneRoot是场景自动创建的GLNode根节点

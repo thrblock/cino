@@ -14,6 +14,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.annotation.GLAutoInit;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
+import com.thrblock.cino.gllayer.GLCommonUniform;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.shader.AbstractGLProgram;
 

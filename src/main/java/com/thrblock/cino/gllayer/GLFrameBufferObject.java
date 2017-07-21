@@ -1,4 +1,4 @@
-package com.thrblock.cino.gllayer.fbo;
+package com.thrblock.cino.gllayer;
 
 import java.nio.FloatBuffer;
 
@@ -17,17 +17,17 @@ import com.thrblock.cino.shader.AbstractGLProgram;
  */
 public class GLFrameBufferObject {
     private static final Logger LOG = LoggerFactory.getLogger(GLFrameBufferObject.class);
-    
-    private static final int[] FBO = new int[1];
-    private static final int[] FBO_TEXTURE = new int[1];
-    private static final int[] RBO_DEPTH = new int[1];
-
     private static final float[] FBO_VECS = { -1, -1, 1, -1, -1, 1, 1, 1, };
-    private static final FloatBuffer FBO_VECS_BUF = FloatBuffer.allocate(FBO_VECS.length);
-    
-    private GLPoint[] points;
     private static final float[] beta = { 0, 1f, 1f, 0 };
     private static final float[] gama = { 1f, 1f, 0, 0 };
+    
+    private final int[] fbo = new int[1];
+    private final int[] fboTexture = new int[1];
+    private final int[] fboDepth = new int[1];
+
+    private final FloatBuffer fboVectorBuffer = FloatBuffer.allocate(FBO_VECS.length);
+    
+    private GLPoint[] points;
     
     private int frameSizeW;
     private int frameSizeH;
@@ -45,7 +45,7 @@ public class GLFrameBufferObject {
     public GLFrameBufferObject(int frameSizeW,int frameSizeH) {
         this.frameSizeW = frameSizeW;
         this.frameSizeH = frameSizeH;
-        FBO_VECS_BUF.put(FBO_VECS);
+        fboVectorBuffer.put(FBO_VECS);
         initPointPosition();
     }
     
@@ -61,9 +61,9 @@ public class GLFrameBufferObject {
      */
     public void initFBOByGLContext(GL gl) {
         gl.glActiveTexture(GL.GL_TEXTURE0);
-        gl.glGenTextures(1, FBO_TEXTURE, 0);
+        gl.glGenTextures(1, fboTexture, 0);
         // 准备纹理
-        gl.glBindTexture(GL.GL_TEXTURE_2D, FBO_TEXTURE[0]);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, fboTexture[0]);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
         gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, frameSizeW, frameSizeH, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
@@ -71,16 +71,16 @@ public class GLFrameBufferObject {
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
 
         // 准备深度缓冲区
-        gl.glGenRenderbuffers(1, RBO_DEPTH, 0);
-        gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, RBO_DEPTH[0]);
+        gl.glGenRenderbuffers(1, fboDepth, 0);
+        gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, fboDepth[0]);
         gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, frameSizeW, frameSizeH);
         gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, 0);
 
         // 将纹理与深度缓冲绑定在帧缓冲中
-        gl.glGenFramebuffers(1, FBO, 0);
-        gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, FBO[0]);
-        gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, FBO_TEXTURE[0], 0);
-        gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, RBO_DEPTH[0]);
+        gl.glGenFramebuffers(1, fbo, 0);
+        gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
+        gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, fboTexture[0], 0);
+        gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, fboDepth[0]);
         int status;
         if ((status = gl.glCheckFramebufferStatus(GL.GL_FRAMEBUFFER)) != GL.GL_FRAMEBUFFER_COMPLETE) {
             LOG.warn("glCheckFramebufferStatus error,status:" + status);
@@ -93,9 +93,9 @@ public class GLFrameBufferObject {
      * @param gl
      */
     public void destroyFBOByGLContext(GL gl) {
-        gl.glDeleteRenderbuffers(1, RBO_DEPTH, 0);
-        gl.glDeleteTextures(1, FBO_TEXTURE, 0);
-        gl.glDeleteFramebuffers(1, FBO, 0);
+        gl.glDeleteRenderbuffers(1, fboDepth, 0);
+        gl.glDeleteTextures(1, fboTexture, 0);
+        gl.glDeleteFramebuffers(1, fbo, 0);
     }
     
     /**
@@ -123,7 +123,7 @@ public class GLFrameBufferObject {
             initFBOByGLContext(gl);
             inited = true;
         }
-        gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, FBO[0]);
+        gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
     }
     
     /**
@@ -142,7 +142,7 @@ public class GLFrameBufferObject {
         GL2 gl2 = gl.getGL2();
         bindProgram(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        gl2.glBindTexture(GL.GL_TEXTURE_2D, FBO_TEXTURE[0]);
+        gl2.glBindTexture(GL.GL_TEXTURE_2D, fboTexture[0]);
         gl2.glEnable(GL.GL_TEXTURE_2D);
 
         gl2.glBegin(GL2.GL_QUADS);
@@ -178,4 +178,21 @@ public class GLFrameBufferObject {
         this.program = program;
     }
     
+    @Override
+    public String toString() {
+        return "GLFBO@" + fbo[0];
+    }
+    
+    @Override
+    public int hashCode() {
+        return fbo[0];
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof GLFrameBufferObject) {
+            return fbo[0] == ((GLFrameBufferObject)obj).fbo[0];
+        }
+        return false;
+    }
 }
