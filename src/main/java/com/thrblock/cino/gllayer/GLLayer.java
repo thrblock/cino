@@ -29,6 +29,9 @@ public class GLLayer {
 
     private GLFrameBufferObject[] st = new GLFrameBufferObject[0];
     private Deque<GLFrameBufferObject> stack;
+    private int frameSizeW = 800;
+    private int frameSizeH = 600;
+    private boolean refreshFBO = false;
 
     /**
      * 构造GLLayer
@@ -145,6 +148,14 @@ public class GLLayer {
      * 执行同步插入，将交换区的对象插入实际绘制区
      */
     public void swap() {
+        if(refreshFBO) {
+            swapSp.acquireUninterruptibly();
+            refreshFBO = false;
+            for(GLFrameBufferObject fbo:st) {
+                fbo.resize(frameSizeW, frameSizeH);
+            }
+            swapSp.release();
+        }
         if (!shapSwap.isEmpty()) {
             swapSp.acquireUninterruptibly();
             shapeList.addAll(shapSwap);
@@ -214,9 +225,9 @@ public class GLLayer {
      * @param h
      * @return
      */
-    public GLFrameBufferObject generageFBO(int w, int h) {
+    public GLFrameBufferObject generageFBO(int w, int h,int flexmode) {
         swapSp.acquireUninterruptibly();
-        GLFrameBufferObject result = new GLFrameBufferObject(w, h);
+        GLFrameBufferObject result = new GLFrameBufferObject(w, h, flexmode);
         fboSwap.add(result);
         swapSp.release();
         return result;
@@ -228,6 +239,10 @@ public class GLLayer {
      * @param h
      */
     public void noticeScreenChange(int w, int h) {
-
+        this.frameSizeW = w;
+        this.frameSizeH = h;
+        swapSp.acquireUninterruptibly();
+        this.refreshFBO   = true;
+        swapSp.release();
     }
 }

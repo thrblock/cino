@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
@@ -37,15 +38,18 @@ public class GLFrameBufferObject {
     
     protected AbstractGLProgram program;
     
+    private final int flexmode;
+    
     /**
      * OpenGL PostProcessing Buffer
      * @param frameSizeW
      * @param frameSizeH
      */
-    public GLFrameBufferObject(int frameSizeW,int frameSizeH) {
+    public GLFrameBufferObject(int frameSizeW,int frameSizeH,int flexmode) {
         this.frameSizeW = frameSizeW;
         this.frameSizeH = frameSizeH;
         fboVectorBuffer.put(FBO_VECS);
+        this.flexmode = flexmode;
         initPointPosition();
     }
     
@@ -120,6 +124,9 @@ public class GLFrameBufferObject {
             inited = false;
         }
         if(!inited) {
+            if(flexmode == CinoFrameConfig.FIX) {
+                initPointPosition();
+            }
             initFBOByGLContext(gl);
             inited = true;
         }

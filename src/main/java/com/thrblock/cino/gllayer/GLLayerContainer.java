@@ -7,13 +7,18 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.annotation.ScreenSizeChangeListener;
+import com.thrblock.cino.glprocessor.GLEventProcessor;
 import com.thrblock.cino.glshape.GLShape;
 
 /**
@@ -35,10 +40,22 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
     private int frameSizeW;
     @Value("${cino.frame.screen.height:600}")
     private int frameSizeH;
+    @Value("${cino.frame.flexmode:0}")
+    private int flexmode;
+
+    @Autowired
+    private GLEventProcessor eventProcessor;
 
     private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
     private GLFrameBufferObject[] st = new GLFrameBufferObject[0];
+    private boolean refreshFBO = false;
+
+    @PostConstruct
+    void init() {
+        eventProcessor.addScreenSizeChangeListener(topLayer::noticeScreenChange);
+    }
+
     /**
      * 根据索引 获得一个绘制层结构
      * 
@@ -60,6 +77,7 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
             for (int i = layerList.size(); i <= index; i++) {
                 LOG.info("layer auto generated:" + i);
                 GLLayer gen = new GLLayer(fboStack);
+                eventProcessor.addScreenSizeChangeListener(gen::noticeScreenChange);
                 layerList.add(gen);
             }
         }
@@ -87,6 +105,14 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
      * 将交换区内的图形对象加入绘制队列，一般由绘制同步逻辑进行调用
      */
     public void swap() {
+        if (refreshFBO) {
+            swapSp.acquireUninterruptibly();
+            refreshFBO = false;
+            for (GLFrameBufferObject fbo : st) {
+                fbo.resize(frameSizeW, frameSizeH);
+            }
+            swapSp.release();
+        }
         if (!fboSwap.isEmpty()) {
             swapSp.acquireUninterruptibly();
             int totalLength = st.length + fboSwap.size();
@@ -132,7 +158,7 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
     }
 
     private void afterLayerDraw(GL2 gl2) {
-        while(!fboStack.isEmpty()) {
+        while (!fboStack.isEmpty()) {
             GLFrameBufferObject crt = fboStack.pop();
             GLFrameBufferObject next = fboStack.peek();
             if (next != null) {
@@ -161,16 +187,31 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
 
     @Override
     public GLFrameBufferObject generateLayerFBO(int index) {
-        return getLayer(index).generageFBO(frameSizeW, frameSizeH);
+        return getLayer(index).generageFBO(frameSizeW, frameSizeH, flexmode);
     }
 
     @Override
     public GLFrameBufferObject generateGlobalFBO() {
         swapSp.acquireUninterruptibly();
-        GLFrameBufferObject result = new GLFrameBufferObject(frameSizeW, frameSizeH);
+        GLFrameBufferObject result = new GLFrameBufferObject(frameSizeW, frameSizeH, flexmode);
         fboSwap.add(result);
         swapSp.release();
         return result;
+    }
+
+    /**
+     * 通知 屏幕尺寸变更
+     * 
+     * @param w
+     * @param h
+     */
+    @ScreenSizeChangeListener
+    public void noticeScreenChange(int w, int h) {
+        this.frameSizeW = w;
+        this.frameSizeH = h;
+        swapSp.acquireUninterruptibly();
+        this.refreshFBO = true;
+        swapSp.release();
     }
 
 }

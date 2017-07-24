@@ -1,8 +1,6 @@
 package com.thrblock.cino.gllayer;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
@@ -16,7 +14,6 @@ import com.thrblock.cino.shader.data.GLUniformInt;
  * @author zepu.li
  */
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GLCommonUniform {
 
     @Value("${cino.frame.fps:60}")
@@ -38,10 +35,10 @@ public class GLCommonUniform {
         IPureFragment res = () -> {
             iGlobalTime.setValue(iGlobalTime.getValue() + 1f / fps);
             iFrame.setValue(iFrame.getValue() + 1);
+            iResolution[0] = frameSizeW;
+            iResolution[1] = frameSizeH;
         };
         
-        iResolution[0] = frameSizeW;
-        iResolution[1] = frameSizeH;
         program.bindDataAsFloatVec("iResolution", iResolution);
         program.bindDataAsFloat(iGlobalTime);
         program.bindDataAsInt(iFrame);

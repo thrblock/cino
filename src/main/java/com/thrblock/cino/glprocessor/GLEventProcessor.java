@@ -7,7 +7,6 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
@@ -39,9 +38,6 @@ public class GLEventProcessor implements GLEventListener {
     
     @Autowired
     private CinoFrameConfig config;
-    
-    @Value("${cino.context.enablefbo:false}")
-    private boolean enablefbo = false;
     
     private boolean reshaped = false;
     
