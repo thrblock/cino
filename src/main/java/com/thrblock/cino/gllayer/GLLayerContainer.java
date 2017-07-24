@@ -146,8 +146,8 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
      *            OpenGL2 上下文
      */
     public void drawAllLayer(GL2 gl2) {
-        beforeLayerDraw(gl2);
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        beforeLayerDraw(gl2);
         for (int i = 0; i < layerList.size(); i++) {
             drawLayer(getLayer(i), gl2);
         }
@@ -162,7 +162,7 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
             GLFrameBufferObject crt = fboStack.pop();
             GLFrameBufferObject next = fboStack.peek();
             if (next != null) {
-                next.bindFBO(gl2);
+                next.reBindFBO(gl2);
             } else {
                 crt.unBindFBO(gl2);
             }

@@ -131,6 +131,15 @@ public class GLFrameBufferObject {
             inited = true;
         }
         gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+    }
+    
+    /**
+     * 重回绑定 但不清除缓冲区
+     * @param gl
+     */
+    public void reBindFBO(GL gl) {
+        gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
     }
     
     /**
@@ -148,7 +157,6 @@ public class GLFrameBufferObject {
     public void drawAsTexture(GL gl) {
         GL2 gl2 = gl.getGL2();
         bindProgram(gl2);
-        gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl2.glBindTexture(GL.GL_TEXTURE_2D, fboTexture[0]);
         gl2.glEnable(GL.GL_TEXTURE_2D);
 

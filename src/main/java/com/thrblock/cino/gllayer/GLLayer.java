@@ -211,7 +211,7 @@ public class GLLayer {
             GLFrameBufferObject crt = stack.pop();
             GLFrameBufferObject next = stack.peek();
             if (next != null) {
-                next.bindFBO(gl);
+                next.reBindFBO(gl);
             } else {
                 crt.unBindFBO(gl);
             }
