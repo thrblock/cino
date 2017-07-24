@@ -23,6 +23,9 @@ public class MouseControl implements AWTEventListener,IMouseControl {
     private CinoFrameConfig frameConfig;
     private int x;
     private int y;
+    /**
+     * 构造鼠标控制器
+     */
     public MouseControl(){
         Toolkit.getDefaultToolkit().addAWTEventListener(this,AWTEvent.MOUSE_MOTION_EVENT_MASK);
         LOG.info("inited.");

@@ -10,11 +10,6 @@ package com.thrblock.cino.util.math;
  */
 public class CMath {
     public static final float FLOAT_EQUAL_SENCITIVE = 1.4E-45f;
-    /**
-     * <img src="doc-files/T1.png"/>
-     */
-    public static final LimitedFloatFunction FUNC_T1 = new LimitedFloatFunction(
-            i -> (float) Math.abs(Math.log(2f * i) * Math.cos(i)), 0.5f, 6.25f);
 
     private CMath() {
     }

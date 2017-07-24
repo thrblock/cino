@@ -44,6 +44,7 @@ public class GLFrameBufferObject {
      * OpenGL PostProcessing Buffer
      * @param frameSizeW
      * @param frameSizeH
+     * @param flexmode 缩放模式
      */
     public GLFrameBufferObject(int frameSizeW,int frameSizeH,int flexmode) {
         this.frameSizeW = frameSizeW;

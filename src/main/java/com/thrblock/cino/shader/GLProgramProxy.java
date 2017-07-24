@@ -10,6 +10,10 @@ import com.jogamp.opengl.GL2;
  */
 public class GLProgramProxy extends AbstractGLProgram {
     private final GLProgram src;
+    /**
+     * 构造代理程序
+     * @param src
+     */
     public GLProgramProxy(GLProgram src) {
         this.src = src;
     }

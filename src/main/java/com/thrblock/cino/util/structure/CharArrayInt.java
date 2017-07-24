@@ -51,6 +51,9 @@ public class CharArrayInt {
         setByInt(current + value);
     }
     
+    /**
+     * 加一
+     */
     public void addOne() {
         addByInt(1);
     }

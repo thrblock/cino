@@ -9,6 +9,10 @@ import com.thrblock.cino.util.math.CMath;
  */
 public class NodeMotivationProxy {
     private GLNode node;
+    /**
+     * 构造节点动作代理
+     * @param node
+     */
     public NodeMotivationProxy(GLNode node) {
         this.node = node;
     }

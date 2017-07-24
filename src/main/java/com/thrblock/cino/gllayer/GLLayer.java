@@ -223,6 +223,7 @@ public class GLLayer {
      * 创建一个属于此层次的帧缓冲对象
      * @param w
      * @param h
+     * @param flexmode 缩放模式
      * @return
      */
     public GLFrameBufferObject generageFBO(int w, int h,int flexmode) {

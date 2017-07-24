@@ -99,6 +99,10 @@ public class GLProgram extends AbstractGLProgram implements GLInitializable {
         }
     }
     
+    /**
+     * 创建一个着色程序代理-使用相同着色程序但具有独立参数空间的结构
+     * @return
+     */
     public GLProgramProxy genProxy() {
         return new GLProgramProxy(this);
     }

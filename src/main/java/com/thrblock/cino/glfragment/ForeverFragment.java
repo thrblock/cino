@@ -7,6 +7,10 @@ package com.thrblock.cino.glfragment;
  */
 public class ForeverFragment implements IGLFragment {
     private IPureFragment pure;
+    /**
+     * 构造执行片段
+     * @param pure
+     */
     public ForeverFragment(IPureFragment pure) {
         this.pure = pure;
     }

@@ -1,8 +1,19 @@
 package com.thrblock.cino.util.structure;
 
+/**
+ * 泛型对象对
+ * @author thrblock
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class Pair<K,V> {
     private final K key;
     private final V value;
+    /**构造一个泛型对象对
+     * @param k
+     * @param v
+     */
     public Pair(K k,V v) {
         this.key = k;
         this.value = v;

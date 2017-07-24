@@ -7,6 +7,9 @@ import com.thrblock.cino.glshape.GLRect;
  */
 public class RectPositionProxy {
     private GLRect rect;
+    /**已原始矩形构造位置操作代理
+     * @param rect
+     */
     public RectPositionProxy(GLRect rect) {
         this.rect = rect;
     }

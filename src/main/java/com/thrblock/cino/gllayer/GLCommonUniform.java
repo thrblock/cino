@@ -45,6 +45,11 @@ public class GLCommonUniform {
         return res;
     }
 
+    /**
+     * 窗体大小变更通知
+     * @param w
+     * @param h
+     */
     @ScreenSizeChangeListener
     public void onchange(int w, int h) {
         this.frameSizeW = w;
