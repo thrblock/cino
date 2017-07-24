@@ -174,8 +174,8 @@ public class GLLayerContainer implements IGLFrameBufferObjectManager {
         if (st.length > 0) {
             for (int i = 0; i < st.length; i++) {
                 fboStack.push(st[i]);
+                st[i].bindFBO(gl2);
             }
-            st[st.length - 1].bindFBO(gl2);
         }
     }
 

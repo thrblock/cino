@@ -201,8 +201,8 @@ public class GLLayer {
         if (st.length > 0) {
             for (int i = 0; i < st.length; i++) {
                 stack.push(st[i]);
+                st[i].bindFBO(gl2);
             }
-            st[st.length - 1].bindFBO(gl2);
         }
     }
 
