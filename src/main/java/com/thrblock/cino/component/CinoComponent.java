@@ -121,6 +121,10 @@ public abstract class CinoComponent implements KeyListener {
         onDeactivited.forEach(e->e.accept());
     }
     
+    /**
+     * 伴随组件自动的帧片段逻辑
+     * @param pure
+     */
     protected final void auto(IPureFragment pure) {
         compFrag.addFragment(new ForeverFragment(pure));
     }
