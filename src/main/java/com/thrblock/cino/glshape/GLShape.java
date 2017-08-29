@@ -2,7 +2,7 @@ package com.thrblock.cino.glshape;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.thrblock.cino.glshape.builder.GLNode;
+import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
 /**

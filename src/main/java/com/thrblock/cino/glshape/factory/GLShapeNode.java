@@ -1,4 +1,4 @@
-package com.thrblock.cino.glshape.builder;
+package com.thrblock.cino.glshape.factory;
 
 import java.util.ArrayList;
 import java.util.List;

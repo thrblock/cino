@@ -15,14 +15,14 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
  * @author lizepu
  */
 @Component
-public class GLFragmentContainer implements IGLFragmentContainer{
+public class GLFragmentManager implements IGLFragmentManager{
     private CrudeLinkedList<IGLFragment> frags = new CrudeLinkedList<>();
     private CrudeLinkedList<IGLFragment>.CrudeIter fragIt = frags.genCrudeIter();
     private List<IGLFragment> swap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
     private boolean pause = false;
     private boolean destroy = false;
-    private GLFragmentContainer(){
+    private GLFragmentManager(){
     }
     @Override
     public void allFragment() {
@@ -75,8 +75,8 @@ public class GLFragmentContainer implements IGLFragmentContainer{
      * 构造子集
      * @return 子集容器，树状容器结构适合游戏暂停效果的实现，你可以有选择的暂停某个子集或是根来实现暂停效果
      */
-    public GLFragmentContainer generateSubContainer() {
-        GLFragmentContainer result = new GLFragmentContainer();
+    public GLFragmentManager generateSubContainer() {
+        GLFragmentManager result = new GLFragmentManager();
         this.addFragment(new IGLFragment(){
             @Override
             public void fragment() {

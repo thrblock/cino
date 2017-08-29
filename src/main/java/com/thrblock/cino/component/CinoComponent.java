@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glfragment.ForeverFragment;
-import com.thrblock.cino.glfragment.FragmentBuilder;
-import com.thrblock.cino.glfragment.GLFragmentContainer;
+import com.thrblock.cino.glfragment.FragmentFactory;
+import com.thrblock.cino.glfragment.GLFragmentManager;
 import com.thrblock.cino.glfragment.IPureFragment;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
-import com.thrblock.cino.glshape.builder.GLNode;
-import com.thrblock.cino.glshape.builder.GLShapeBuilder;
+import com.thrblock.cino.glshape.factory.GLNode;
+import com.thrblock.cino.glshape.factory.GLShapeFactory;
 import com.thrblock.cino.io.IKeyControlStack;
 
 /**
@@ -44,7 +44,7 @@ public abstract class CinoComponent implements KeyListener {
      * 图形构造器，用来绘制图形
      */
     @Autowired
-    protected GLShapeBuilder shapeBuilder;
+    protected GLShapeFactory shapeFactory;
     
     /**
      * 键盘IO控制器，可以挂载监听器捕获键盘事件或是读取某一指定按键的状态
@@ -56,17 +56,17 @@ public abstract class CinoComponent implements KeyListener {
      * 根片段容器
      */
     @Autowired
-    protected GLFragmentContainer rootFrag;
+    protected GLFragmentManager rootFrag;
     
     /**
      * 组件片段容器
      */
-    protected GLFragmentContainer compFrag;
+    protected GLFragmentManager compFrag;
     /**
      * 片段构造器
      */
     @Autowired
-    protected FragmentBuilder fragBuilder;
+    protected FragmentFactory fragFactory;
     
     /**
      * 帧缓冲管理器
@@ -86,8 +86,8 @@ public abstract class CinoComponent implements KeyListener {
     private final void postConstruct() throws Exception {
         compFrag = rootFrag.generateSubContainer();
         compFrag.pause();
-        fragBuilder.setContainer(compFrag);
-        sceneRoot = shapeBuilder.createNode();
+        fragFactory.setContainer(compFrag);
+        sceneRoot = shapeFactory.createNode();
         init();
     }
     

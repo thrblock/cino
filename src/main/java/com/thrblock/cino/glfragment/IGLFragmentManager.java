@@ -4,7 +4,7 @@ package com.thrblock.cino.glfragment;
  * 片段逻辑容器的抽象层，提供执行全部逻辑以及增加逻辑的方法
  * @author lizepu
  */
-public interface IGLFragmentContainer {
+public interface IGLFragmentManager {
     /**
      * 运行全部片段逻辑，应在每次绘制完成后运行
      */

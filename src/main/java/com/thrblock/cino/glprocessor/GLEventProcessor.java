@@ -14,9 +14,9 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.CinoFrameConfig;
-import com.thrblock.cino.glfragment.IGLFragmentContainer;
+import com.thrblock.cino.glfragment.IGLFragmentManager;
 import com.thrblock.cino.glinitable.GLInitor;
-import com.thrblock.cino.gllayer.GLLayerContainer;
+import com.thrblock.cino.gllayer.GLLayerManager;
 
 /**
  * GLEventProcessor 捕捉OpenGL绘制事件并进行处理，是各类组件中同步逻辑的调用者
@@ -28,10 +28,10 @@ public class GLEventProcessor implements GLEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);
     
     @Autowired
-    private IGLFragmentContainer fragmentContainer;
+    private IGLFragmentManager fragmentContainer;
     
     @Autowired
-    private GLLayerContainer layerContainer;
+    private GLLayerManager layerContainer;
     
     @Autowired
     private GLInitor contextInitor;

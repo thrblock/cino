@@ -1,6 +1,6 @@
 package com.thrblock.cino.glshape.proxy;
 
-import com.thrblock.cino.glshape.builder.GLNode;
+import com.thrblock.cino.glshape.factory.GLNode;
 
 /**
  * GLNode节点的通道操作类

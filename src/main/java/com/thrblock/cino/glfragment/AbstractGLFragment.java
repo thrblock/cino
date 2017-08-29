@@ -15,7 +15,7 @@ public abstract class AbstractGLFragment implements IGLFragment {
     private boolean destory = false;
     
     @Autowired
-    private IGLFragmentContainer container;
+    private IGLFragmentManager container;
     
     /**
      * for spring ioc use only
@@ -27,7 +27,7 @@ public abstract class AbstractGLFragment implements IGLFragment {
      * 构造一个片段，使用指定的片段容器
      * @param refContainer
      */
-    public AbstractGLFragment(IGLFragmentContainer refContainer) {
+    public AbstractGLFragment(IGLFragmentManager refContainer) {
         this.container = refContainer;
         addToContainer();
     }

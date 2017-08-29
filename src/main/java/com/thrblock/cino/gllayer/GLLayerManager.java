@@ -29,8 +29,8 @@ import com.thrblock.cino.glshape.GLShape;
  * @author lizepu
  */
 @Component
-public class GLLayerContainer implements IGLFrameBufferObjectManager {
-    private static final Logger LOG = LoggerFactory.getLogger(GLLayerContainer.class);
+public class GLLayerManager implements IGLFrameBufferObjectManager {
+    private static final Logger LOG = LoggerFactory.getLogger(GLLayerManager.class);
     private List<GLLayer> layerList = new CopyOnWriteArrayList<>();
     private Deque<GLFrameBufferObject> fboStack = new ArrayDeque<>();
     private GLLayer topLayer = new GLLayer(fboStack);

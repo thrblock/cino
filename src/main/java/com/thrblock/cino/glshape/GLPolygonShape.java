@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL2;
  * @author lizepu
  *
  */
-public abstract class GLPolygonShape extends GLMutiPointShape{
+public class GLPolygonShape extends GLMutiPointShape{
 
     private boolean fill = false;
     

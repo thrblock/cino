@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
  */
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component
-public class FragmentBuilder {
+public class FragmentFactory {
     @Autowired
-    private IGLFragmentContainer container;
+    private IGLFragmentManager container;
 
     /**
      * 使用指定的片段容器
      * @param container 指定的片段容器
      */
-    public void setContainer(IGLFragmentContainer container) {
+    public void setContainer(IGLFragmentManager container) {
         this.container = container;
     }
 

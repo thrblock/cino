@@ -1,4 +1,4 @@
-package com.thrblock.cino.glshape.builder;
+package com.thrblock.cino.glshape.factory;
 
 import com.thrblock.cino.glshape.proxy.NodeAlphaProxy;
 import com.thrblock.cino.glshape.proxy.NodeMotivationProxy;
