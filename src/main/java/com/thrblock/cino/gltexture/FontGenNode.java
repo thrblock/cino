@@ -45,15 +45,15 @@ public class FontGenNode {
      * @param imgGenerator
      *            文字到图像的映射
      */
-    public FontGenNode(FontMetrics fm, CharFunction<BufferedImage> imgGenerator) {
-        this.fm = fm;
+    public FontGenNode(CharFunction<BufferedImage> imgGenerator) {
         this.imgGenerator = imgGenerator;
     }
 
     private BufferedImage genImage(char c) {
         int fmwidth = fm.charWidth(c) <= 0 ? 1 : fm.charWidth(c);
-        BufferedImage charBuffer = new BufferedImage(fmwidth, fm.getAscent() + fm.getDescent(),
-                BufferedImage.TYPE_INT_ARGB);
+        int fmheight = fm.getAscent() + fm.getDescent();
+        fmheight = fmheight <= 0 ? 1 : fmheight;
+        BufferedImage charBuffer = new BufferedImage(fmwidth, fmheight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) charBuffer.getGraphics();
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

@@ -105,7 +105,8 @@ public class GLLine extends GLMutiPointShape {
     public void drawShape(GL2 gl) {
         gl.glLineWidth(lineWidth);
         gl.glBegin(GL.GL_LINES);
-        for (GLPoint point : points) {
+        for (int i = 0; i < points.length; i++) {
+            GLPoint point = points[i];
             gl.glColor4f(point.getR(), point.getG(), point.getB(), point.getAlpha());
             gl.glVertex2f(point.getX(), point.getY());
         }

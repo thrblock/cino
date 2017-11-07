@@ -15,12 +15,10 @@ public class GLRect extends GLPolygonShape {
      * @param height 高度
      */
     public GLRect(float x,float y,float width,float height) {
-        super(new GLPoint[]{
-                new GLPoint(x - width / 2,y + height / 2),
-                new GLPoint(x + width / 2,y + height / 2),
-                new GLPoint(x + width / 2,y - height / 2),
-                new GLPoint(x - width / 2,y - height / 2)
-                });
+        super(new GLPoint(x - width / 2,y + height / 2),
+              new GLPoint(x + width / 2,y + height / 2),
+              new GLPoint(x + width / 2,y - height / 2),
+              new GLPoint(x - width / 2,y - height / 2));
     }
     
     /**

@@ -114,9 +114,9 @@ public class GLShapeFactory {
      * @param y
      *            中心坐标y
      * @param axisA
-     *            半长轴
+     *            长轴
      * @param axisB
-     *            半短轴
+     *            短轴
      * @param accuracy
      *            精度，即使用点的个数
      * @return 椭圆对象

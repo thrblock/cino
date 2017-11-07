@@ -17,8 +17,8 @@ public class GLOval extends GLPolygonShape {
 	 * 构造一个椭圆对象
 	 * @param x 中心坐标x
 	 * @param y 中心坐标y
-	 * @param axisA 半长轴
-	 * @param axisB 半短轴
+	 * @param axisA 长轴
+	 * @param axisB 短轴
 	 * @param accuracy 精度，即使用点的数量
 	 * @return 椭圆图形对象
 	 */

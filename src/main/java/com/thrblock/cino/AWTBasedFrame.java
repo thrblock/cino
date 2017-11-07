@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,8 @@ import com.jogamp.opengl.util.FPSAnimator;
  *
  */
 @Component
-public class CinoFrameConfig {
+public class AWTBasedFrame {
+    private static final Logger LOG = LoggerFactory.getLogger(AWTBasedFrame.class);
     /**
      * 等比例缩放
      * @see #setFlexMode
@@ -43,7 +46,6 @@ public class CinoFrameConfig {
     
     @Autowired
     private GLEventListener glEventListener;
-    
     /**
      * 使用的显示卡
      */
@@ -250,6 +252,7 @@ public class CinoFrameConfig {
         glcaps.setDoubleBuffered(doubleBuffer);
         GLCanvas canvas = new GLCanvas(glcaps);
         canvas.addGLEventListener(glEventListener);
+        LOG.info("graphics device you are current using:%s",graphicsDevice.toString());
         if(fullScreen) {
             frame.setUndecorated(true);
             container.add(canvas);
@@ -284,6 +287,7 @@ public class CinoFrameConfig {
             Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(), null);
             frame.getContentPane().setCursor(blankCursor);
         }
+        
         return frame;
     }
 }

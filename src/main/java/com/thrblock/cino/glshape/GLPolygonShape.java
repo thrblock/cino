@@ -15,7 +15,7 @@ public class GLPolygonShape extends GLMutiPointShape{
      * 以顶点数组构造一个封闭图形
      * @param points 顶点数组
      */
-    public GLPolygonShape(GLPoint[] points) {
+    public GLPolygonShape(GLPoint... points) {
         super(points);
     }
     /**
@@ -40,12 +40,14 @@ public class GLPolygonShape extends GLMutiPointShape{
      * @return 是否发生碰撞的布尔值
      */
     public boolean isSquareableCollide(GLPolygonShape another) {
-        for(GLPoint point:points) {
+        for (int i = 0; i < points.length; i++) {
+            GLPoint point = points[i];
             if(another.isPointInside(point.getX(),point.getY())) {
                 return true;
             }
         }
-        for(GLPoint point:another.points) {
+        for(int i = 0; i < another.points.length; i++) {
+            GLPoint point = another.points[i];
             if(isPointInside(point.getX(),point.getY())) {
                 return true;
             }
@@ -98,7 +100,8 @@ public class GLPolygonShape extends GLMutiPointShape{
         } else {
             gl.glBegin(GL2.GL_LINE_LOOP);
         }
-        for(GLPoint point:points) {
+        for (int i = 0; i < points.length; i++) {
+            GLPoint point = points[i];
             gl.glColor4f(point.getR(), point.getG(),point.getB(),point.getAlpha());
             gl.glVertex2f(point.getX(),point.getY());
         }

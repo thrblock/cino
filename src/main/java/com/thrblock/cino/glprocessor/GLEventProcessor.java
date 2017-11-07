@@ -13,7 +13,8 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.thrblock.cino.CinoFrameConfig;
+import com.thrblock.cino.AWTBasedFrame;
+import com.thrblock.cino.debug.FPSDebugger;
 import com.thrblock.cino.glfragment.IGLFragmentManager;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayerManager;
@@ -28,16 +29,19 @@ public class GLEventProcessor implements GLEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);
     
     @Autowired
-    private IGLFragmentManager fragmentContainer;
+    private IGLFragmentManager fragmentManager;
     
     @Autowired
-    private GLLayerManager layerContainer;
+    private GLLayerManager layerManager;
     
     @Autowired
     private GLInitor contextInitor;
     
     @Autowired
-    private CinoFrameConfig config;
+    private AWTBasedFrame config;
+    
+    @Autowired
+    private FPSDebugger fpsCounter;
     
     private boolean reshaped = false;
     
@@ -45,11 +49,13 @@ public class GLEventProcessor implements GLEventListener {
     
     @Override
     public void display(GLAutoDrawable drawable) {
+        long startTime = System.currentTimeMillis();
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         contextInitor.glInitializing(gl);
-        layerContainer.drawAllLayer(gl2);
-        fragmentContainer.allFragment();
+        layerManager.drawAllLayer(gl2);
+        fragmentManager.allFragment();
+        fpsCounter.noticeDrawCall(System.currentTimeMillis() - startTime);
     }
 
     @Override
@@ -94,7 +100,7 @@ public class GLEventProcessor implements GLEventListener {
         
         int orthW = w <= 0?1:w/2;
         int orthH = h <= 0?1:h/2;
-        if(!reshaped || config.getFlexMode() == CinoFrameConfig.FIX) {
+        if(!reshaped || config.getFlexMode() == AWTBasedFrame.FIX) {
             reshaped = true;
             gl2.glViewport(0, 0, w, h);
             gl2.glMatrixMode(GL2.GL_PROJECTION);

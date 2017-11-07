@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.thrblock.cino.CinoFrameConfig;
+import com.thrblock.cino.AWTBasedFrame;
 
 /**
  * 鼠标控制器
@@ -20,7 +20,7 @@ import com.thrblock.cino.CinoFrameConfig;
 public class MouseControl implements AWTEventListener,IMouseControl {
     private static final Logger LOG = LoggerFactory.getLogger(MouseControl.class);
     @Autowired
-    private CinoFrameConfig frameConfig;
+    private AWTBasedFrame frameConfig;
     private int x;
     private int y;
     /**

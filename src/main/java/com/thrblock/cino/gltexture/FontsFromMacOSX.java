@@ -5,7 +5,7 @@ package com.thrblock.cino.gltexture;
  * @author thrblock
  *
  */
-public class FontName {
+public class FontsFromMacOSX {
     public static final String ARIAL = "Arial";
     public static final String ARIAL_BLACK = "Arial Black";
     public static final String ARIAL_HEBREW = "Arial Hebrew";
@@ -35,6 +35,6 @@ public class FontName {
     public static final String SONGTI_SC = "Songti SC";
     public static final String SONGTI_TC = "Songti TC";
 
-    private FontName() {
+    private FontsFromMacOSX() {
     }
 }

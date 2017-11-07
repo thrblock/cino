@@ -9,6 +9,8 @@ import java.util.Arrays;
 public class CharArrayInt {
     private char[] arr;
     private int current = 0;
+    private int keepInFront = 0;
+    private int keepInBack;
     
     /**
      * 以初始字符串对char数组进行初始化
@@ -16,6 +18,7 @@ public class CharArrayInt {
      */
     public CharArrayInt(String init) {
         this.arr = init.toCharArray();
+        keepInBack = arr.length - 1;
     }
     
     /**
@@ -25,6 +28,7 @@ public class CharArrayInt {
     public CharArrayInt(char[] array) {
         this.arr = array;
         Arrays.fill(arr, '0');
+        keepInBack = arr.length - 1;
     }
     
     /**
@@ -37,12 +41,30 @@ public class CharArrayInt {
             throw new IllegalArgumentException("value out of range.");
         }
         int number = value;
-        for (int i = arr.length - 1; i >= 0; i--) {
+        for (int i = keepInBack; i >= keepInFront; i--) {
             arr[i] = (char) ('0' + (number % 10));
             number /= 10;
         }
     }
     
+    public void setFrontKeepStr(String str) {
+        if(str.length() > arr.length) {
+            throw new IllegalArgumentException("Too long to keep:" + str);
+        }
+        char[] strC = str.toCharArray();
+        System.arraycopy(strC, 0, arr, 0, strC.length);
+        this.keepInFront += strC.length;
+    }
+    
+    public void setBackKeepStr(String str) {
+        if(str.length() > arr.length) {
+            throw new IllegalArgumentException("Too long to keep:" + str);
+        }
+        char[] strC = str.toCharArray();
+        System.arraycopy(strC, 0, arr, arr.length - strC.length, strC.length);
+        this.keepInBack -= strC.length;
+    }
+
     /**
      * 增加一个整数
      * @param value 要增加的数

@@ -10,6 +10,7 @@ import com.thrblock.cino.gltexture.GLFont;
 
 /**
  * 文字区域 以单个字符为基础结构进行的字库构建，图形对象，可以定义一个矩形文字区域，进行预定义字体的展示，设置颜色、缩进等样式
+ * 
  * @author lizepu
  */
 public class GLCharArea extends GLShape {
@@ -25,7 +26,7 @@ public class GLCharArea extends GLShape {
      * 水平居中
      */
     public static final int HOR_CENTRAL = 2;
-    
+
     /**
      * 顶部对齐
      */
@@ -38,7 +39,7 @@ public class GLCharArea extends GLShape {
      * 中部对齐
      */
     public static final int VER_CENTRAL = 2;
-    
+
     /**
      * 垂直对齐方式，默认为靠上
      */
@@ -51,8 +52,7 @@ public class GLCharArea extends GLShape {
     private float y;
     private float width;
     private float height;
-    
-    
+
     private char[] str;
     private GLFont f;
     private final ArrayList<GLPoint> points;
@@ -62,35 +62,49 @@ public class GLCharArea extends GLShape {
     private float g = 1.0f;
     private float b = 1.0f;
     private float alpha = 1.0f;
-    
+
     private float theta = 0;
 
     /**
      * 构造一个文字区域
-     * @param f 字体名称
-     * @param x 区域中心坐标
-     * @param y 区域中心坐标
-     * @param w 区域宽度
-     * @param h 区域高度
-     * @param initStr 初始文字显示
+     * 
+     * @param f
+     *            字体名称
+     * @param x
+     *            区域中心坐标
+     * @param y
+     *            区域中心坐标
+     * @param w
+     *            区域宽度
+     * @param h
+     *            区域高度
+     * @param initStr
+     *            初始文字显示
      */
-    public GLCharArea(GLFont f, float x, float y,float w,float h, String initStr) {
+    public GLCharArea(GLFont f, float x, float y, float w, float h, String initStr) {
         this(f, x, y, w, h, initStr.toCharArray());
     }
 
     /**
      * 构造一个文字区域
-     * @param f 字体名称
-     * @param x 区域中心坐标
-     * @param y 区域中心坐标
-     * @param w 区域宽度
-     * @param h 区域高度
-     * @param charmap 映射字符数组，对字符数组的改变将直接反映在显示上
+     * 
+     * @param f
+     *            字体名称
+     * @param x
+     *            区域中心坐标
+     * @param y
+     *            区域中心坐标
+     * @param w
+     *            区域宽度
+     * @param h
+     *            区域高度
+     * @param charmap
+     *            映射字符数组，对字符数组的改变将直接反映在显示上
      */
-    public GLCharArea(GLFont f, float x, float y,float w,float h, char[] charmap) {
+    public GLCharArea(GLFont f, float x, float y, float w, float h, char[] charmap) {
         this.f = f;
         this.str = charmap;
-        
+
         this.x = x;
         this.y = y;
         this.width = w;
@@ -101,7 +115,9 @@ public class GLCharArea extends GLShape {
 
     /**
      * 设置水平方式
-     * @param horAlia 水平对齐方式
+     * 
+     * @param horAlia
+     *            水平对齐方式
      * @see #HOR_LEFT
      * @see #HOR_CENTRAL
      * @see #HOR_RIGHT
@@ -110,10 +126,12 @@ public class GLCharArea extends GLShape {
         this.horAlia = horAlia;
         reOffset();
     }
-    
+
     /**
      * 设置垂直对齐方式
-     * @param verAlia 垂直对齐方式
+     * 
+     * @param verAlia
+     *            垂直对齐方式
      * @see #VER_BOTTOM
      * @see #VER_CENTRAL
      * @see #VER_UP
@@ -122,53 +140,61 @@ public class GLCharArea extends GLShape {
         this.verAlia = verAlia;
         reOffset();
     }
-    
+
     /**
      * 设置区域宽度，区域宽度将作为文字的水平对齐标准
-     * @param width 区域宽度
+     * 
+     * @param width
+     *            区域宽度
      */
     public void setWidth(float width) {
         this.width = width;
         reOffset();
     }
-    
+
     /**
      * 设置区域高度，区域宽度将作为文字的垂直对齐标准
-     * @param height 区域高度
+     * 
+     * @param height
+     *            区域高度
      */
     public void setHeight(float height) {
         this.height = height;
         reOffset();
     }
+
     /**
      * {@inheritDoc}<br />
      * 获得 位置量x，定义为区域的中心横坐标
-     * */
+     */
     @Override
     public float getX() {
         return x;
     }
+
     /**
      * {@inheritDoc}<br />
      * 获得 位置量y，定义为区域的中心纵坐标
-     * */
+     */
     @Override
     public float getY() {
         return y;
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 位置量x，定义为区域的中心横坐标
-     * */
+     */
     @Override
     public void setX(float x) {
         float offset = x - getX();
         setXOffset(offset);
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 位置量y，定义为区域的中心纵坐标
-     * */
+     */
     @Override
     public void setY(float y) {
         float offset = y - getY();
@@ -178,7 +204,7 @@ public class GLCharArea extends GLShape {
     /**
      * {@inheritDoc}<br />
      * 获得 中心位置x，定义为区域的中心位置<br />
-     * */
+     */
     @Override
     public float getCentralX() {
         return x;
@@ -187,15 +213,16 @@ public class GLCharArea extends GLShape {
     /**
      * {@inheritDoc}<br />
      * 获得 中心位置y，定义为区域的中心位置<br />
-     * */
+     */
     @Override
     public float getCentralY() {
         return y;
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 中心位置x，定义为区域的中心位置<br />
-     * */
+     */
     @Override
     public void setCentralX(float x) {
         float offset = x - getCentralX();
@@ -205,50 +232,55 @@ public class GLCharArea extends GLShape {
     /**
      * {@inheritDoc}<br />
      * 设置 中心位置y，定义为区域的中心位置<br />
-     * */
+     */
     @Override
     public void setCentralY(float y) {
         float offset = y - getCentralY();
         setYOffset(offset);
     }
+
     /**
      * {@inheritDoc}<br />
      * 获得 通道参数，文字区域不提供对指定点的alpha设定
-     * */
+     */
     @Override
     public float getAlpha() {
         return alpha;
     }
+
     /**
      * {@inheritDoc}<br />
      * 获得 旋转角度
-     * */
+     */
     @Override
     public float getTheta() {
         return theta;
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 旋转角度<br />
      * 注意，低分辨率下扭曲可能影响文字质量
-     * */
+     */
     @Override
     public void setTheta(float dstTheta) {
-        setTheta(dstTheta,getCentralX(),getCentralY());
+        setTheta(dstTheta, getCentralX(), getCentralY());
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 旋转角度，以指定轴x,y<br />
      * 注意，低分辨率下扭曲可能影响文字质量
-     * */
+     */
     @Override
     public void setTheta(float dstTheta, float x, float y) {
         float offset = dstTheta - this.theta;
-        float nx = revolveX(this.x,this.y,x,y,offset);
-        float ny = revolveY(this.x,this.y,x,y,offset);
-        for (GLPoint point : points) {
-            float dx = revolveX(point.getX(),point.getY(),x,y,offset);
-            float dy = revolveY(point.getX(),point.getY(),x,y,offset);
+        float nx = revolveX(this.x, this.y, x, y, offset);
+        float ny = revolveY(this.x, this.y, x, y, offset);
+        for (int i = 0; i < points.size(); i++) {
+            GLPoint point = points.get(i);
+            float dx = revolveX(point.getX(), point.getY(), x, y, offset);
+            float dy = revolveY(point.getX(), point.getY(), x, y, offset);
             point.setX(dx);
             point.setY(dy);
         }
@@ -256,12 +288,12 @@ public class GLCharArea extends GLShape {
         this.x = nx;
         this.y = ny;
     }
-    
-
 
     /**
      * 设置字体库使用名称
-     * @param fontName 字体库名称
+     * 
+     * @param fontName
+     *            字体库名称
      */
     public void setGLFont(GLFont f) {
         this.f = f;
@@ -269,6 +301,7 @@ public class GLCharArea extends GLShape {
 
     /**
      * 获得当前字体库名称
+     * 
      * @return 字体库名称
      */
     public GLFont getFont() {
@@ -278,16 +311,19 @@ public class GLCharArea extends GLShape {
     /**
      * 设置文字<br />
      * 注意，重置文字后旋转特性将丢失
-     * @param str 文字字符串
+     * 
+     * @param str
+     *            文字字符串
      */
     public void setFontString(String str) {
         setFontString(str.toCharArray());
     }
 
     /**
-     * 使用char数组设置文字，外部对此数组的修改将直接反映在显示上
-     * 注意，重置文字后旋转特性将丢失
-     * @param str 文字字符数组
+     * 使用char数组设置文字，外部对此数组的修改将直接反映在显示上 注意，重置文字后旋转特性将丢失
+     * 
+     * @param str
+     *            文字字符数组
      */
     public void setFontString(char[] str) {
         this.str = str;
@@ -297,6 +333,7 @@ public class GLCharArea extends GLShape {
 
     /**
      * 获得当前文字内容
+     * 
      * @return 当前文字内容
      */
     public String getFontString() {
@@ -310,19 +347,19 @@ public class GLCharArea extends GLShape {
         this.theta = 0;
         recalcPoint = true;
     }
-    
+
     /**
      * 全部坐标计算数据向下取整，防止因浮点数引起的纹理走样
      */
     public void floor() {
-        this.x = (int)x;
-        this.y = (int)y;
-        this.width = (int)width;
-        this.height = (int)height;
+        this.x = (int) x;
+        this.y = (int) y;
+        this.width = (int) width;
+        this.height = (int) height;
         recalcPoint = true;
         reOffset();
     }
-    
+
     private void reOffset() {
         recalcOffset = true;
     }
@@ -334,40 +371,46 @@ public class GLCharArea extends GLShape {
 
     /**
      * 设置文字颜色
-     * @param c 文字颜色
+     * 
+     * @param c
+     *            文字颜色
      */
     public void setColor(Color c) {
         this.r = c.getRed() / 255f;
         this.g = c.getGreen() / 255f;
         this.b = c.getBlue() / 255f;
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 横向偏移量
-     * */
+     */
     @Override
     public void setXOffset(float offset) {
         x += offset;
         setPointXOffset(offset);
     }
-    
+
     private void setPointXOffset(float offset) {
-        for (GLPoint point : points) {
+        for (int i = 0; i < points.size(); i++) {
+            GLPoint point = points.get(i);
             point.setXOffset(offset);
         }
     }
+
     /**
      * {@inheritDoc}<br />
      * 设置 纵向偏移量
-     * */
+     */
     @Override
     public void setYOffset(float offset) {
         y += offset;
         setPointYOffset(offset);
     }
-    
+
     private void setPointYOffset(float offset) {
-        for (GLPoint point : points) {
+        for (int i = 0; i < points.size(); i++) {
+            GLPoint point = points.get(i);
             point.setYOffset(offset);
         }
     }
@@ -379,7 +422,7 @@ public class GLCharArea extends GLShape {
             recalcWithLimit(gl);
             recalcPoint = false;
         }
-        if(recalcOffset) {
+        if (recalcOffset) {
             recalcOffset();
             recalcOffset = false;
         }
@@ -417,36 +460,36 @@ public class GLCharArea extends GLShape {
     private void recalcOffset() {
         float minDx = points.get(0).getX();
         float maxDx = minDx;
-        
+
         float maxDy = points.get(0).getY();
         float minDy = maxDy;
-        for(int i = 0;i < str.length * 4;i++) {
+        for (int i = 0; i < str.length * 4; i++) {
             GLPoint p = points.get(i);
-            if(p.getX() > maxDx) {
+            if (p.getX() > maxDx) {
                 maxDx = p.getX();
             }
-            if(p.getY() < minDy) {
+            if (p.getY() < minDy) {
                 minDy = p.getY();
             }
         }
-        
+
         float rw = maxDx - minDx;
         float rh = maxDy - minDy;
-        
+
         float offsetX;
         float offsetY;
-        
-        if(horAlia == HOR_LEFT) {
+
+        if (horAlia == HOR_LEFT) {
             offsetX = 0;
-        } else if(horAlia == HOR_RIGHT) {
+        } else if (horAlia == HOR_RIGHT) {
             offsetX = width - rw;
         } else {
             offsetX = (width - rw) / 2;
         }
-        
-        if(verAlia == VER_UP) {
+
+        if (verAlia == VER_UP) {
             offsetY = 0;
-        } else if(verAlia == VER_BOTTOM) {
+        } else if (verAlia == VER_BOTTOM) {
             offsetY = height - rh;
         } else {
             offsetY = (height - rh) / 2;
@@ -466,7 +509,7 @@ public class GLCharArea extends GLShape {
                 points.add(npt);
             }
         }
-        if(points.size() < 4) {
+        if (points.size() < 4) {
             return;
         }
         GLPoint linePoint = points.get(3);
