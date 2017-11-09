@@ -7,7 +7,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.thrblock.cino.util.io.SmartConfig;
+import com.thrblock.cino.util.SmartConfig;
 
 /**
  * cino spring 上下文配置

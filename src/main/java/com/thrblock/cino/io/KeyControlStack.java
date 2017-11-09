@@ -1,17 +1,17 @@
 package com.thrblock.cino.io;
 
 import java.awt.AWTEvent;
-import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Semaphore;
 import java.util.function.BooleanSupplier;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Component;
 
+import com.jogamp.newt.event.KeyAdapter;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
@@ -19,7 +19,7 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
  * @author lizepu
  */
 @Component
-public class KeyControlStack implements AWTEventListener, IKeyControlStack {
+public class KeyControlStack implements AWTEventListener {
     private boolean[] keyStatus = new boolean[1024];
     private Deque<KeyListener> listenerStack = new ConcurrentLinkedDeque<>();
     /**
@@ -28,19 +28,34 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
     private CrudeLinkedList<BooleanSupplier> keyEventBlocker = new CrudeLinkedList<>();
     private CrudeLinkedList<BooleanSupplier>.CrudeIter blockIter = keyEventBlocker.genCrudeIter();
     private Semaphore blockSp = new Semaphore(1);
-    /**
-     * 构造一个键盘堆栈控制器
-     */
-    public KeyControlStack() {
-        Toolkit.getDefaultToolkit().addAWTEventListener(this,AWTEvent.KEY_EVENT_MASK);
+
+    private class NEWTAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(com.jogamp.newt.event.KeyEvent e) {
+            onKeyPressed(new KeyEvent(e));
+        }
+        @Override
+        public void keyReleased(com.jogamp.newt.event.KeyEvent e) {
+            onKeyRelease(new KeyEvent(e));
+        }
+    }
+    
+    private NEWTAdapter keyAdapter;
+    @PostConstruct
+    void init() {
+        this.keyAdapter = new NEWTAdapter();
+    }
+    
+    public NEWTAdapter newtKeyListener() {
+        return keyAdapter;
     }
 
-    @Override
+
+
     public void pushKeyListener(KeyListener keyListener) {
         listenerStack.push(keyListener);
     }
 
-    @Override
     public KeyListener popKeyListener() {
         if(!listenerStack.isEmpty()) {
             return listenerStack.pop();
@@ -49,7 +64,6 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
         }
     }
 
-    @Override
     public boolean isKeyDown(int keyCode) {
         if (keyCode >= 0 && keyCode < keyStatus.length) {
             return keyStatus[keyCode];
@@ -62,13 +76,6 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
         return listenerStack.peek();
     }
 
-    private void onKeyTyped(KeyEvent e) {
-        KeyListener listener = peekKeyListener();
-        if(listener != null && isCurrentEventPassable()) {
-            listener.keyTyped(e);
-        }
-    }
-    
     private void onKeyPressed(KeyEvent e) {
         KeyListener listener = peekKeyListener();
         if(listener != null && isCurrentEventPassable()) {
@@ -91,18 +98,15 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
 
     @Override
     public void eventDispatched(AWTEvent event) {
-        if(event instanceof KeyEvent) {
-            KeyEvent e = (KeyEvent)event;
+        if(event instanceof java.awt.event.KeyEvent) {
+            java.awt.event.KeyEvent e = (java.awt.event.KeyEvent)event;
             int id = e.getID();
             switch (id) {
-            case KeyEvent.KEY_TYPED:
-                onKeyTyped(e);
-                break;
             case KeyEvent.KEY_PRESSED:
-                onKeyPressed(e);
+                onKeyPressed(new KeyEvent(e));
                 break;
             case KeyEvent.KEY_RELEASED:
-                onKeyRelease(e);
+                onKeyRelease(new KeyEvent(e));
                 break;
             default:
                 break;
@@ -111,7 +115,6 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
         
     }
 
-    @Override
     public void replaceKeyListener(KeyListener keyListener) {
         popKeyListener();
         pushKeyListener(keyListener);
@@ -132,7 +135,6 @@ public class KeyControlStack implements AWTEventListener, IKeyControlStack {
         return result;
     }
 
-    @Override
     public void addBlocker(BooleanSupplier blocker) {
         blockSp.acquireUninterruptibly();
         keyEventBlocker.add(blocker);

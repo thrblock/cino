@@ -1,7 +1,5 @@
 package com.thrblock.cino.component;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -15,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.thrblock.cino.AWTBasedFrame;
+import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glfragment.EveryGLFragment;
 import com.thrblock.cino.glfragment.ForeverFragment;
@@ -25,7 +23,9 @@ import com.thrblock.cino.glfragment.IPureFragment;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.glshape.factory.GLShapeFactory;
-import com.thrblock.cino.io.IKeyControlStack;
+import com.thrblock.cino.io.KeyControlStack;
+import com.thrblock.cino.io.KeyEvent;
+import com.thrblock.cino.io.KeyListener;
 
 /**
  * 提供设计相关的主要成员
@@ -43,7 +43,7 @@ public abstract class CinoComponent implements KeyListener {
      * frame中包括了当前绘制框架的大部分信息（宽高、垂直同步是否开启，是否全屏等）
      */
     @Autowired
-    protected AWTBasedFrame frame;
+    protected CinoFrameConfig frame;
 
     /**
      * 图形构造器，用来绘制图形
@@ -55,7 +55,7 @@ public abstract class CinoComponent implements KeyListener {
      * 键盘IO控制器，可以挂载监听器捕获键盘事件或是读取某一指定按键的状态
      */
     @Autowired
-    protected IKeyControlStack keyIO;
+    protected KeyControlStack keyIO;
 
     /**
      * 根片段容器
@@ -168,10 +168,6 @@ public abstract class CinoComponent implements KeyListener {
     protected final <T> void autoEvery(int count,BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
         IPureFragment frag = () -> cons.accept(sup.get());
         compFrag.addFragment(new EveryGLFragment(count, frag.mergeCondition(condition)));
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
     }
 
     @Override

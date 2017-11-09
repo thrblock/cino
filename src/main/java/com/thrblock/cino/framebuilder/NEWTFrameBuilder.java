@@ -1,4 +1,4 @@
-package com.thrblock.cino;
+package com.thrblock.cino.framebuilder;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.newt.event.WindowAdapter;
@@ -16,10 +17,13 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.thrblock.cino.io.KeyControlStack;
+import com.thrblock.cino.io.MouseControl;
 
 @Component
-public class NEWTBasedFrame {
-    private static final Logger LOG = LoggerFactory.getLogger(NEWTBasedFrame.class);
+@Lazy(true)
+public class NEWTFrameBuilder {
+    private static final Logger LOG = LoggerFactory.getLogger(NEWTFrameBuilder.class);
     /**
      * 等比例缩放
      * 
@@ -35,9 +39,15 @@ public class NEWTBasedFrame {
 
     @Autowired
     private GLEventListener glEventListener;
+    
+    @Autowired
+    private MouseControl mouseControl;
+    
+    @Autowired
+    private KeyControlStack keyStack;
 
     /**
-     * 使用的显示卡
+     * 使用的显示设备
      */
     private GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -104,24 +114,25 @@ public class NEWTBasedFrame {
         LOG.info("graphics device you are current using:" + graphicsDevice.toString());
 
         window.addWindowListener(new WindowAdapter() {
+            // Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.
             @Override
             public void windowDestroyNotify(WindowEvent arg0) {
-                // Use a dedicate thread to run the stop() to ensure that the
-                // animator stops before program exits.
-                new Thread() {
-                    @Override
-                    public void run() {
-                        if (animator.isStarted())
-                            animator.stop(); // stop the animator loop
-                        System.exit(0);
+                new Thread(()-> {
+                    if (animator.isStarted()) {
+                        animator.stop(); // stop the animator loop
                     }
-                }.start();
+                    System.exit(0);
+                }).start();
             }
         });
 
         window.addGLEventListener(glEventListener);
+        window.addMouseListener(mouseControl.newtMouseListener());
+        window.addKeyListener(keyStack.newtKeyListener());
         window.setSize(screenWidth, screenHeight);
         window.setTitle(frameTitle);
+        window.setPointerVisible(!hideMouse);
         window.setVisible(true);
         animator.start(); // start the animator loop
         return window;

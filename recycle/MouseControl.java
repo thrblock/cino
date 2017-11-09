@@ -1,16 +1,14 @@
 package com.thrblock.cino.io;
 
 import java.awt.AWTEvent;
+import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 
-import javax.annotation.PostConstruct;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.jogamp.newt.event.MouseAdapter;
-import com.jogamp.newt.event.MouseListener;
 
 /**
  * 鼠标控制器
@@ -18,7 +16,8 @@ import com.jogamp.newt.event.MouseListener;
  * @author lizepu
  */
 @Component
-public class MouseControl implements AWTEventListener {
+public class MouseControl implements AWTEventListener, IMouseControl {
+    private static final Logger LOG = LoggerFactory.getLogger(MouseControl.class);
     /**
      * 渲染位置宽度 （像素）
      */
@@ -32,25 +31,14 @@ public class MouseControl implements AWTEventListener {
     private int x;
     private int y;
 
-    private class NEWTAdapter extends MouseAdapter {
-        @Override
-        public void mouseMoved(com.jogamp.newt.event.MouseEvent e) {
-            MouseControl.this.x = e.getX() - screenWidth / 2;
-            MouseControl.this.y = -e.getY() + screenHeight / 2;
-        }
+    /**
+     * 构造鼠标控制器
+     */
+    public MouseControl() {
+        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        LOG.info("inited.");
     }
-    
-    private NEWTAdapter newtMouseAdapter;
-    
-    @PostConstruct
-    void init() {
-        this.newtMouseAdapter = new NEWTAdapter();
-    }
-    
-    public MouseListener newtMouseListener() {
-        return newtMouseAdapter;
-    }
-    
+
     @Override
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
@@ -62,10 +50,12 @@ public class MouseControl implements AWTEventListener {
         }
     }
 
+    @Override
     public int getMouseX() {
         return x;
     }
 
+    @Override
     public int getMouseY() {
         return y;
     }

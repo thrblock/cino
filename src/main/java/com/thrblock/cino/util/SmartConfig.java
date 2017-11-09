@@ -1,4 +1,4 @@
-package com.thrblock.cino.util.io;
+package com.thrblock.cino.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

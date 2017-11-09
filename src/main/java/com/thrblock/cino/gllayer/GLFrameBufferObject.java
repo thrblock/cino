@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.thrblock.cino.AWTBasedFrame;
+import com.thrblock.cino.glprocessor.GLEventProcessor;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
@@ -125,7 +125,7 @@ public class GLFrameBufferObject {
             inited = false;
         }
         if(!inited) {
-            if(flexmode == AWTBasedFrame.FIX) {
+            if(flexmode == GLEventProcessor.FIX) {
                 initPointPosition();
             }
             initFBOByGLContext(gl);

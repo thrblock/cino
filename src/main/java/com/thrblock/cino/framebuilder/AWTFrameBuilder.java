@@ -1,5 +1,6 @@
-package com.thrblock.cino;
+package com.thrblock.cino.framebuilder;
 
+import java.awt.AWTEvent;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -9,6 +10,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
+import javax.annotation.PostConstruct;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GLCapabilities;
@@ -24,6 +27,8 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.thrblock.cino.io.KeyControlStack;
+import com.thrblock.cino.io.MouseControl;
 
 /**
  * GL渲染窗体设置
@@ -31,21 +36,18 @@ import com.jogamp.opengl.util.FPSAnimator;
  *
  */
 @Component
-public class AWTBasedFrame {
-    private static final Logger LOG = LoggerFactory.getLogger(AWTBasedFrame.class);
-    /**
-     * 等比例缩放
-     * @see #setFlexMode
-     */
-    public static final int SCALE = 0;
-    /**
-     * 仅仅是画布变大，图形大小不变
-     * @see #setFlexMode
-     */
-    public static final int FIX = 1;
+@Lazy(true)
+public class AWTFrameBuilder {
+    private static final Logger LOG = LoggerFactory.getLogger(AWTFrameBuilder.class);
     
     @Autowired
     private GLEventListener glEventListener;
+    
+    @Autowired
+    private KeyControlStack keyStack;
+    
+    @Autowired
+    private MouseControl mouseControl;
     /**
      * 使用的显示卡
      */
@@ -83,11 +85,6 @@ public class AWTBasedFrame {
      */
     @Value("${cino.frame.hidemouse:true}")
     private boolean hideMouse = true;
-    /**
-     * 当前缩放模式
-     */
-    @Value("${cino.frame.flexmode:"+SCALE+"}")
-    private int flexMode = SCALE;
     
     /**
      * 渲染位置宽度 （像素）
@@ -100,135 +97,11 @@ public class AWTBasedFrame {
     @Value("${cino.frame.screen.height:600}")
     private int screenHeight = 600;
     
-    /**
-     * 是否隐藏鼠标
-     */
-    public boolean isHideMouse() {
-        return hideMouse;
+    @PostConstruct
+    void init() {
+        Toolkit.getDefaultToolkit().addAWTEventListener(keyStack,AWTEvent.KEY_EVENT_MASK);
+        Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
-
-    /**
-     * 设置是否隐藏鼠标
-     * @param hideMouse 代表是否隐藏鼠标的布尔值
-     */
-    public void setHideMouse(boolean hideMouse) {
-        this.hideMouse = hideMouse;
-    }
-
-    /**
-     * 获得 渲染位置宽度 像素
-     */
-    public int getScreenWidth() {
-        return screenWidth;
-    }
-
-    /**
-     * 设置 渲染位置宽度 像素
-     */
-    public void setScreenWidth(int screenWidth) {
-        this.screenWidth = screenWidth;
-    }
-    
-    /**
-     * 获得 渲染位置高度 像素
-     */
-    public int getScreenHeight() {
-        return screenHeight;
-    }
-
-    /**
-     * 设置 渲染位置高度 像素
-     */
-    public void setScreenHeight(int screenHeight) {
-        this.screenHeight = screenHeight;
-    }
-
-    /**
-     * 是否使用双重缓冲
-     */
-    public boolean isDoubleBuffer() {
-        return doubleBuffer;
-    }
-
-    /**
-     * 设置 是否使用双重缓冲
-     */
-    public void setDoubleBuffer(boolean doubleBuffer) {
-        this.doubleBuffer = doubleBuffer;
-    }
-
-    /**
-     * 是否使用垂直同步
-     */
-    public boolean isVsync() {
-        return vsync;
-    }
-
-    /**
-     * 设置 是否使用垂直同步
-     */
-    public void setVsync(boolean vsync) {
-        this.vsync = vsync;
-    }
-
-    /**
-     * 是否全屏
-     */
-    public boolean isFullScreen() {
-        return fullScreen;
-    }
-
-    /**
-     * 设置 是否全屏
-     */
-    public void setFullScreen(boolean fullScreen) {
-        this.fullScreen = fullScreen;
-    }
-
-    /**
-     * 获得 期望 每秒绘制速率
-     */
-    public int getFramesPerSecond() {
-        return framesPerSecond;
-    }
-
-    /**
-     * 设置 期望 每秒绘制速率
-     */
-    public void setFramesPerSecond(int framesPerSecond) {
-        this.framesPerSecond = framesPerSecond;
-    }
-
-    /**
-     * 窗体是否可变
-     */
-    public boolean isFlexible() {
-        return flexible;
-    }
-
-    /**
-     * 设置 窗体是否可变
-     */
-    public void setFlexible(boolean flexible) {
-        this.flexible = flexible;
-    }
-
-    /**
-     * 获得 当前缩放模式
-     */
-    public int getFlexMode() {
-        return flexMode;
-    }
-
-    /**
-     * 设置 当前缩放模式
-     * @see #SCALE
-     * @see #FIX
-     */
-    public void setFlexMode(int flexMode) {
-        this.flexMode = flexMode;
-    }
-
     /**
      * 按照配置 构造JFrame
      * @return 满足配置的jframe
@@ -252,7 +125,7 @@ public class AWTBasedFrame {
         glcaps.setDoubleBuffered(doubleBuffer);
         GLCanvas canvas = new GLCanvas(glcaps);
         canvas.addGLEventListener(glEventListener);
-        LOG.info("graphics device you are current using:%s",graphicsDevice.toString());
+        LOG.info("graphics device you are current using:" + graphicsDevice.toString());
         if(fullScreen) {
             frame.setUndecorated(true);
             container.add(canvas);
@@ -270,7 +143,6 @@ public class AWTBasedFrame {
         if(vsync) {
             Animator animator = new Animator(canvas);
             animator.setRunAsFastAsPossible(false);
-            
             SwingUtilities.invokeLater(() -> {
                 frame.setVisible(true);
                 animator.start();
