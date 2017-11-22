@@ -14,8 +14,8 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.thrblock.cino.debug.FPSDebugger;
-import com.thrblock.cino.glfragment.IGLFragmentManager;
+import com.thrblock.cino.debug.DebugPannel;
+import com.thrblock.cino.glanimate.GLAnimateManager;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayerManager;
 
@@ -43,7 +43,7 @@ public class GLEventProcessor implements GLEventListener {
     public static final int FIX = 1;
 
     @Autowired
-    private IGLFragmentManager fragmentManager;
+    private GLAnimateManager animateManager;
 
     @Autowired
     private GLLayerManager layerManager;
@@ -61,7 +61,7 @@ public class GLEventProcessor implements GLEventListener {
     private int flexMode;
 
     @Autowired
-    private FPSDebugger fpsCounter;
+    private DebugPannel fpsCounter;
 
     private boolean reshaped = false;
 
@@ -74,7 +74,7 @@ public class GLEventProcessor implements GLEventListener {
         GL2 gl2 = gl.getGL2();
         contextInitor.glInitializing(gl);
         layerManager.drawAllLayer(gl2);
-        fragmentManager.allFragment();
+        animateManager.runAll();
         fpsCounter.noticeDrawCall(System.currentTimeMillis() - startTime);
     }
 

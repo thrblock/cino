@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
-import com.thrblock.cino.glfragment.IPureFragment;
+import com.thrblock.cino.glanimate.IPureFragment;
 import com.thrblock.cino.shader.AbstractGLProgram;
 import com.thrblock.cino.shader.data.GLUniformFloat;
 import com.thrblock.cino.shader.data.GLUniformInt;

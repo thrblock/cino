@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.component.CinoComponent;
@@ -14,7 +15,8 @@ import com.thrblock.cino.gltexture.GLFont;
 import com.thrblock.cino.util.structure.CharArrayInt;
 
 @Component
-public class FPSDebugger extends CinoComponent {
+@Lazy(true)
+public class DebugPannel extends CinoComponent {
     @Value("${cino.frame.fps:60}")
     private int fps;
 

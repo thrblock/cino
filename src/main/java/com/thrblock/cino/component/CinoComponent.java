@@ -15,11 +15,10 @@ import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.function.VoidConsumer;
-import com.thrblock.cino.glfragment.EveryGLFragment;
-import com.thrblock.cino.glfragment.ForeverFragment;
-import com.thrblock.cino.glfragment.FragmentFactory;
-import com.thrblock.cino.glfragment.GLFragmentManager;
-import com.thrblock.cino.glfragment.IPureFragment;
+import com.thrblock.cino.glanimate.GLAnimate;
+import com.thrblock.cino.glanimate.GLAnimateFactory;
+import com.thrblock.cino.glanimate.GLAnimateManager;
+import com.thrblock.cino.glanimate.IPureFragment;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.glshape.factory.GLShapeFactory;
@@ -61,17 +60,17 @@ public abstract class CinoComponent implements KeyListener {
      * 根片段容器
      */
     @Autowired
-    protected GLFragmentManager rootFrag;
+    protected GLAnimateManager rootFrag;
 
     /**
      * 组件片段容器
      */
-    protected GLFragmentManager compFrag;
+    protected GLAnimateManager compAni;
     /**
      * 片段构造器
      */
     @Autowired
-    protected FragmentFactory fragFactory;
+    protected GLAnimateFactory animateFactory;
 
     /**
      * 帧缓冲管理器
@@ -89,9 +88,9 @@ public abstract class CinoComponent implements KeyListener {
 
     @PostConstruct
     private final void postConstruct() throws Exception {
-        compFrag = rootFrag.generateSubContainer();
-        compFrag.pause();
-        fragFactory.setContainer(compFrag);
+        compAni = rootFrag.generateSubContainer();
+        compAni.pause();
+        animateFactory.setContainer(compAni);
         sceneRoot = shapeFactory.createNode();
         init();
     }
@@ -114,7 +113,7 @@ public abstract class CinoComponent implements KeyListener {
      * 激活组件
      */
     public final void activited() {
-        compFrag.remuse();
+        compAni.remuse();
         onActivited.forEach(e -> e.accept());
     }
 
@@ -122,7 +121,7 @@ public abstract class CinoComponent implements KeyListener {
      * 停止组件
      */
     public final void deactivited() {
-        compFrag.pause();
+        compAni.pause();
         onDeactivited.forEach(e -> e.accept());
     }
 
@@ -132,19 +131,28 @@ public abstract class CinoComponent implements KeyListener {
      * @param pure
      */
     protected final void auto(IPureFragment pure) {
-        compFrag.addFragment(new ForeverFragment(pure));
+        GLAnimate ani = animateFactory.build();
+        ani.add(pure);
+        ani.enable();
     }
 
     protected final <T> void auto(Supplier<T> sup, Consumer<T> cons) {
-        compFrag.addFragment(new EveryGLFragment(1, () -> cons.accept(sup.get())));
+        GLAnimate ani = animateFactory.build();
+        ani.add(() -> cons.accept(sup.get()));
+        ani.enable();
     }
 
     protected final void autoEvery(int count, IPureFragment pure) {
-        compFrag.addFragment(new EveryGLFragment(count, pure));
+        GLAnimate ani = animateFactory.build();
+        ani.add(pure.mergeDelay(count));
+        ani.enable();
     }
 
     protected final <T> void autoEvery(int count, Supplier<T> sup, Consumer<T> cons) {
-        compFrag.addFragment(new EveryGLFragment(count, () -> cons.accept(sup.get())));
+        GLAnimate ani = animateFactory.build();
+        IPureFragment pure = () -> cons.accept(sup.get());
+        ani.add(pure.mergeDelay(count));
+        ani.enable();
     }
     
     /**
@@ -153,21 +161,29 @@ public abstract class CinoComponent implements KeyListener {
      * @param pure
      */
     protected final void auto(BooleanSupplier condition,IPureFragment pure) {
-        compFrag.addFragment(new ForeverFragment(pure.mergeCondition(condition)));
+        GLAnimate ani = animateFactory.build();
+        ani.add(pure.mergeCondition(condition));
+        ani.enable();
     }
 
     protected final <T> void auto(BooleanSupplier condition,Supplier<T> sup, Consumer<T> cons) {
-        IPureFragment frag = () -> cons.accept(sup.get());
-        compFrag.addFragment(new EveryGLFragment(1, frag.mergeCondition(condition)));
+        GLAnimate ani = animateFactory.build();
+        IPureFragment pure = () -> cons.accept(sup.get());
+        ani.add(pure.mergeCondition(condition));
+        ani.enable();
     }
 
     protected final void autoEvery(int count,BooleanSupplier condition, IPureFragment pure) {
-        compFrag.addFragment(new EveryGLFragment(count, pure.mergeCondition(condition)));
+        GLAnimate ani = animateFactory.build();
+        ani.add(pure.mergeDelay(count).mergeCondition(condition));
+        ani.enable();
     }
 
     protected final <T> void autoEvery(int count,BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
-        IPureFragment frag = () -> cons.accept(sup.get());
-        compFrag.addFragment(new EveryGLFragment(count, frag.mergeCondition(condition)));
+        GLAnimate ani = animateFactory.build();
+        IPureFragment pure = () -> cons.accept(sup.get());
+        ani.add(pure.mergeDelay(count).mergeCondition(condition));
+        ani.enable();
     }
     
     @Override
