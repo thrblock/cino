@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -36,7 +35,7 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
     private GLInitor glInitor;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         String[] beanNames = applicationContext.getBeanDefinitionNames();
         Arrays.stream(beanNames).map(applicationContext::getBean).forEach(this::processBean);
     }

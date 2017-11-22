@@ -169,9 +169,10 @@ public abstract class CinoComponent implements KeyListener {
         IPureFragment frag = () -> cons.accept(sup.get());
         compFrag.addFragment(new EveryGLFragment(count, frag.mergeCondition(condition)));
     }
-
+    
     @Override
     public void keyPressed(KeyEvent e) {
+        
     }
 
     @Override
