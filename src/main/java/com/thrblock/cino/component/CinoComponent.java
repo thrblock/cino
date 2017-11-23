@@ -25,6 +25,7 @@ import com.thrblock.cino.glshape.factory.GLShapeFactory;
 import com.thrblock.cino.io.KeyControlStack;
 import com.thrblock.cino.io.KeyEvent;
 import com.thrblock.cino.io.KeyListener;
+import com.thrblock.cino.io.MouseControl;
 
 /**
  * 提供设计相关的主要成员
@@ -55,7 +56,9 @@ public abstract class CinoComponent implements KeyListener {
      */
     @Autowired
     protected KeyControlStack keyIO;
-
+    
+    @Autowired
+    protected MouseControl mouseIO;
     /**
      * 根片段容器
      */

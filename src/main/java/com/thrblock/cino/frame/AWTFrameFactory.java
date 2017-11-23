@@ -1,4 +1,4 @@
-package com.thrblock.cino.framebuilder;
+package com.thrblock.cino.frame;
 
 import java.awt.AWTEvent;
 import java.awt.Container;
@@ -37,8 +37,8 @@ import com.thrblock.cino.io.MouseControl;
  */
 @Component
 @Lazy(true)
-public class AWTFrameBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(AWTFrameBuilder.class);
+public class AWTFrameFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(AWTFrameFactory.class);
     
     @Autowired
     private GLEventListener glEventListener;
@@ -100,7 +100,7 @@ public class AWTFrameBuilder {
     @PostConstruct
     void init() {
         Toolkit.getDefaultToolkit().addAWTEventListener(keyStack,AWTEvent.KEY_EVENT_MASK);
-        Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_EVENT_MASK);
     }
     /**
      * 按照配置 构造JFrame

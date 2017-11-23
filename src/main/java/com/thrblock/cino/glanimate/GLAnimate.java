@@ -15,6 +15,7 @@ public class GLAnimate {
 
     private ArrayList<IPureFragment> frags = new ArrayList<>();
     private int index = -1;
+    private IPureFragment finish;
 
     GLAnimate() {
     }
@@ -39,6 +40,7 @@ public class GLAnimate {
      * 开启此片段逻辑
      */
     public void enable() {
+        index = 0;
         this.enable = true;
     }
 
@@ -59,10 +61,19 @@ public class GLAnimate {
     public void animate() {
         if (!checkIndex()) {
             disable();
+            if(finish != null) {
+                finish.fragment();
+            }
+        } else {
+            frags.get(index).fragment();
         }
-        frags.get(index).fragment();
     }
 
+    public GLAnimate whenFinish(IPureFragment finish) {
+        this.finish = finish;
+        return this;
+    }
+    
     /**
      * 切换到下一逻辑，若不存在会自动停止
      */

@@ -1,4 +1,4 @@
-package com.thrblock.cino.framebuilder;
+package com.thrblock.cino.frame;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -22,8 +22,8 @@ import com.thrblock.cino.io.MouseControl;
 
 @Component
 @Lazy(true)
-public class NEWTFrameBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(NEWTFrameBuilder.class);
+public class NEWTFrameFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(NEWTFrameFactory.class);
     /**
      * 等比例缩放
      * 

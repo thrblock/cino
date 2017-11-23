@@ -2,7 +2,7 @@ package com.thrblock.cino.io;
 
 import java.awt.AWTEvent;
 import java.awt.event.AWTEventListener;
-import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 
@@ -31,12 +31,40 @@ public class MouseControl implements AWTEventListener {
     private int screenHeight = 600;
     private int x;
     private int y;
-
+    
+    private boolean[] mouseButtonStatus = new boolean[64];
+    private Consumer<MouseEvent> mouseClicked;
+    private Consumer<MouseEvent> mousePressed;
+    private Consumer<MouseEvent> mouseReleased;
+    
     private class NEWTAdapter extends MouseAdapter {
         @Override
         public void mouseMoved(com.jogamp.newt.event.MouseEvent e) {
             MouseControl.this.x = e.getX() - screenWidth / 2;
             MouseControl.this.y = -e.getY() + screenHeight / 2;
+        }
+        
+        @Override
+        public void mouseClicked(com.jogamp.newt.event.MouseEvent e) {
+            if(mouseClicked != null) {
+                mouseClicked.accept(new MouseEvent(e));
+            }
+        }
+        
+        @Override
+        public void mousePressed(com.jogamp.newt.event.MouseEvent e) {
+            press(e.getButton());
+            if(mousePressed != null) {
+                mousePressed.accept(new MouseEvent(e));
+            }
+        }
+
+        @Override
+        public void mouseReleased(com.jogamp.newt.event.MouseEvent e) {
+            release(e.getButton());
+            if(mouseReleased != null) {
+                mouseReleased.accept(new MouseEvent(e));
+            }
         }
     }
     
@@ -53,11 +81,25 @@ public class MouseControl implements AWTEventListener {
     
     @Override
     public void eventDispatched(AWTEvent event) {
-        if (event instanceof MouseEvent) {
-            MouseEvent e = (MouseEvent) event;
-            if (e.getID() == MouseEvent.MOUSE_MOVED) {
+        if (event instanceof java.awt.event.MouseEvent) {
+            java.awt.event.MouseEvent e = (java.awt.event.MouseEvent) event;
+            if (e.getID() == java.awt.event.MouseEvent.MOUSE_MOVED) {
                 this.x = e.getX() - screenWidth / 2;
                 this.y = -e.getY() + screenHeight / 2;
+            } else if(e.getID() == java.awt.event.MouseEvent.MOUSE_CLICKED) {
+                if(mouseClicked != null) {
+                    mouseClicked.accept(new MouseEvent(e));
+                }
+            } else if(e.getID() == java.awt.event.MouseEvent.MOUSE_PRESSED) {
+                press(e.getButton());
+                if(mousePressed != null) {
+                    mousePressed.accept(new MouseEvent(e));
+                }
+            } else if(e.getID() == java.awt.event.MouseEvent.MOUSE_RELEASED) {
+                release(e.getButton());
+                if(mouseReleased != null) {
+                    mouseReleased.accept(new MouseEvent(e));
+                }
             }
         }
     }
@@ -68,5 +110,28 @@ public class MouseControl implements AWTEventListener {
 
     public int getMouseY() {
         return y;
+    }
+    
+    private void press(int st) {
+        if(st >= 0 && st <= mouseButtonStatus.length) {
+            mouseButtonStatus[st] = true;
+        }
+    }
+    private void release(int st) {
+        if(st >= 0 && st <= mouseButtonStatus.length) {
+            mouseButtonStatus[st] = true;
+        }
+    }
+
+    public void setMouseClicked(Consumer<MouseEvent> mouseClicked) {
+        this.mouseClicked = mouseClicked;
+    }
+
+    public void setMousePressed(Consumer<MouseEvent> mousePressed) {
+        this.mousePressed = mousePressed;
+    }
+
+    public void setMouseReleased(Consumer<MouseEvent> mouseReleased) {
+        this.mouseReleased = mouseReleased;
     }
 }
