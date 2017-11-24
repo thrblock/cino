@@ -63,7 +63,7 @@ public abstract class CinoComponent implements KeyListener {
      * 根片段容器
      */
     @Autowired
-    protected GLAnimateManager rootFrag;
+    protected GLAnimateManager rootAni;
 
     /**
      * 组件片段容器
@@ -91,7 +91,7 @@ public abstract class CinoComponent implements KeyListener {
 
     @PostConstruct
     private final void postConstruct() throws Exception {
-        compAni = rootFrag.generateSubContainer();
+        compAni = rootAni.generateSubContainer();
         compAni.pause();
         animateFactory.setContainer(compAni);
         sceneRoot = shapeFactory.createNode();

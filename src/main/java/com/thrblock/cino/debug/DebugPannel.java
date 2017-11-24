@@ -41,25 +41,30 @@ public class DebugPannel extends CinoComponent {
     private CharArrayInt arrayInt4ft;
 
     private Font panelFont;
+
     @Override
     public void init() throws Exception {
         if (debug) {
             lastRegTime = System.currentTimeMillis();
-            
-            panelFont = new Font(FontsInCommon.DIALOG, Font.PLAIN, 12);
-            
+
+            panelFont = getDefaultFont();
+
             shapeFactory.setLayer(-1);
             buildPanel();
             buildFPS();
             buildOVR();
             buildOVD();
-            
+
             onActivited(sceneRoot::show);
             onDeactivited(sceneRoot::hide);
-            
-            sceneRoot.setCentralX((screenW - debugPannelWidth) / 2); 
-            sceneRoot.setCentralY((screenH - debugPannelHeight) / 2); 
+
+            sceneRoot.setCentralX((screenW - debugPannelWidth) / 2);
+            sceneRoot.setCentralY((screenH - debugPannelHeight) / 2);
         }
+    }
+
+    private Font getDefaultFont() {
+        return new Font(FontsInCommon.GNU_FREE_MONO, Font.PLAIN, 12);
     }
 
     private void buildPanel() {
@@ -79,7 +84,7 @@ public class DebugPannel extends CinoComponent {
         GLCharArea charArea = shapeFactory.buildGLCharArea(font, 0, 15, debugPannelWidth, 20, fpsC);
         charArea.setColor(Color.BLACK);
     }
-    
+
     private void buildOVR() {
         char[] fpsC = new char[7];
         GLFont font = new GLFont(panelFont);
@@ -90,7 +95,7 @@ public class DebugPannel extends CinoComponent {
         GLCharArea charArea = shapeFactory.buildGLCharArea(font, 0, 0, debugPannelWidth, 20, fpsC);
         charArea.setColor(Color.BLACK);
     }
-    
+
     private void buildOVD() {
         char[] fpsC = new char[7];
         GLFont font = new GLFont(panelFont);
@@ -116,14 +121,14 @@ public class DebugPannel extends CinoComponent {
             second = second == 0 ? 1 : second;
             int avgTimeCount = (int) (fps / second);
             long avgTimeUse = allTimeUse / fps;
-            if(allTimeUse > 9999) {
+            if (allTimeUse > 9999) {
                 arrayInt4ft.setByInt(9999);
             } else {
-                arrayInt4ft.setByInt((int)allTimeUse);
+                arrayInt4ft.setByInt((int) allTimeUse);
             }
             allTimeUse = 0;
-            float avgTimeCent = avgTimeUse/(1000f/fps);
-            int timeCent = (int)(avgTimeCent * 100);
+            float avgTimeCent = avgTimeUse / (1000f / fps);
+            int timeCent = (int) (avgTimeCent * 100);
             arrayInt4fps.setByInt(avgTimeCount);
             arrayInt4ovr.setByInt(timeCent);
         }
