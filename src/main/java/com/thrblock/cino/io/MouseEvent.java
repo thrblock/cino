@@ -1,12 +1,6 @@
 package com.thrblock.cino.io;
 
 public class MouseEvent {
-//    {
-//        com.jogamp.newt.event.MouseEvent e;
-//        com.jogamp.newt.event.MouseListener el;
-//        java.awt.event.MouseEvent s;
-//        java.awt.event.MouseListener sl;
-//    }
     private Object src;
     private int x;
     private int y;

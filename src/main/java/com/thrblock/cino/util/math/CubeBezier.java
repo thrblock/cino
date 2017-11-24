@@ -63,6 +63,13 @@ public class CubeBezier {
         return (float) Math.pow(src, time);
     }
 
+    public Point2D getStart() {
+        return start;
+    }
+    
+    public Point2D getEnd() {
+        return end;
+    }
     /**
      * 计算给定点的贝塞尔曲线值
      * 

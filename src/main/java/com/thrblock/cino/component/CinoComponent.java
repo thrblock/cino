@@ -57,6 +57,9 @@ public abstract class CinoComponent implements KeyListener {
     @Autowired
     protected KeyControlStack keyIO;
     
+    /**
+     * 鼠标IO控制器，可以设置鼠标监听器捕获鼠标事件 或读取某一鼠标按键的状态
+     */
     @Autowired
     protected MouseControl mouseIO;
     /**
