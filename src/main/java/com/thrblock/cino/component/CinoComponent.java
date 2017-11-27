@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import com.thrblock.cino.io.KeyControlStack;
 import com.thrblock.cino.io.KeyEvent;
 import com.thrblock.cino.io.KeyListener;
 import com.thrblock.cino.io.MouseControl;
+import com.thrblock.cino.storage.Storage;
 
 /**
  * 提供设计相关的主要成员
@@ -38,7 +40,11 @@ public abstract class CinoComponent implements KeyListener {
      * 日志
      */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-
+    /**
+     * local storage
+     */
+    @Autowired
+    protected Storage storage;
     /**
      * frame中包括了当前绘制框架的大部分信息（宽高、垂直同步是否开启，是否全屏等）
      */
@@ -100,11 +106,23 @@ public abstract class CinoComponent implements KeyListener {
         sceneRoot = shapeFactory.createNode();
         init();
     }
+    
+    @PreDestroy
+    private final void preDestroy() throws Exception {
+        storage.save(this);
+        destory();
+    }
 
     /**
      * 初始化时调用一次
      */
     public void init() throws Exception {
+    }
+    
+    /**
+     * 销毁时调用一次
+     */
+    public void destory() throws Exception {
     }
 
     protected final void onActivited(VoidConsumer v) {

@@ -15,3 +15,4 @@ cino.frame.screen.width=800
 cino.frame.screen.height=600
 cino.context.enablefbo=true
 cino.debug.enable=true
+cino.storage.location=./

@@ -1,8 +1,5 @@
 package com.thrblock.cino;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -13,10 +10,15 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import com.thrblock.cino.annotation.BootComponent;
+import com.thrblock.cino.annotation.EnableLocalStorage;
 import com.thrblock.cino.annotation.GLAutoInit;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
+import com.thrblock.cino.component.CinoComponent;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.glprocessor.GLEventProcessor;
+import com.thrblock.cino.storage.Storage;
+import com.thrblock.cino.util.ReflactUtils;
 
 /**
  * Cino 注解处理器
@@ -33,6 +35,9 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
 
     @Autowired
     private GLInitor glInitor;
+    
+    @Autowired
+    private Storage storage;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
@@ -41,24 +46,22 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
     }
 
     private void processBean(Object o) {
-        Arrays.stream(findAnnotationMethod(ScreenSizeChangeListener.class, o))
-                .forEach(m -> glEventProcessor.addScreenSizeChangeListener((w, h) -> invokeMethod(o, m, w, h)));
-        Arrays.stream(findAnnotationMethod(GLAutoInit.class, o))
-                .forEach(m -> glInitor.addGLInitializable(gl -> invokeMethod(o, m, gl)));
-    }
+        LOG.info("processing annotation of beans");
+        Arrays.stream(ReflactUtils.findAnnotationMethod(ScreenSizeChangeListener.class, o))
+                .forEach(m -> glEventProcessor.addScreenSizeChangeListener((w, h) -> ReflactUtils.invokeMethod(o, m, w, h)));
+        Arrays.stream(ReflactUtils.findAnnotationMethod(GLAutoInit.class, o))
+                .forEach(m -> glInitor.addGLInitializable(gl -> ReflactUtils.invokeMethod(o, m, gl)));
 
-    private void invokeMethod(Object o, Method m, Object... params) {
-        try {
-            m.invoke(o, params);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            LOG.error("error when invoke annotation method:" + e);
+        BootComponent boot = AnnotationUtils.findAnnotation(o.getClass(), BootComponent.class);
+        if (boot != null && o instanceof CinoComponent) {
+            CinoComponent comp = (CinoComponent) o;
+            comp.activited();
         }
-    }
-
-    private Method[] findAnnotationMethod(Class<? extends Annotation> annotationClass, Object o) {
-        Method[] all = o.getClass().getMethods();
-        return Arrays.stream(all).filter(method -> AnnotationUtils.findAnnotation(method, annotationClass) != null)
-                .toArray(size -> new Method[size]);
+        
+        EnableLocalStorage st = AnnotationUtils.findAnnotation(o.getClass(), EnableLocalStorage.class);
+        if(st != null) {
+            storage.load(o);
+        }
     }
 
 }

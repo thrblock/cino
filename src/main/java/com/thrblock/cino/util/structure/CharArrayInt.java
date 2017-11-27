@@ -88,6 +88,10 @@ public class CharArrayInt {
         return arr;
     }
     
+    public int getCurrent() {
+        return current;
+    }
+    
     private int getLength(int src) {
         if(src == 0) {
             return 1;
