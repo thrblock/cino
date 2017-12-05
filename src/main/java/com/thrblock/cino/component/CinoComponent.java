@@ -12,6 +12,7 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.CinoFrameConfig;
@@ -40,6 +41,12 @@ public abstract class CinoComponent implements KeyListener {
      * 日志
      */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Value("${cino.frame.screen.width:1024}")
+    protected int screenW;
+
+    @Value("${cino.frame.screen.height:600}")
+    protected int screenH;
     /**
      * local storage
      */
@@ -149,6 +156,13 @@ public abstract class CinoComponent implements KeyListener {
         onDeactivited.forEach(e -> e.accept());
     }
 
+    /**
+     * auto show/hide scene root when component activited/deactivited 
+     */
+    protected final void autoShowHide() {
+        onActivited(sceneRoot::show);
+        onDeactivited(sceneRoot::hide);
+    }
     /**
      * 伴随组件自动的帧片段逻辑
      * 

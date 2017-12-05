@@ -3,8 +3,9 @@ package com.thrblock.cino.glanimate;
 import java.util.function.BooleanSupplier;
 
 /**
- * 一个纯粹的片段逻辑 函数式接口
- * 
+ * 一个纯粹的片段逻辑 函数式接口<br />
+ * 本来等同于Runnable 但是使用Runnable会产生异步相关的不必要的联想<br />
+ * 后来增加的default方法<br />
  * @author lizepu
  */
 @FunctionalInterface

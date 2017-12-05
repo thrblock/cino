@@ -1,6 +1,7 @@
 package com.thrblock.cino.glanimate;
 
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
 
 /**
  * GLAnimate 抽象动画<br />
@@ -20,6 +21,14 @@ public class GLAnimate {
     GLAnimate() {
     }
 
+    public GLAnimate add(BooleanSupplier boolfrag) {
+        return this.add(() -> {
+            if(boolfrag.getAsBoolean()) {
+                next();
+            }
+        });
+    }
+    
     public GLAnimate add(IPureFragment frag) {
         frags.add(frag);
         if (index == -1) {

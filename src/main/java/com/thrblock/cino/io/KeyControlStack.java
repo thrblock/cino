@@ -4,15 +4,12 @@ import java.awt.AWTEvent;
 import java.awt.event.AWTEventListener;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.Semaphore;
-import java.util.function.BooleanSupplier;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
 import com.jogamp.newt.event.KeyAdapter;
-import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
  * 键盘堆栈控制器,维护着一个键盘监听器栈结构，会把按键事件传给栈的顶层
@@ -22,12 +19,6 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
 public class KeyControlStack implements AWTEventListener {
     private boolean[] keyStatus = new boolean[1024];
     private Deque<KeyListener> listenerStack = new ConcurrentLinkedDeque<>();
-    /**
-     * keyEvent 阻塞点
-     */
-    private CrudeLinkedList<BooleanSupplier> keyEventBlocker = new CrudeLinkedList<>();
-    private CrudeLinkedList<BooleanSupplier>.CrudeIter blockIter = keyEventBlocker.genCrudeIter();
-    private Semaphore blockSp = new Semaphore(1);
 
     private class NEWTAdapter extends KeyAdapter {
         @Override
@@ -78,7 +69,7 @@ public class KeyControlStack implements AWTEventListener {
 
     private void onKeyPressed(KeyEvent e) {
         KeyListener listener = peekKeyListener();
-        if(listener != null && isCurrentEventPassable()) {
+        if(listener != null) {
             listener.keyPressed(e);
         }
         if (e.getKeyCode() >= 0 && e.getKeyCode() < keyStatus.length) {
@@ -88,7 +79,7 @@ public class KeyControlStack implements AWTEventListener {
     
     private void onKeyRelease(KeyEvent e) {
         KeyListener listener = peekKeyListener();
-        if(listener != null && isCurrentEventPassable()) {
+        if(listener != null) {
             listener.keyReleased(e);
         }
         if (e.getKeyCode() >= 0 && e.getKeyCode() < keyStatus.length) {
@@ -120,24 +111,4 @@ public class KeyControlStack implements AWTEventListener {
         pushKeyListener(keyListener);
     }
     
-    private boolean isCurrentEventPassable() {
-        boolean result = true;
-        blockSp.acquireUninterruptibly();
-        while(blockIter.hasNext()) {
-            BooleanSupplier blocker = blockIter.next();
-            if(blocker.getAsBoolean()) {
-                result = false;
-                break;
-            }
-        }
-        blockIter.reset();
-        blockSp.release();
-        return result;
-    }
-
-    public void addBlocker(BooleanSupplier blocker) {
-        blockSp.acquireUninterruptibly();
-        keyEventBlocker.add(blocker);
-        blockSp.release();
-    }
 }

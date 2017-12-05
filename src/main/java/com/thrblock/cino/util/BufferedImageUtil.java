@@ -1,4 +1,4 @@
-package com.thrblock.cino.gltexture;
+package com.thrblock.cino.util;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -18,6 +18,10 @@ public class BufferedImageUtil {
         return op.filter(image, null);
     }
 
+    public static BufferedImage genEmptyImage(int w,int h) {
+        return new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    }
+    
     public static BufferedImage getScaledImage(BufferedImage src, int w, int h) {
         int finalw = w;
         int finalh = h;

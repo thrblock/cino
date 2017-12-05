@@ -8,6 +8,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.image.BufferedImage;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +29,9 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.thrblock.cino.io.KeyControlStack;
+import com.thrblock.cino.io.MouseBus;
 import com.thrblock.cino.io.MouseControl;
+import com.thrblock.cino.io.MouseEvent;
 
 /**
  * GL渲染窗体设置
@@ -48,6 +51,9 @@ public class AWTFrameFactory {
     
     @Autowired
     private MouseControl mouseControl;
+    
+    @Autowired
+    private MouseBus mouseBus;
     /**
      * 使用的显示卡
      */
@@ -101,6 +107,25 @@ public class AWTFrameFactory {
     void init() {
         Toolkit.getDefaultToolkit().addAWTEventListener(keyStack,AWTEvent.KEY_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_EVENT_MASK);
+        Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        mouseBus.setAdder(l -> {
+            AWTEventListener awtl = event -> {
+                if (event instanceof java.awt.event.MouseEvent) {
+                    java.awt.event.MouseEvent e = (java.awt.event.MouseEvent) event;
+                    if (e.getID() == java.awt.event.MouseEvent.MOUSE_CLICKED) {
+                        l.mouseClicked(new MouseEvent(e));
+                    } else if (e.getID() == java.awt.event.MouseEvent.MOUSE_PRESSED) {
+                        l.mousePressed(new MouseEvent(e));
+                    } else if (e.getID() == java.awt.event.MouseEvent.MOUSE_RELEASED) {
+                        l.mouseReleased(new MouseEvent(e));
+                    }
+                }
+            };
+            Toolkit.getDefaultToolkit().addAWTEventListener(awtl, AWTEvent.MOUSE_EVENT_MASK);
+            Toolkit.getDefaultToolkit().addAWTEventListener(awtl, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+            return awtl;
+        });
+        
     }
     /**
      * 按照配置 构造JFrame

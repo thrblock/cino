@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.jogamp.newt.event.MouseAdapter;
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
@@ -18,7 +20,9 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.thrblock.cino.io.KeyControlStack;
+import com.thrblock.cino.io.MouseBus;
 import com.thrblock.cino.io.MouseControl;
+import com.thrblock.cino.io.MouseEvent;
 
 @Component
 @Lazy(true)
@@ -39,10 +43,13 @@ public class NEWTFrameFactory {
 
     @Autowired
     private GLEventListener glEventListener;
-    
+
     @Autowired
     private MouseControl mouseControl;
-    
+
+    @Autowired
+    private MouseBus mouseBus;
+
     @Autowired
     private KeyControlStack keyStack;
 
@@ -135,6 +142,26 @@ public class NEWTFrameFactory {
         window.setPointerVisible(!hideMouse);
         window.setVisible(true);
         animator.start(); // start the animator loop
+        
+        mouseBus.setAdder(l->{
+            MouseAdapter newtl = new MouseAdapter() {
+                @Override
+                public void mouseClicked(com.jogamp.newt.event.MouseEvent e) {
+                    l.mouseClicked(new MouseEvent(e));
+                }
+                @Override
+                public void mousePressed(com.jogamp.newt.event.MouseEvent e) {
+                    l.mousePressed(new MouseEvent(e));
+                }
+                @Override
+                public void mouseReleased(com.jogamp.newt.event.MouseEvent e) {
+                    l.mouseReleased(new MouseEvent(e));
+                }
+            };
+            window.addMouseListener(newtl);
+            return l;
+        });
+        mouseBus.setRemover(o -> window.removeMouseListener((MouseListener)o));
         return window;
     }
 }

@@ -14,6 +14,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.thrblock.cino.function.CharFunction;
 import com.thrblock.cino.glprocessor.GLEventProcessor;
+import com.thrblock.cino.util.BufferedImageUtil;
 
 /**
  * 可生成固定字体的纹理

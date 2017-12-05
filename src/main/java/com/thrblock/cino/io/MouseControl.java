@@ -31,6 +31,7 @@ public class MouseControl implements AWTEventListener {
      */
     @Value("${cino.frame.screen.height:600}")
     private int screenHeight = 600;
+    
     private int x;
     private int y;
 
@@ -61,7 +62,8 @@ public class MouseControl implements AWTEventListener {
         @Override
         public void mouseClicked(com.jogamp.newt.event.MouseEvent e) {
             if (enableMouseClick) {
-                mouseClicked.accept(new MouseEvent(e));
+                MouseEvent event = new MouseEvent(e);
+                mouseClicked.accept(event);
             }
         }
 
@@ -94,10 +96,12 @@ public class MouseControl implements AWTEventListener {
     @PostConstruct
     void init() {
         this.newtMouseAdapter = new NEWTAdapter();
-        awtKeyMapping.put(java.awt.event.MouseEvent.MOUSE_MOVED, e -> {
+        Consumer<java.awt.event.MouseEvent> moving = e -> {
             this.x = e.getX() - screenWidth / 2;
             this.y = -e.getY() + screenHeight / 2;
-        });
+        };
+        awtKeyMapping.put(java.awt.event.MouseEvent.MOUSE_MOVED, moving);
+        awtKeyMapping.put(java.awt.event.MouseEvent.MOUSE_DRAGGED, moving);
         awtKeyMapping.put(java.awt.event.MouseEvent.MOUSE_CLICKED, e -> {
             if (enableMouseClick) {
                 mouseClicked.accept(new MouseEvent(e));
