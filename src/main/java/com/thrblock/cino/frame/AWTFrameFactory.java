@@ -125,7 +125,7 @@ public class AWTFrameFactory {
             Toolkit.getDefaultToolkit().addAWTEventListener(awtl, AWTEvent.MOUSE_MOTION_EVENT_MASK);
             return awtl;
         });
-        
+        mouseBus.setRemover(o -> Toolkit.getDefaultToolkit().removeAWTEventListener((AWTEventListener) o));
     }
     /**
      * 按照配置 构造JFrame

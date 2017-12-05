@@ -43,6 +43,10 @@ public class GLShapeFactory {
     public void setLayer(int layerIndex) {
         this.layer = layerIndex;
     }
+    
+    public int getLayer() {
+        return layer;
+    }
 
     /**
      * 构造一个点
