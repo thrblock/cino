@@ -262,7 +262,7 @@ public class GLPoint extends GLShape {
      * 获得 旋转角度，该设置不会影响到点图形的显示，但会影响其子节点
      * */
 	@Override
-	public float getTheta() {
+	public float getRadian() {
 		return theta;
 	}
 
@@ -271,7 +271,7 @@ public class GLPoint extends GLShape {
      * 设置 旋转角度，该设置不会影响到点图形的显示，但会影响其子节点
      * */
 	@Override
-	public void setTheta(float dstTheta) {
+	public void setRadian(float dstTheta) {
 		this.theta = dstTheta;
 	}
 
@@ -280,7 +280,7 @@ public class GLPoint extends GLShape {
      * 设置 旋转角度，指定旋转轴
      * */
 	@Override
-	public void setTheta(float dstTheta, float cx, float cy) {
+	public void setRadian(float dstTheta, float cx, float cy) {
 		float offset = dstTheta - this.theta;
 		float nx = revolveX(x, y, cx, cy, offset);
 		float ny = revolveY(x, y, cx, cy, offset);

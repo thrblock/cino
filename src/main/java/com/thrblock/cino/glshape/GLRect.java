@@ -1,7 +1,5 @@
 package com.thrblock.cino.glshape;
 
-import com.thrblock.cino.glshape.proxy.RectPositionProxy;
-
 /**
  * 一个矩形图形对象
  * @author lizepu
@@ -69,11 +67,68 @@ public class GLRect extends GLPolygonShape {
         }
     }
     
+    public void rightOf(GLRect another) {
+        rightOf(another,0);
+    }
     /**
-     * 获得 矩形位置操作代理类
-     * @return 矩形位置操作代理类
+     * 将此矩形放置于另一矩形的左侧
+     * @param another 另一矩形
      */
-    public RectPositionProxy proxyRectPosition (){
-        return new RectPositionProxy(this);
+    public void rightOf(GLRect another,float margin) {
+        sameStatusOf(another);
+        float w = (getWidth() + another.getWidth()) / 2 + margin;
+        float yoffset = (float) Math.sin(getRadian()) * w;
+        float xoffset = (float) Math.cos(getRadian()) * w;
+        setCentralX(getCentralX() - xoffset);
+        setCentralY(getCentralY() - yoffset);
+    }
+    
+    public void leftOf(GLRect another) {
+        leftOf(another,0);
+    }
+    
+    /**
+     * 将此矩形放置于另一矩形的右侧
+     * @param another 另一矩形
+     */
+    public void leftOf(GLRect another,float margin) {
+        sameStatusOf(another);
+        float w = (getWidth() + another.getWidth()) / 2 + margin;
+        float yoffset = (float) Math.sin(getRadian()) * w;
+        float xoffset = (float) Math.cos(getRadian()) * w;
+        setCentralX(getCentralX() + xoffset);
+        setCentralY(getCentralY() + yoffset);
+    }
+    
+    public void topOf(GLRect another) {
+        topOf(another,0);
+    }
+    /**
+     * 将此矩形放置于另一矩形的上边
+     * @param another 另一矩形
+     */
+    public void topOf(GLRect another,float margin) {
+        sameStatusOf(another);
+        float h = (getHeight() + another.getHeight()) / 2 + margin;
+        float yoffset = (float) Math.cos(getRadian()) * h;
+        float xoffset = (float) Math.sin(getRadian()) * h;
+        setCentralX(getCentralX() - xoffset);
+        setCentralY(getCentralY() + yoffset);
+    }
+    
+    public void bottomOf(GLRect another) {
+        bottomOf(another,0);
+    }
+    /**
+     * 将此矩形放置于另一矩形的上边
+     * @param another 另一矩形
+     */
+    public void bottomOf(GLRect another,float margin) {
+        sameStatusOf(another);
+        float h = (getHeight() + another.getHeight()) / 2 + margin;
+        float yoffset = (float) Math.cos(getRadian()) * h;
+        float xoffset = (float) Math.sin(getRadian()) * h;
+        setCentralX(getCentralX() + xoffset);
+        setCentralY(getCentralY() - yoffset);
     }
 }

@@ -253,7 +253,7 @@ public class GLCharArea extends GLShape {
      * 获得 旋转角度
      */
     @Override
-    public float getTheta() {
+    public float getRadian() {
         return theta;
     }
 
@@ -263,8 +263,8 @@ public class GLCharArea extends GLShape {
      * 注意，低分辨率下扭曲可能影响文字质量
      */
     @Override
-    public void setTheta(float dstTheta) {
-        setTheta(dstTheta, getCentralX(), getCentralY());
+    public void setRadian(float dstTheta) {
+        setRadian(dstTheta, getCentralX(), getCentralY());
     }
 
     /**
@@ -273,7 +273,7 @@ public class GLCharArea extends GLShape {
      * 注意，低分辨率下扭曲可能影响文字质量
      */
     @Override
-    public void setTheta(float dstTheta, float x, float y) {
+    public void setRadian(float dstTheta, float x, float y) {
         float offset = dstTheta - this.theta;
         float nx = revolveX(this.x, this.y, x, y, offset);
         float ny = revolveY(this.x, this.y, x, y, offset);

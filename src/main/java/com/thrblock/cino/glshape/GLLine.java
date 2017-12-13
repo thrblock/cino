@@ -25,7 +25,7 @@ public class GLLine extends GLMutiPointShape {
      *            点2纵坐标
      */
     public GLLine(float x1, float y1, float x2, float y2) {
-        super(new GLPoint[] { new GLPoint(x1, y1), new GLPoint(x2, y2) });
+        super(new GLPoint(x1, y1), new GLPoint(x2, y2));
     }
 
     /**
@@ -33,7 +33,7 @@ public class GLLine extends GLMutiPointShape {
      * 直线的角度被重定义为 x轴正 向沿逆时针方向转至 向量p0->p1 方向所需转动的角度（弧度单位）
      */
     @Override
-    public float getTheta() {
+    public float getRadian() {
         return CMath.getQuadrantTheta(getPointX(0), getPointY(0), getPointX(1), getPointY(1));
     }
 

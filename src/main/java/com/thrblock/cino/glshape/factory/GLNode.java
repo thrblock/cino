@@ -91,19 +91,19 @@ public interface GLNode {
      * 获得 旋转角 弧度制 具体效果依赖于GLNode实现类
      * @return 旋转角
      */
-    public float getTheta();
+    public float getRadian();
     /**
      * 设置 旋转角 弧度制 具体效果依赖于GLNode实现类
      * @param dstTheta 要设置的角度
      */
-    public void setTheta(float dstTheta);
+    public void setRadian(float dstTheta);
     /**
      * 设置 旋转角 弧度制 以指定转轴进行旋转变换,具体效果依赖于GLNode实现类
      * @param dstTheta 要设置的角度
      * @param x 转轴x
      * @param y 转轴y
      */
-    public void setTheta(float dstTheta,float x,float y);
+    public void setRadian(float dstTheta,float x,float y);
     
     /**
      * 得到自身的通道操作类

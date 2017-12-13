@@ -128,22 +128,22 @@ public class GLShapeNode implements GLNode{
     }
 
     @Override
-    public float getTheta() {
-        return basic.getTheta();
+    public float getRadian() {
+        return basic.getRadian();
     }
 
     @Override
-    public void setTheta(float dstTheta) {
-        basic.setTheta(dstTheta);
+    public void setRadian(float dstTheta) {
+        basic.setRadian(dstTheta);
         float rolx = basic.getCentralX();
         float roly = basic.getCentralY();
-        subList.forEach(e -> e.setTheta(dstTheta,rolx,roly));
+        subList.forEach(e -> e.setRadian(dstTheta,rolx,roly));
     }
 
     @Override
-    public void setTheta(float dstTheta, float x, float y) {
-        basic.setTheta(dstTheta,x,y);
-        subList.forEach(e -> e.setTheta(dstTheta,x,y));
+    public void setRadian(float dstTheta, float x, float y) {
+        basic.setRadian(dstTheta,x,y);
+        subList.forEach(e -> e.setRadian(dstTheta,x,y));
     }
 }
 /**
@@ -229,17 +229,17 @@ class GLNop implements GLNode {
     }
 
     @Override
-    public float getTheta() {
+    public float getRadian() {
         return 0;
     }
 
     @Override
-    public void setTheta(float dstTheta) {
+    public void setRadian(float dstTheta) {
         //Nop 不会对任何操作进行实际处理
     }
 
     @Override
-    public void setTheta(float dstTheta, float x, float y) {
+    public void setRadian(float dstTheta, float x, float y) {
         //Nop 不会对任何操作进行实际处理
     }
     

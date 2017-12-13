@@ -26,6 +26,7 @@ public class FontGenNode {
     private FontMetrics fm;
     private Texture[] textures = new Texture[128];
     private CharFunction<BufferedImage> imgGenerator;
+    private int fmheight;
 
     /**
      * 字体节点
@@ -35,6 +36,7 @@ public class FontGenNode {
      */
     public FontGenNode(FontMetrics fm) {
         this.fm = fm;
+        this.fmheight = fm.getAscent() + fm.getDescent();
         this.imgGenerator = this::genImage;
     }
 
@@ -52,7 +54,6 @@ public class FontGenNode {
 
     private BufferedImage genImage(char c) {
         int fmwidth = fm.charWidth(c) <= 0 ? 1 : fm.charWidth(c);
-        int fmheight = fm.getAscent() + fm.getDescent();
         fmheight = fmheight <= 0 ? 1 : fmheight;
         BufferedImage charBuffer = new BufferedImage(fmwidth, fmheight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) charBuffer.getGraphics();

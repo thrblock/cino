@@ -207,28 +207,28 @@ public abstract class GLMutiPointShape extends GLShape {
 
     /**
      * {@inheritDoc}<br />
-     * 获得 旋转角度
+     * 获得 旋转角度,定义为逆时针方向旋转的弧度
      */
     @Override
-    public float getTheta() {
+    public float getRadian() {
         return theta;
     }
 
     /**
      * {@inheritDoc}<br />
-     * 设置 自旋角度
+     * 设置 自旋角度,定义为逆时针方向旋转的弧度
      */
     @Override
-    public void setTheta(float dstTheta) {
-        setTheta(dstTheta, getCentralX(), getCentralY());
+    public void setRadian(float dstTheta) {
+        setRadian(dstTheta, getCentralX(), getCentralY());
     }
 
     /**
      * {@inheritDoc}<br />
-     * 以x,y为轴旋转图形
+     * 以x,y为轴旋转图形,定义为逆时针方向旋转的弧度
      */
-    public void setTheta(float dstTheta, float x, float y) {
-        float offset = dstTheta - getTheta();
+    public void setRadian(float dstTheta, float x, float y) {
+        float offset = dstTheta - getRadian();
         for (GLPoint point : points) {
             float dx = revolveX(point.getX(), point.getY(), x, y, offset);
             float dy = revolveY(point.getX(), point.getY(), x, y, offset);
@@ -244,8 +244,8 @@ public abstract class GLMutiPointShape extends GLShape {
      * @param angle
      *            角度
      */
-    public void setAngle(float angle) {
-        this.setTheta((float) (angle * Math.PI / 180));
+    public void setDegree(float angle) {
+        this.setRadian((float) (angle * Math.PI / 180));
     }
 
     /**
@@ -381,5 +381,15 @@ public abstract class GLMutiPointShape extends GLShape {
         }
         builder.append(']');
         return builder.toString();
+    }
+    
+    public void sameCentralOf(GLMutiPointShape shape) {
+        setCentralX(shape.getCentralX());
+        setCentralY(shape.getCentralY());
+    }
+    
+    public void sameStatusOf(GLMutiPointShape shape) {
+        sameCentralOf(shape);
+        setRadian(shape.getRadian());
     }
 }
