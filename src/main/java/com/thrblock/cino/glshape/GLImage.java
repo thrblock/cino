@@ -3,7 +3,9 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
+import com.thrblock.cino.gltexture.GLBufferedTexture;
 import com.thrblock.cino.gltexture.GLTexture;
+import com.thrblock.cino.util.BufferedImageUtil;
 
 /**
  * 贴图图形对象 是一个矩形的贴图
@@ -11,6 +13,8 @@ import com.thrblock.cino.gltexture.GLTexture;
  *
  */
 public class GLImage extends GLRect {
+    public static final int EMPTY_WH = 4;
+    public static final GLTexture EMPTY_TEXTURE = new GLBufferedTexture(BufferedImageUtil.genEmptyImage(EMPTY_WH, EMPTY_WH));
     private static final int MODE_NORMAL = 0b00;
     private static final int MODE_X_VERT = 0b01;
     private static final int MODE_Y_VERT = 0b10;
@@ -23,6 +27,12 @@ public class GLImage extends GLRect {
     private int mode = MODE_NORMAL;
     private GLTexture gltexture;
     private boolean resize = false;
+    /**
+     * build a empty image with input size;
+     */
+    public GLImage() {
+        this(0, 0, EMPTY_WH ,EMPTY_WH,EMPTY_TEXTURE);
+    }
     /**
      * 构造一个贴图图形对象
      * @param x 中心坐标x

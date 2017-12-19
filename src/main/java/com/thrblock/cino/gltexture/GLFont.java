@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.util.texture.Texture;
 import com.thrblock.cino.function.CharFunction;
 import com.thrblock.cino.glinitable.GLInitializable;
 
@@ -42,12 +41,8 @@ public class GLFont implements GLInitializable {
         preLoadBuilder.append(preLoad);
     }
     
-    public GLFont(CharFunction<BufferedImage> mapper) {
-        this.genNode = new FontGenNode(mapper);
-    }
-    
     public GLFont(CharFunction<BufferedImage> mapper,char[] preLoad) {
-        this(mapper);
+        this.genNode = new FontGenNode(mapper,preLoad[0]);
         preLoadBuilder.append(preLoad);
     }
 
@@ -72,7 +67,11 @@ public class GLFont implements GLInitializable {
      * @param c
      * @return
      */
-    public Texture getCharTexture(GL gl, char c) {
-        return genNode.genTexture(gl, c);
+    public GLTexture getCharTexture(char c) {
+        return genNode.genTexture(c);
+    }
+    
+    public int getFmheight() {
+        return genNode.getFmheight();
     }
 }

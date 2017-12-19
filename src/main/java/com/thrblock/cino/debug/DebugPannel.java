@@ -1,18 +1,15 @@
 package com.thrblock.cino.debug;
 
 import java.awt.Color;
-import java.awt.Font;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.component.CinoComponent;
-import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.gltexture.FontsInCommon;
-import com.thrblock.cino.gltexture.GLFont;
-import com.thrblock.cino.util.structure.CharArrayInt;
+import com.thrblock.cino.util.charprocess.CharAreaConfig;
+import com.thrblock.cino.util.charprocess.CharArrayInt;
 
 @Component
 @Lazy(true)
@@ -40,31 +37,21 @@ public class DebugPannel extends CinoComponent {
     private CharArrayInt arrayInt4ovr;
     private CharArrayInt arrayInt4ft;
 
-    private Font panelFont;
-
     @Override
     public void init() throws Exception {
         if (debug) {
             lastRegTime = System.currentTimeMillis();
-
-            panelFont = getDefaultFont();
-
             shapeFactory.setLayer(-1);
             buildPanel();
             buildFPS();
             buildOVR();
             buildOVD();
 
-            onActivited(sceneRoot::show);
-            onDeactivited(sceneRoot::hide);
+            autoShowHide();
 
             sceneRoot.setCentralX((screenW - debugPannelWidth) / 2);
             sceneRoot.setCentralY((screenH - debugPannelHeight) / 2);
         }
-    }
-
-    private Font getDefaultFont() {
-        return new Font(FontsInCommon.GNU_FREE_MONO, Font.PLAIN, 12);
     }
 
     private void buildPanel() {
@@ -76,34 +63,27 @@ public class DebugPannel extends CinoComponent {
 
     private void buildFPS() {
         char[] fpsC = new char[7];
-        GLFont font = new GLFont(panelFont);
         arrayInt4fps = new CharArrayInt(fpsC);
         arrayInt4fps.setFrontKeepStr("Fps:");
         arrayInt4fps.setByInt(0);
-        shapeFactory.setLayer(-1);
-        GLCharArea charArea = shapeFactory.buildGLCharArea(font, 0, 15, debugPannelWidth, 20, fpsC);
-        charArea.setColor(Color.BLACK);
+        shapeFactory.buildGLCharArea(0, 22, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     private void buildOVR() {
         char[] fpsC = new char[7];
-        GLFont font = new GLFont(panelFont);
         arrayInt4ovr = new CharArrayInt(fpsC);
         arrayInt4ovr.setFrontKeepStr("Ovr:");
         arrayInt4ovr.setBackKeepStr("%");
         arrayInt4ovr.setByInt(0);
-        GLCharArea charArea = shapeFactory.buildGLCharArea(font, 0, 0, debugPannelWidth, 20, fpsC);
-        charArea.setColor(Color.BLACK);
+        shapeFactory.buildGLCharArea(0, 3, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     private void buildOVD() {
         char[] fpsC = new char[7];
-        GLFont font = new GLFont(panelFont);
         arrayInt4ft = new CharArrayInt(fpsC);
         arrayInt4ft.setFrontKeepStr("Tu:");
         arrayInt4ft.setByInt(0);
-        GLCharArea charArea = shapeFactory.buildGLCharArea(font, 0, -15, debugPannelWidth, 20, fpsC);
-        charArea.setColor(Color.BLACK);
+        shapeFactory.buildGLCharArea(0, -18, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     public void noticeDrawCall(long timeUse) {

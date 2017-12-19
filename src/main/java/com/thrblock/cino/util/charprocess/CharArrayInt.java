@@ -1,4 +1,4 @@
-package com.thrblock.cino.util.structure;
+package com.thrblock.cino.util.charprocess;
 
 import java.util.Arrays;
 

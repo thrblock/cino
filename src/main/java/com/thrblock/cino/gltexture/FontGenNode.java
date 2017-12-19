@@ -10,11 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.thrblock.cino.function.CharFunction;
 import com.thrblock.cino.glprocessor.GLEventProcessor;
-import com.thrblock.cino.util.BufferedImageUtil;
 
 /**
  * 可生成固定字体的纹理
@@ -24,7 +21,7 @@ import com.thrblock.cino.util.BufferedImageUtil;
 public class FontGenNode {
     private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);
     private FontMetrics fm;
-    private Texture[] textures = new Texture[128];
+    private GLTexture[] textures = new GLTexture[128];
     private CharFunction<BufferedImage> imgGenerator;
     private int fmheight;
 
@@ -37,6 +34,7 @@ public class FontGenNode {
     public FontGenNode(FontMetrics fm) {
         this.fm = fm;
         this.fmheight = fm.getAscent() + fm.getDescent();
+        this.fmheight = fmheight <= 0 ? 1 : fmheight;
         this.imgGenerator = this::genImage;
     }
 
@@ -48,13 +46,13 @@ public class FontGenNode {
      * @param imgGenerator
      *            文字到图像的映射
      */
-    public FontGenNode(CharFunction<BufferedImage> imgGenerator) {
+    public FontGenNode(CharFunction<BufferedImage> imgGenerator,char lenDetect) {
         this.imgGenerator = imgGenerator;
+        this.fmheight = imgGenerator.apply(lenDetect).getHeight();
     }
 
     private BufferedImage genImage(char c) {
         int fmwidth = fm.charWidth(c) <= 0 ? 1 : fm.charWidth(c);
-        fmheight = fmheight <= 0 ? 1 : fmheight;
         BufferedImage charBuffer = new BufferedImage(fmwidth, fmheight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) charBuffer.getGraphics();
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -75,20 +73,17 @@ public class FontGenNode {
      *            文字
      * @return 纹理对象
      */
-    public Texture genTexture(GL gl, char c) {
+    public GLTexture genTexture(char c) {
         checkRange(c);
         if (textures[c] == null) {
-            textures[c] = AWTTextureIO.newTexture(gl.getGLProfile(), BufferedImageUtil.reverse(imgGenerator.apply(c)),
-                    false);
-            textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-            textures[c].setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+            textures[c] = new GLBufferedTexture(imgGenerator.apply(c));
         }
         return textures[c];
     }
 
     private void checkRange(char c) {
         if (c > textures.length) {// 若超出ASCII标准字符集
-            Texture[] fullArr = new Texture[65535];// 用512KB换取O(1)性能
+            GLTexture[] fullArr = new GLTexture[65535];// 用512KB换取O(1)性能
             System.arraycopy(textures, 0, fullArr, 0, textures.length);
             this.textures = fullArr;
             LOG.info("texture array expand to 65535 for font:" + fm.getFont().toString());
@@ -103,7 +98,12 @@ public class FontGenNode {
      */
     public void load(GL gl, char[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            genTexture(gl, arr[i]);
+            genTexture(arr[i]).initByGLContext(gl);
         }
     }
+
+    public int getFmheight() {
+        return fmheight;
+    }
+
 }

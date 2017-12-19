@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.CinoFrameConfig;
+import com.thrblock.cino.eventbus.EventBus;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glanimate.GLAnimate;
 import com.thrblock.cino.glanimate.GLAnimateFactory;
@@ -104,6 +105,10 @@ public abstract class CinoComponent implements KeyListener {
 
     @Autowired
     protected GLLayerManager layerManager;
+
+    @Autowired
+    protected EventBus eventBus;
+
     /**
      * sceneRoot是场景自动创建的GLNode根节点
      */
@@ -249,15 +254,15 @@ public abstract class CinoComponent implements KeyListener {
     protected final void autoMouseClicked(Consumer<MouseEvent> e) {
         mouseHolders.add(mouseIO.addMouseClicked(e));
     }
-    
+
     protected final void autoMousePressed(Consumer<MouseEvent> e) {
         mouseHolders.add(mouseIO.addMousePressed(e));
     }
-    
+
     protected final void autoMouseReleased(Consumer<MouseEvent> e) {
         mouseHolders.add(mouseIO.addMouseReleased(e));
     }
-    
+
     protected final void autoShapeClicked(GLPolygonShape shape, Consumer<MouseEvent> e) {
         autoShapeClicked(shape, shapeFactory.getLayer(), e);
     }
@@ -331,6 +336,22 @@ public abstract class CinoComponent implements KeyListener {
             if (activited && shape.isVisible() && !shape.isDestory() && shape.isPointInside(
                     mouseIO.getMouseX() - layer.getViewXOffset(), mouseIO.getMouseY() - layer.getViewYOffset())) {
                 e.accept(event);
+            }
+        });
+    }
+
+    protected final <T> void autoMapEvent(Class<T> clazz, Consumer<T> cons) {
+        eventBus.mapEvent(clazz, e -> {
+            if (this.activited) {
+                cons.accept(e);
+            }
+        });
+    }
+
+    protected final void autoMapEvent(Object o, VoidConsumer cons) {
+        eventBus.mapEvent(o, () -> {
+            if (this.activited) {
+                cons.accept();
             }
         });
     }

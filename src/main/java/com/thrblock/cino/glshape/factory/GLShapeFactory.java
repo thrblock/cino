@@ -18,8 +18,8 @@ import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.glshape.GLPolygonShape;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.glshape.GLTriangle;
-import com.thrblock.cino.gltexture.GLFont;
 import com.thrblock.cino.gltexture.GLTexture;
+import com.thrblock.cino.util.charprocess.CharAreaConfig;
 
 /**
  * 图形构造器
@@ -43,7 +43,7 @@ public class GLShapeFactory {
     public void setLayer(int layerIndex) {
         this.layer = layerIndex;
     }
-    
+
     public int getLayer() {
         return layer;
     }
@@ -159,68 +159,17 @@ public class GLShapeFactory {
     }
 
     /**
-     * 创建一个文字区
+     * 使用空纹理构造一个贴图对象
      * 
-     * @param f
-     *            字体
-     * @param x
-     *            中心坐标x
-     * @param y
-     *            中心坐标y
-     * @param w
-     *            宽度（水平校准依据）
-     * @param h
-     *            高度（垂直校准依据）
-     * @param initStr
-     *            初始文字
-     * @return GLCharArea 文字区对象
+     * @return 贴图对象
      */
-    public GLCharArea buildGLCharArea(GLFont f, float x, float y, float w, float h, String initStr) {
-        GLCharArea charLine = new GLCharArea(f, x, y, w, h, initStr);
-        layerContainer.addShapeToSwap(layer, charLine);
+    public GLImage buildGLImage() {
+        GLImage image = new GLImage();
+        layerContainer.addShapeToSwap(layer, image);
         if (currentNode != null) {
-            currentNode.addSubNode(charLine);
+            currentNode.addSubNode(image);
         }
-        return charLine;
-    }
-
-    /**
-     * 创建一个文字区 初始文字为空串
-     * 
-     * @param f
-     *            字体
-     * @param x
-     *            中心坐标x
-     * @param y
-     *            中心坐标y
-     * @param w
-     *            宽度（水平校准依据）
-     * @param h
-     *            高度（垂直校准依据）
-     * @return GLCharArea 文字区对象
-     */
-    public GLCharArea buildGLCharArea(GLFont f, float x, float y, float w, float h) {
-        return buildGLCharArea(f, x, y, w, h, "");
-    }
-
-    /**
-     * 创建文字区
-     * 
-     * @param f
-     * @param x
-     * @param y
-     * @param w
-     * @param h
-     * @param initStr
-     * @return
-     */
-    public GLCharArea buildGLCharArea(GLFont f, float x, float y, float w, float h, char[] initStr) {
-        GLCharArea charLine = new GLCharArea(f, x, y, w, h, initStr);
-        layerContainer.addShapeToSwap(layer, charLine);
-        if (currentNode != null) {
-            currentNode.addSubNode(charLine);
-        }
-        return charLine;
+        return image;
     }
 
     /**
@@ -261,6 +210,24 @@ public class GLShapeFactory {
             currentNode.addSubNode(polygon);
         }
         return polygon;
+    }
+    
+    public GLCharArea buildGLCharArea(float x,float y,float w,float h,CharAreaConfig conf) {
+        GLCharArea area = new GLCharArea(x, y, w, h, conf);
+        layerContainer.addShapeToSwap(layer, area);
+        if (currentNode != null) {
+            currentNode.addSubNode(area);
+        }
+        return area;
+    }
+    
+    public GLCharArea buildGLCharArea(float x,float y,float w,CharAreaConfig conf) {
+        GLCharArea area = new GLCharArea(x, y, w, conf.getFont().getFmheight(), conf);
+        layerContainer.addShapeToSwap(layer, area);
+        if (currentNode != null) {
+            currentNode.addSubNode(area);
+        }
+        return area;
     }
 
     /**
