@@ -43,7 +43,7 @@ public class GLCharArea extends GLRect {
     }
 
     private void drawContent(GL2 gl) {
-        for (int i = 0; i < imgs.length; i++) {
+        for (int i = 0; i < imgs.length && charArray[i] != '\0'; i++) {
             imgs[i].drawShape(gl);
         }
     }

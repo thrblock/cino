@@ -20,12 +20,6 @@ public class DebugPannel extends CinoComponent {
     @Value("${cino.debug.enable:false}")
     private boolean debug;
 
-    @Value("${cino.frame.screen.width:800}")
-    private int screenW;
-
-    @Value("${cino.frame.screen.height:600}")
-    private int screenH;
-
     private int debugPannelWidth = 50;
     private int debugPannelHeight = 50;
 
@@ -49,8 +43,8 @@ public class DebugPannel extends CinoComponent {
 
             autoShowHide();
 
-            sceneRoot.setCentralX((screenW - debugPannelWidth) / 2);
-            sceneRoot.setCentralY((screenH - debugPannelHeight) / 2);
+            sceneRoot.setCentralX((float)(screenW - debugPannelWidth) / 2);
+            sceneRoot.setCentralY((float)(screenH - debugPannelHeight) / 2);
         }
     }
 

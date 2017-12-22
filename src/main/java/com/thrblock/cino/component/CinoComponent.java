@@ -37,7 +37,7 @@ import com.thrblock.cino.io.MouseEvent;
 import com.thrblock.cino.storage.Storage;
 
 /**
- * 提供设计相关的主要成员
+ * 提供设计相关的主要成员,可以以此类为单位进行逻辑上的粒度控制
  * 
  * @author zepu.li
  */
