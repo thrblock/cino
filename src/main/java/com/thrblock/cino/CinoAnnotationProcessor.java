@@ -57,7 +57,7 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
         this.applicationContext = applicationContext;
         String[] beanNames = applicationContext.getBeanDefinitionNames();
         Arrays.stream(beanNames).map(applicationContext::getBean).forEach(this::processBean);
-        lst.forEach(e -> e.accept());
+        lst.forEach(VoidConsumer::accept);
     }
 
     private void processBean(Object o) {

@@ -41,19 +41,19 @@ public class GLShapeNode implements GLNode{
     @Override
     public void show() {
         basic.show();
-        subList.forEach(e -> e.show());
+        subList.forEach(GLNode::show);
     }
 
     @Override
     public void hide() {
         basic.hide();
-        subList.forEach(e -> e.hide());
+        subList.forEach(GLNode::hide);
     }
 
     @Override
     public void destroy() {
         basic.destroy();
-        subList.forEach(e -> e.destroy());
+        subList.forEach(GLNode::destroy);
     }
 
     @Override

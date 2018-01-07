@@ -84,7 +84,7 @@ public class GLEventProcessor implements GLEventListener {
         GL2 gl2 = gl.getGL2();
         LOG.info("GL init");
         LOG.info("The Renderer you are current using:" + gl.glGetString(GL.GL_RENDERER));
-        LOG.info("The Renderer driver version is:" + gl.glGetString(GL.GL_VERSION));
+        LOG.info("The Renderer driver version is {}",gl.glGetString(GL.GL_VERSION));
         Thread.currentThread().setName("GL_Draw");
         if (vsync) {
             gl.setSwapInterval(1);

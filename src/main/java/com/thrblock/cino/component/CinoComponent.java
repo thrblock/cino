@@ -165,7 +165,7 @@ public abstract class CinoComponent implements KeyListener {
     public final void activited() {
         activited = true;
         compAni.remuse();
-        onActivited.forEach(e -> e.accept());
+        onActivited.forEach(VoidConsumer::accept);
     }
 
     /**
@@ -173,7 +173,7 @@ public abstract class CinoComponent implements KeyListener {
      */
     public final void deactivited() {
         compAni.pause();
-        onDeactivited.forEach(e -> e.accept());
+        onDeactivited.forEach(VoidConsumer::accept);
         activited = false;
     }
 
