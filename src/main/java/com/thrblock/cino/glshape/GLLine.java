@@ -111,5 +111,6 @@ public class GLLine extends GLMutiPointShape {
             gl.glVertex2f(point.getX(), point.getY());
         }
         gl.glEnd();
+        gl.glLineWidth(1.0f);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.jogamp.newt.event.MouseAdapter;
 import com.jogamp.newt.event.MouseListener;
+import com.thrblock.cino.annotation.ScreenSizeChangeListener;
 
 /**
  * 鼠标控制器
@@ -30,6 +31,12 @@ public class MouseControl implements AWTEventListener {
      */
     @Value("${cino.frame.screen.height:600}")
     private int screenHeight = 600;
+    
+    @Value("${cino.frame.flexmode:0}")
+    private int flexmode;
+    
+    private float currentW;
+    private float currentH;
 
     @Autowired
     private MouseBus bus;
@@ -41,8 +48,8 @@ public class MouseControl implements AWTEventListener {
 
     private class NEWTAdapter extends MouseAdapter {
         private void moving(com.jogamp.newt.event.MouseEvent e) {
-            MouseControl.this.x = e.getX() - screenWidth / 2;
-            MouseControl.this.y = -e.getY() + screenHeight / 2;
+            MouseControl.this.x = getConvertedX(e.getX());
+            MouseControl.this.y = getConvertedY(e.getY());
         }
 
         @Override
@@ -70,6 +77,8 @@ public class MouseControl implements AWTEventListener {
 
     @PostConstruct
     void init() {
+        this.currentW = screenWidth;
+        this.currentH = screenHeight;
         this.newtMouseAdapter = new NEWTAdapter();
     }
 
@@ -83,14 +92,24 @@ public class MouseControl implements AWTEventListener {
             java.awt.event.MouseEvent e = (java.awt.event.MouseEvent) event;
             if (e.getID() == java.awt.event.MouseEvent.MOUSE_MOVED
                     || e.getID() == java.awt.event.MouseEvent.MOUSE_DRAGGED) {
-                this.x = e.getX() - screenWidth / 2;
-                this.y = -e.getY() + screenHeight / 2;
+                this.x = getConvertedX(e.getX());
+                this.y = getConvertedY(e.getY());
             } else if (e.getID() == java.awt.event.MouseEvent.MOUSE_PRESSED) {
                 press(e.getButton());
             } else if (e.getID() == java.awt.event.MouseEvent.MOUSE_RELEASED) {
                 release(e.getButton());
             }
         }
+    }
+    
+    private int getConvertedX(int x) {
+        int scaledX = flexmode == 1 ? x : (int) (x * screenWidth / currentW);
+        return scaledX - ((flexmode == 1) ? (int) currentW : screenWidth) / 2;
+    }
+
+    private int getConvertedY(int y) {
+        int scaledY = flexmode == 1 ? y : (int) (y * screenHeight / currentH);
+        return -scaledY + ((flexmode == 1) ? (int) currentH : screenHeight) / 2;
     }
 
     public int getMouseX() {
@@ -150,5 +169,11 @@ public class MouseControl implements AWTEventListener {
         } else {
             return false;
         }
+    }
+    
+    @ScreenSizeChangeListener
+    public void screenChange(int w,int h) {
+        this.currentW = w;
+        this.currentH = h;
     }
 }

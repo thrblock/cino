@@ -23,17 +23,46 @@ public class GLAnimate {
 
     public GLAnimate add(BooleanSupplier boolfrag) {
         return this.add(() -> {
-            if(boolfrag.getAsBoolean()) {
+            if (boolfrag.getAsBoolean()) {
                 next();
             }
         });
     }
-    
+
     public GLAnimate add(IPureFragment frag) {
         frags.add(frag);
         if (index == -1) {
             index = 0;
         }
+        return this;
+    }
+
+    public GLAnimate addOnce(IPureFragment frag) {
+        BooleanSupplier boolfrag = () -> {
+            frag.fragment();
+            return true;
+        };
+        add(boolfrag);
+        return this;
+    }
+
+    public GLAnimate addDelay(int delay) {
+        BooleanSupplier delaySup = new BooleanSupplier() {
+            int crt = 0;
+            int count = delay;
+
+            @Override
+            public boolean getAsBoolean() {
+                if (crt < count) {
+                    crt++;
+                    return false;
+                } else {
+                    crt = 0;
+                    return true;
+                }
+            }
+        };
+        add(delaySup);
         return this;
     }
 
@@ -70,7 +99,7 @@ public class GLAnimate {
     public void animate() {
         if (!checkIndex()) {
             disable();
-            if(finish != null) {
+            if (finish != null) {
                 finish.fragment();
             }
         } else {
@@ -82,7 +111,7 @@ public class GLAnimate {
         this.finish = finish;
         return this;
     }
-    
+
     /**
      * 切换到下一逻辑，若不存在会自动停止
      */

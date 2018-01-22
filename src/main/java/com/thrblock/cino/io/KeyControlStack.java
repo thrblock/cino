@@ -54,6 +54,10 @@ public class KeyControlStack implements AWTEventListener {
             return null;
         }
     }
+    
+    public void removeKeyListener(KeyListener keyListener) {
+        listenerStack.remove(keyListener);
+    }
 
     public boolean isKeyDown(int keyCode) {
         if (keyCode >= 0 && keyCode < keyStatus.length) {

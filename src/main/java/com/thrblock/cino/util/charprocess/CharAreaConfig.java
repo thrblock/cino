@@ -6,8 +6,9 @@ import com.thrblock.cino.gltexture.FontsInCommon;
 import com.thrblock.cino.gltexture.GLFont;
 
 public class CharAreaConfig {
+    private static final GLFont DEFAULT_FONT = new GLFont(new Font(FontsInCommon.GNU_FREE_MONO, Font.PLAIN, 12));
     private char[] charArray;
-    private GLFont font = new GLFont(new Font(FontsInCommon.GNU_FREE_MONO, Font.PLAIN, 12));
+    private GLFont font;
     private PositionSynchronizer positionSyn = new FlowAsLine();
     private Style style = (arr, i, img) -> {
     };
@@ -25,7 +26,7 @@ public class CharAreaConfig {
     }
 
     public GLFont getFont() {
-        return font;
+        return font == null?DEFAULT_FONT:font;
     }
 
     public void setFont(GLFont font) {

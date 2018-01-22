@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.image.BufferedImage;
+import java.util.function.BiConsumer;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JFrame;
@@ -35,6 +36,7 @@ import com.thrblock.cino.io.MouseEvent;
 
 /**
  * GL渲染窗体设置
+ * 
  * @author thrblock
  *
  */
@@ -42,23 +44,23 @@ import com.thrblock.cino.io.MouseEvent;
 @Lazy(true)
 public class AWTFrameFactory {
     private static final Logger LOG = LoggerFactory.getLogger(AWTFrameFactory.class);
-    
+
     @Autowired
     private GLEventListener glEventListener;
-    
+
     @Autowired
     private KeyControlStack keyStack;
-    
+
     @Autowired
     private MouseControl mouseControl;
-    
+
     @Autowired
     private MouseBus mouseBus;
     /**
      * 使用的显示卡
      */
     private GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    
+
     @Value("${cino.frame.title:title}")
     private String frameTitle = "title";
     /**
@@ -91,7 +93,7 @@ public class AWTFrameFactory {
      */
     @Value("${cino.frame.hidemouse:true}")
     private boolean hideMouse = true;
-    
+
     /**
      * 渲染位置宽度 （像素）
      */
@@ -102,10 +104,11 @@ public class AWTFrameFactory {
      */
     @Value("${cino.frame.screen.height:600}")
     private int screenHeight = 600;
-    
+
+    private BiConsumer<Integer, Integer> resizeFunction;
     @PostConstruct
     void init() {
-        Toolkit.getDefaultToolkit().addAWTEventListener(keyStack,AWTEvent.KEY_EVENT_MASK);
+        Toolkit.getDefaultToolkit().addAWTEventListener(keyStack, AWTEvent.KEY_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(mouseControl, AWTEvent.MOUSE_MOTION_EVENT_MASK);
         mouseBus.setAdder(l -> {
@@ -127,31 +130,37 @@ public class AWTFrameFactory {
         });
         mouseBus.setRemover(o -> Toolkit.getDefaultToolkit().removeAWTEventListener((AWTEventListener) o));
     }
+
     /**
      * 按照配置 构造JFrame
+     * 
      * @return 满足配置的jframe
      */
     public JFrame buildFrame() {
         JFrame frame = new JFrame();
         frame.setTitle(frameTitle);
-        return buildFrame(frame,frame.getContentPane(),true);
+        return buildFrame(frame, frame.getContentPane(), true);
     }
-    
+
     /**
      * 按照配置 已固定步骤初始化一个JFrame
-     * @param frame 提供的jframe
-     * @param container awt container
-     * @param pack 是否按照建议的大小重新布局组件
+     * 
+     * @param frame
+     *            提供的jframe
+     * @param container
+     *            awt container
+     * @param pack
+     *            是否按照建议的大小重新布局组件
      * @return 满足条件的jframe实例
      */
-    public JFrame buildFrame(JFrame frame,Container container,boolean pack) {
+    public JFrame buildFrame(JFrame frame, Container container, boolean pack) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GLCapabilities glcaps = new GLCapabilities(GLProfile.getDefault());
         glcaps.setDoubleBuffered(doubleBuffer);
         GLCanvas canvas = new GLCanvas(glcaps);
         canvas.addGLEventListener(glEventListener);
         LOG.info("graphics device you are current using:" + graphicsDevice.toString());
-        if(fullScreen) {
+        if (fullScreen) {
             frame.setUndecorated(true);
             container.add(canvas);
             graphicsDevice.setFullScreenWindow(frame);
@@ -159,13 +168,13 @@ public class AWTFrameFactory {
             frame.setResizable(flexible);
             canvas.setPreferredSize(new Dimension(screenWidth, screenHeight));
             container.add(canvas);
-            if(pack) {
+            if (pack) {
                 frame.pack();
             }
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-            frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
+            frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height / 2 - frame.getSize().height / 2);
         }
-        if(vsync) {
+        if (vsync) {
             Animator animator = new Animator(canvas);
             animator.setRunAsFastAsPossible(false);
             SwingUtilities.invokeLater(() -> {
@@ -173,18 +182,24 @@ public class AWTFrameFactory {
                 animator.start();
             });
         } else {
-            FPSAnimator animator = new FPSAnimator(canvas,framesPerSecond, true);
+            FPSAnimator animator = new FPSAnimator(canvas, framesPerSecond, true);
             SwingUtilities.invokeLater(() -> {
                 frame.setVisible(true);
                 animator.start();
             });
         }
-        if(hideMouse) {
+        if (hideMouse) {
             BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
             Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(), null);
             frame.getContentPane().setCursor(blankCursor);
         }
-        
+        this.resizeFunction = (w, h) -> canvas.setPreferredSize(new Dimension(w, h));
         return frame;
+    }
+
+    public void resizeLatest(int w,int h) {
+        if(resizeFunction != null) {
+            resizeFunction.accept(w, h);
+        }
     }
 }

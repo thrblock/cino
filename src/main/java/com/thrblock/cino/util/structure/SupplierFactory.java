@@ -25,7 +25,7 @@ public class SupplierFactory {
 
     public static Supplier<Double> cycleOfSin(int accur) {
         double start = 0;
-        double step = 1.0 / accur;
+        double step = Math.PI * 2 / accur;
         Double[] arr = new Double[accur];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Math.sin(start + step * i);
@@ -35,7 +35,7 @@ public class SupplierFactory {
 
     public static Supplier<Double> cycleOfCos(int accur) {
         double start = 0;
-        double step = 1.0 / accur;
+        double step = Math.PI * 2 / accur;
         Double[] arr = new Double[accur];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Math.cos(start + step * i);
