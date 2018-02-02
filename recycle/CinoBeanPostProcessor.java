@@ -6,11 +6,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.annotation.BootComponent;
 import com.thrblock.cino.annotation.EnableLocalStorage;
@@ -25,15 +28,10 @@ import com.thrblock.cino.glprocessor.GLEventProcessor;
 import com.thrblock.cino.storage.Storage;
 import com.thrblock.cino.util.ReflactUtils;
 
-/**
- * Cino 注解处理器
- * 
- * @author zepu.li
- *
- */
-@Configuration
-class CinoAnnotationProcessor implements ApplicationContextAware {
-    private static final Logger LOG = LoggerFactory.getLogger(CinoAnnotationProcessor.class);
+@Component
+public class CinoBeanPostProcessor implements BeanPostProcessor,ApplicationListener<ContextRefreshedEvent> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CinoBeanPostProcessor.class);
 
     @Autowired
     private GLEventProcessor glEventProcessor;
@@ -49,19 +47,18 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
     
-    private List<VoidConsumer> afterProcessed = new LinkedList<>();
+    private List<VoidConsumer> afterProcess = new LinkedList<>();
     
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        LOG.info("processing annotation of beans");
-        this.applicationContext = applicationContext;
-        String[] beanNames = applicationContext.getBeanDefinitionNames();
-        //this code cause lazy load failed;too be changed!
-        Arrays.stream(beanNames).map(applicationContext::getBean).forEach(this::processBean);
-        afterProcessed.forEach(VoidConsumer::accept);
-        afterProcessed.clear();
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
     }
 
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        LOG.info("processing annotation of bean:{}",beanName);
+        processBean(bean);
+        return bean;
+    }
+    
     private void processBean(Object o) {
         Arrays.stream(ReflactUtils.findAnnotationMethod(ScreenSizeChangeListener.class, o))
                 .forEach(m -> glEventProcessor.addScreenSizeChangeListener((w, h) -> ReflactUtils.invokeMethod(o, m, w, h)));
@@ -71,7 +68,7 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
         BootComponent boot = AnnotationUtils.findAnnotation(o.getClass(), BootComponent.class);
         if (boot != null && o instanceof CinoComponent) {
             CinoComponent comp = (CinoComponent) o;
-            afterProcessed.add(comp::activited);
+            afterProcess.add(comp::activited);
         }
         
         EnableLocalStorage st = AnnotationUtils.findAnnotation(o.getClass(), EnableLocalStorage.class);
@@ -88,4 +85,9 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
         }
     }
 
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        afterProcess.forEach(VoidConsumer::accept);
+        afterProcess.clear();
+    }
 }

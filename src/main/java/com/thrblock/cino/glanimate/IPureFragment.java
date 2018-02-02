@@ -42,6 +42,11 @@ public interface IPureFragment {
         };
     }
     
+    /**
+     * 使逻辑以指定的间隔执行 相当于跳帧操作
+     * @param delay 要跳的帧数
+     * @return
+     */
     public default IPureFragment mergeDelay(int delay) {
         return new DelayFragment(delay,this);
     }

@@ -26,11 +26,6 @@ public class GLAnimateManager {
     }
 
     public void runAll() {
-        if(destroy) {
-            this.frags = new CrudeLinkedList<>();
-            this.fragIt = frags.genCrudeIter();
-            return;
-        }
         if(pause) {
             return;
         }

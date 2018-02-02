@@ -49,7 +49,7 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
     
-    private List<VoidConsumer> afterProcessed = new LinkedList<>();
+    private List<VoidConsumer> lst = new LinkedList<>();
     
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
@@ -58,8 +58,7 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
         String[] beanNames = applicationContext.getBeanDefinitionNames();
         //this code cause lazy load failed;too be changed!
         Arrays.stream(beanNames).map(applicationContext::getBean).forEach(this::processBean);
-        afterProcessed.forEach(VoidConsumer::accept);
-        afterProcessed.clear();
+        lst.forEach(VoidConsumer::accept);
     }
 
     private void processBean(Object o) {
@@ -71,7 +70,7 @@ class CinoAnnotationProcessor implements ApplicationContextAware {
         BootComponent boot = AnnotationUtils.findAnnotation(o.getClass(), BootComponent.class);
         if (boot != null && o instanceof CinoComponent) {
             CinoComponent comp = (CinoComponent) o;
-            afterProcessed.add(comp::activited);
+            lst.add(comp::activited);
         }
         
         EnableLocalStorage st = AnnotationUtils.findAnnotation(o.getClass(), EnableLocalStorage.class);
