@@ -159,7 +159,8 @@ public class AWTFrameFactory {
         glcaps.setDoubleBuffered(doubleBuffer);
         GLCanvas canvas = new GLCanvas(glcaps);
         canvas.addGLEventListener(glEventListener);
-        LOG.info("graphics device you are current using:" + graphicsDevice.toString());
+        LOG.info("graphics device you are current using:{}",graphicsDevice);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         if (fullScreen) {
             frame.setUndecorated(true);
             container.add(canvas);
@@ -171,7 +172,6 @@ public class AWTFrameFactory {
             if (pack) {
                 frame.pack();
             }
-            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height / 2 - frame.getSize().height / 2);
         }
         if (vsync) {

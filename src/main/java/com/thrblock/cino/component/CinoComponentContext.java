@@ -31,6 +31,7 @@ import com.thrblock.cino.storage.Storage;
 
 /**
  * 组件上下文 提供一套标准cino api
+ * 
  * @author zepu.li
  *
  */
@@ -40,7 +41,7 @@ abstract class CinoComponentContext {
      */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${cino.frame.screen.width:1024}")
+    @Value("${cino.frame.screen.width:800}")
     protected int screenW;
 
     @Value("${cino.frame.screen.height:600}")
@@ -112,6 +113,7 @@ abstract class CinoComponentContext {
     protected List<VoidConsumer> deactivitedHolder;
     protected List<Object> mouseHolder;
     protected List<Object> eventHolder;
+
     /**
      * 伴随组件自动的帧片段逻辑
      * 
@@ -186,31 +188,19 @@ abstract class CinoComponentContext {
     }
 
     protected final void autoShapeClicked(GLPolygonShape shape, Consumer<MouseEvent> e) {
-        autoShapeClicked(shape, shapeFactory.getLayer(), e);
-    }
-
-    protected final void autoShapePressed(GLPolygonShape shape, Consumer<MouseEvent> e) {
-        autoShapePressed(shape, shapeFactory.getLayer(), e);
-    }
-
-    protected final void autoShapeReleased(GLPolygonShape shape, Consumer<MouseEvent> e) {
-        autoShapeReleased(shape, shapeFactory.getLayer(), e);
-    }
-
-    protected final void autoShapeClicked(GLPolygonShape shape, int index, Consumer<MouseEvent> e) {
-        GLLayer layer = layerManager.getLayer(index);
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         Function<Consumer<MouseEvent>, Object> funs = mouseIO::addMouseClicked;
         autoMouseHook(shape, e, layer, funs);
     }
 
-    protected final void autoShapePressed(GLPolygonShape shape, int index, Consumer<MouseEvent> e) {
-        GLLayer layer = layerManager.getLayer(index);
+    protected final void autoShapePressed(GLPolygonShape shape, Consumer<MouseEvent> e) {
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         Function<Consumer<MouseEvent>, Object> funs = mouseIO::addMousePressed;
         autoMouseHook(shape, e, layer, funs);
     }
 
-    protected final void autoShapeReleased(GLPolygonShape shape, int index, Consumer<MouseEvent> e) {
-        GLLayer layer = layerManager.getLayer(index);
+    protected final void autoShapeReleased(GLPolygonShape shape, Consumer<MouseEvent> e) {
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         Function<Consumer<MouseEvent>, Object> funs = mouseIO::addMouseReleased;
         autoMouseHook(shape, e, layer, funs);
     }
@@ -224,7 +214,7 @@ abstract class CinoComponentContext {
             }
         })));
     }
-    
+
     protected final void onActivited(VoidConsumer v) {
         activitedHolder.add(v);
     }
@@ -234,29 +224,17 @@ abstract class CinoComponentContext {
     }
 
     protected Object shapeClicked(GLPolygonShape shape, Consumer<MouseEvent> e) {
-        return shapeClicked(shape, shapeFactory.getLayer(), e);
-    }
-
-    protected Object shapeClicked(GLPolygonShape shape, int index, Consumer<MouseEvent> e) {
-        GLLayer layer = layerManager.getLayer(index);
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         return mouseHook(shape, e, layer, mouseIO::addMouseClicked);
     }
 
     protected Object shapePressed(GLPolygonShape shape, Consumer<MouseEvent> e) {
-        return shapePressed(shape, shapeFactory.getLayer(), e);
-    }
-
-    protected Object shapePressed(GLPolygonShape shape, int index, Consumer<MouseEvent> e) {
-        GLLayer layer = layerManager.getLayer(index);
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         return mouseHook(shape, e, layer, mouseIO::addMousePressed);
     }
 
     protected Object shapeReleased(GLPolygonShape shape, Consumer<MouseEvent> e) {
-        return shapeReleased(shape, shapeFactory.getLayer(), e);
-    }
-
-    protected Object shapeReleased(GLPolygonShape shape, int index, Consumer<MouseEvent> e) {
-        GLLayer layer = layerManager.getLayer(index);
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         return mouseHook(shape, e, layer, mouseIO::addMouseReleased);
     }
 
@@ -279,10 +257,16 @@ abstract class CinoComponentContext {
     }
 
     protected final void autoMapEvent(Object o, VoidConsumer cons) {
-        eventHolder.add(eventBus.mapEvent(o,() -> {
+        eventHolder.add(eventBus.mapEvent(o, () -> {
             if (activitedSupplier.getAsBoolean()) {
                 cons.accept();
             }
         }));
+    }
+
+    protected final boolean isMouseInside(GLPolygonShape shape) {
+        GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
+        return shape.isVisible() && !shape.isDestory() && shape.isPointInside(
+                mouseIO.getMouseX() - layer.getViewXOffset(), mouseIO.getMouseY() - layer.getViewYOffset());
     }
 }

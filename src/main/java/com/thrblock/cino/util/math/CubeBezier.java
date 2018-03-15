@@ -45,13 +45,13 @@ public class CubeBezier {
      */
     public float bezierX(float input) {
         float t = CMath.clamp(input, 0f, 1f);
-        return start.getX() * pow(t, 3) + 3 * c1.getX() * t * pow(1 - t, 2) + 3 * c2.getX() * pow(t, 2) * (1 - t)
+        return start.getX() * pow(1 - t, 3) + 3 * c1.getX() * t * pow(1 - t, 2) + 3 * c2.getX() * pow(t, 2) * (1 - t)
                 + end.getX() * pow(t, 3);
     }
 
     public float bezierY(float input) {
         float t = CMath.clamp(input, 0f, 1f);
-        return start.getY() * pow(t, 3) + 3 * c1.getY() * t * pow(1 - t, 2) + 3 * c2.getY() * pow(t, 2) * (1 - t)
+        return start.getY() * pow(1 - t, 3) + 3 * c1.getY() * t * pow(1 - t, 2) + 3 * c2.getY() * pow(t, 2) * (1 - t)
                 + end.getY() * pow(t, 3);
     }
 

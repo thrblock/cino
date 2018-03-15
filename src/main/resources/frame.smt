@@ -3,6 +3,7 @@
 #OSMAPPING NUX ./cino-frame.properties
 #OSMAPPING MAC ./cino-frame.properties
 #SMT END
+cino.frame.type=awt
 cino.frame.title=title
 cino.frame.doublebuffer=true
 cino.frame.vsync=false

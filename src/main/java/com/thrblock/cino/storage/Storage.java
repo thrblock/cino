@@ -28,6 +28,9 @@ public class Storage {
 
     public void save(Object o) {
         EnableLocalStorage anno = AnnotationUtils.getAnnotation(o.getClass(), EnableLocalStorage.class);
+        if(anno == null) {
+            return;
+        }
         Properties prop = genProp(anno.value());
         if(prop == null) {
             return;

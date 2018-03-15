@@ -1,7 +1,7 @@
 package com.thrblock.cino.glprocessor;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public class GLEventProcessor implements GLEventListener {
 
     private boolean reshaped = false;
 
-    private List<BiConsumer<Integer, Integer>> screenChangeListener = new LinkedList<>();
+    private List<BiConsumer<Integer, Integer>> screenChangeListener = new CopyOnWriteArrayList<>();
 
     @Override
     public void display(GLAutoDrawable drawable) {

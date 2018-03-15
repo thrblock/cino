@@ -16,10 +16,10 @@ public class EventBus {
         Consumer<T> con;
         public boolean check(Object obj) {
             if(this.clz != null) {
-                return this.clz.equals(obj.getClass());
+                return this.clz.isAssignableFrom(obj.getClass());
             }
             if(this.obj != null) {
-                return this.obj == obj;
+                return this.obj.equals(obj);
             }
             return false;
         }

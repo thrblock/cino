@@ -28,10 +28,19 @@ public class GLImage extends GLRect {
     private GLTexture gltexture;
     private boolean resize = false;
     /**
-     * build a empty image with input size;
+     * build a empty image with default size;
      */
     public GLImage() {
         this(0, 0, EMPTY_WH ,EMPTY_WH,EMPTY_TEXTURE);
+    }
+    
+    /**
+     * build a empty image with input size;
+     * @param w width
+     * @param h height
+     */
+    public GLImage(float w,float h) {
+        this(0, 0, w ,h,EMPTY_TEXTURE);
     }
     /**
      * 构造一个贴图图形对象

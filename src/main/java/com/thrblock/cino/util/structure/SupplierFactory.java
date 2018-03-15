@@ -1,9 +1,7 @@
 package com.thrblock.cino.util.structure;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.util.math.CubeBezier;
 
 public class SupplierFactory {
@@ -43,31 +41,17 @@ public class SupplierFactory {
         return cycleArray(arr);
     }
 
-    public BooleanSupplier centralMotion(GLShape shape, CubeBezier bezier, int time) {
-        float[] xs = new float[time + 1];
-        float[] ys = new float[time + 1];
-        float add = 1f / time;
-        for (int i = 0; i < time; i++) {
-            xs[i] = bezier.bezierX(add * i);
-            ys[i] = bezier.bezierY(add * i);
-        }
-        xs[time] = bezier.bezierX(1.0f);
-        ys[time] = bezier.bezierY(1.0f);
-
-        return new BooleanSupplier() {
-            private int index = 0;
-            @Override
-            public boolean getAsBoolean() {
-                if (index < xs.length) {
-                    shape.setCentralX(xs[index]);
-                    shape.setCentralY(ys[index]);
-                    index++;
-                    return false;
-                } else {
-                    index = 0;
-                    return true;
-                }
-            }
-        };
+    public static Supplier<Point2D> beizerSmooth(float x1, float y1, float x2, float y2, int step) {
+        return beizerSmooth(new Point2D(x1, y1), new Point2D(x2, y2), step);
     }
+
+    public static Supplier<Point2D> beizerSmooth(Point2D start, Point2D end, int step) {
+        CubeBezier bezier = new CubeBezier(start, end, start, end);
+        Point2D[] result = new Point2D[step];
+        for (int i = 1; i <= result.length; i++) {
+            result[i - 1] = new Point2D(bezier.bezierX(i / (float) step), bezier.bezierY(i / (float) step));
+        }
+        return cycleArray(result);
+    }
+
 }

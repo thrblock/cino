@@ -13,9 +13,18 @@ import com.thrblock.cino.shader.AbstractGLProgram;
 public abstract class GLShape implements GLNode{
     private boolean visible = false;
     private boolean destory = false;
+    private int layerIndex;
     private int mixAlpha = GL.GL_SRC_ALPHA;
     private int mixBeta = GL.GL_ONE_MINUS_SRC_ALPHA;
     protected AbstractGLProgram program;
+    
+    public int getLayerIndex() {
+        return layerIndex;
+    }
+    
+    public void setLayerIndex(int layerIndex) {
+        this.layerIndex = layerIndex;
+    }
     /**
      * 获得混合模式系数A
      * @return 混合模式系数A

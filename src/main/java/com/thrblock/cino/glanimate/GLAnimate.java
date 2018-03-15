@@ -46,26 +46,6 @@ public class GLAnimate {
         return this;
     }
 
-    public GLAnimate addDelay(int delay) {
-        BooleanSupplier delaySup = new BooleanSupplier() {
-            int crt = 0;
-            int count = delay;
-
-            @Override
-            public boolean getAsBoolean() {
-                if (crt < count) {
-                    crt++;
-                    return false;
-                } else {
-                    crt = 0;
-                    return true;
-                }
-            }
-        };
-        add(delaySup);
-        return this;
-    }
-
     public boolean isDestory() {
         return destory;
     }
@@ -75,10 +55,17 @@ public class GLAnimate {
     }
 
     /**
-     * 开启此片段逻辑
+     * 重新开启此片段逻辑
      */
     public void enable() {
-        index = 0;
+        reset();
+        remuse();
+    }
+    
+    /**
+     * 由上次中断位置继续此片段逻辑
+     */
+    public void remuse() {
         this.enable = true;
     }
 
@@ -120,10 +107,10 @@ public class GLAnimate {
     }
 
     /**
-     * 切换下一逻辑，若不存在则切换至第一逻辑
+     * 切换指向第一逻辑
      */
-    public void loop() {
-        this.index = (index + 1) % frags.size();
+    public void reset() {
+        this.index = 0;
     }
 
     private boolean checkIndex() {

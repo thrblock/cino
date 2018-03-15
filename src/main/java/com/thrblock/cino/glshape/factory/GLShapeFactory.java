@@ -171,6 +171,20 @@ public class GLShapeFactory {
         }
         return image;
     }
+    
+    /**
+     * 使用空纹理构造一个贴图对象
+     * 
+     * @return 贴图对象
+     */
+    public GLImage buildGLImage(float w,float h) {
+        GLImage image = new GLImage(w,h);
+        layerContainer.addShapeToSwap(layer, image);
+        if (currentNode != null) {
+            currentNode.addSubNode(image);
+        }
+        return image;
+    }
 
     /**
      * 创建一个三角形

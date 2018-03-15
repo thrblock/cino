@@ -1,6 +1,10 @@
 package com.thrblock.cino.io;
 
 public class MouseEvent {
+    public static final int BUTTON1 = 1;
+    public static final int BUTTON2 = 2;
+    public static final int BUTTON3 = 3;
+    
     private Object src;
     private int x;
     private int y;
