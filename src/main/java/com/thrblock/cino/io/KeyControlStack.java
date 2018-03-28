@@ -13,6 +13,7 @@ import com.jogamp.newt.event.KeyAdapter;
 
 /**
  * 键盘堆栈控制器,维护着一个键盘监听器栈结构，会把按键事件传给栈的顶层
+ * 
  * @author lizepu
  */
 @Component
@@ -25,36 +26,36 @@ public class KeyControlStack implements AWTEventListener {
         public void keyPressed(com.jogamp.newt.event.KeyEvent e) {
             onKeyPressed(new KeyEvent(e));
         }
+
         @Override
         public void keyReleased(com.jogamp.newt.event.KeyEvent e) {
             onKeyRelease(new KeyEvent(e));
         }
     }
-    
+
     private NEWTAdapter keyAdapter;
+
     @PostConstruct
     void init() {
         this.keyAdapter = new NEWTAdapter();
     }
-    
+
     public NEWTAdapter newtKeyListener() {
         return keyAdapter;
     }
-
-
 
     public void pushKeyListener(KeyListener keyListener) {
         listenerStack.push(keyListener);
     }
 
     public KeyListener popKeyListener() {
-        if(!listenerStack.isEmpty()) {
+        if (!listenerStack.isEmpty()) {
             return listenerStack.pop();
         } else {
             return null;
         }
     }
-    
+
     public void removeKeyListener(KeyListener keyListener) {
         listenerStack.remove(keyListener);
     }
@@ -73,17 +74,17 @@ public class KeyControlStack implements AWTEventListener {
 
     private void onKeyPressed(KeyEvent e) {
         KeyListener listener = peekKeyListener();
-        if(listener != null) {
+        if (listener != null) {
             listener.keyPressed(e);
         }
         if (e.getKeyCode() >= 0 && e.getKeyCode() < keyStatus.length) {
             keyStatus[e.getKeyCode()] = true;
         }
     }
-    
+
     private void onKeyRelease(KeyEvent e) {
         KeyListener listener = peekKeyListener();
-        if(listener != null) {
+        if (listener != null) {
             listener.keyReleased(e);
         }
         if (e.getKeyCode() >= 0 && e.getKeyCode() < keyStatus.length) {
@@ -93,8 +94,8 @@ public class KeyControlStack implements AWTEventListener {
 
     @Override
     public void eventDispatched(AWTEvent event) {
-        if(event instanceof java.awt.event.KeyEvent) {
-            java.awt.event.KeyEvent e = (java.awt.event.KeyEvent)event;
+        if (event instanceof java.awt.event.KeyEvent) {
+            java.awt.event.KeyEvent e = (java.awt.event.KeyEvent) event;
             int id = e.getID();
             switch (id) {
             case KeyEvent.KEY_PRESSED:
@@ -107,12 +108,12 @@ public class KeyControlStack implements AWTEventListener {
                 break;
             }
         }
-        
+
     }
 
     public void replaceKeyListener(KeyListener keyListener) {
         popKeyListener();
         pushKeyListener(keyListener);
     }
-    
+
 }
