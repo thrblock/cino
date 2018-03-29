@@ -1,13 +1,13 @@
 package com.thrblock.cino.component;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.LinkedList;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.thrblock.cino.function.VoidConsumer;
-import com.thrblock.cino.io.KeyEvent;
-import com.thrblock.cino.io.KeyListener;
 
 /**
  * 提供设计相关的主要成员,可以以此类为单位进行逻辑上的粒度控制
@@ -106,10 +106,13 @@ public abstract class CinoComponent extends CinoComponentContext implements KeyL
     
     @Override
     public void keyPressed(KeyEvent e) {
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+    
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 }

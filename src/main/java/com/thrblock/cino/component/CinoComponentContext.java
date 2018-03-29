@@ -1,5 +1,7 @@
 package com.thrblock.cino.component;
 
+import java.awt.event.AWTEventListener;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -26,7 +28,6 @@ import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.glshape.factory.GLShapeFactory;
 import com.thrblock.cino.io.KeyControlStack;
 import com.thrblock.cino.io.MouseControl;
-import com.thrblock.cino.io.MouseEvent;
 import com.thrblock.cino.storage.Storage;
 
 /**
@@ -111,7 +112,7 @@ abstract class CinoComponentContext {
 
     protected List<VoidConsumer> activitedHolder;
     protected List<VoidConsumer> deactivitedHolder;
-    protected List<Object> mouseHolder;
+    protected List<AWTEventListener> mouseHolder;
     protected List<Object> eventHolder;
 
     /**
@@ -189,24 +190,24 @@ abstract class CinoComponentContext {
 
     protected final void autoShapeClicked(GLPolygonShape shape, Consumer<MouseEvent> e) {
         GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
-        Function<Consumer<MouseEvent>, Object> funs = mouseIO::addMouseClicked;
+        Function<Consumer<MouseEvent>, AWTEventListener> funs = mouseIO::addMouseClicked;
         autoMouseHook(shape, e, layer, funs);
     }
 
     protected final void autoShapePressed(GLPolygonShape shape, Consumer<MouseEvent> e) {
         GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
-        Function<Consumer<MouseEvent>, Object> funs = mouseIO::addMousePressed;
+        Function<Consumer<MouseEvent>, AWTEventListener> funs = mouseIO::addMousePressed;
         autoMouseHook(shape, e, layer, funs);
     }
 
     protected final void autoShapeReleased(GLPolygonShape shape, Consumer<MouseEvent> e) {
         GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
-        Function<Consumer<MouseEvent>, Object> funs = mouseIO::addMouseReleased;
+        Function<Consumer<MouseEvent>, AWTEventListener> funs = mouseIO::addMouseReleased;
         autoMouseHook(shape, e, layer, funs);
     }
 
     private void autoMouseHook(GLPolygonShape shape, Consumer<MouseEvent> e, GLLayer layer,
-            Function<Consumer<MouseEvent>, Object> funs) {
+            Function<Consumer<MouseEvent>, AWTEventListener> funs) {
         onActivited(() -> mouseHolder.add(funs.apply(event -> {
             if (activitedSupplier.getAsBoolean() && shape.isVisible() && !shape.isDestory() && shape.isPointInside(
                     mouseIO.getMouseX() - layer.getViewXOffset(), mouseIO.getMouseY() - layer.getViewYOffset())) {
@@ -223,23 +224,23 @@ abstract class CinoComponentContext {
         deactivitedHolder.add(v);
     }
 
-    protected Object shapeClicked(GLPolygonShape shape, Consumer<MouseEvent> e) {
+    protected AWTEventListener shapeClicked(GLPolygonShape shape, Consumer<MouseEvent> e) {
         GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         return mouseHook(shape, e, layer, mouseIO::addMouseClicked);
     }
 
-    protected Object shapePressed(GLPolygonShape shape, Consumer<MouseEvent> e) {
+    protected AWTEventListener shapePressed(GLPolygonShape shape, Consumer<MouseEvent> e) {
         GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         return mouseHook(shape, e, layer, mouseIO::addMousePressed);
     }
 
-    protected Object shapeReleased(GLPolygonShape shape, Consumer<MouseEvent> e) {
+    protected AWTEventListener shapeReleased(GLPolygonShape shape, Consumer<MouseEvent> e) {
         GLLayer layer = layerManager.getLayer(shape.getLayerIndex());
         return mouseHook(shape, e, layer, mouseIO::addMouseReleased);
     }
 
-    private Object mouseHook(GLPolygonShape shape, Consumer<MouseEvent> e, GLLayer layer,
-            Function<Consumer<MouseEvent>, Object> funs) {
+    private AWTEventListener mouseHook(GLPolygonShape shape, Consumer<MouseEvent> e, GLLayer layer,
+            Function<Consumer<MouseEvent>, AWTEventListener> funs) {
         return funs.apply(event -> {
             if (activitedSupplier.getAsBoolean() && shape.isVisible() && !shape.isDestory() && shape.isPointInside(
                     mouseIO.getMouseX() - layer.getViewXOffset(), mouseIO.getMouseY() - layer.getViewYOffset())) {
