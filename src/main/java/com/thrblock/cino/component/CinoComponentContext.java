@@ -24,8 +24,8 @@ import com.thrblock.cino.gllayer.GLLayer;
 import com.thrblock.cino.gllayer.GLLayerManager;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.GLPolygonShape;
-import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.glshape.factory.GLShapeFactory;
+import com.thrblock.cino.glshape.factory.GLShapeNode;
 import com.thrblock.cino.io.KeyControlStack;
 import com.thrblock.cino.io.MouseControl;
 import com.thrblock.cino.storage.Storage;
@@ -106,7 +106,7 @@ abstract class CinoComponentContext {
     /**
      * sceneRoot是场景自动创建的GLNode根节点
      */
-    protected GLNode sceneRoot;
+    protected GLShapeNode sceneRoot;
 
     protected BooleanSupplier activitedSupplier = () -> false;
 

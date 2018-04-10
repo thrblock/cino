@@ -38,6 +38,28 @@ public class GLShapeNode implements GLNode{
             subList.add(node);
         }
     }
+    
+    public void destroyNode(GLNode node) {
+        if(basic == node) {
+            basic.destroy();
+            if(subList.isEmpty()) {
+                basic = GL_NOP;
+            } else {
+                basic = subList.remove(0);
+            }
+        } else {
+            node.destroy();
+            if(subList.remove(node)) {
+                return;
+            }
+            for(GLNode sub:subList) {
+                if(sub instanceof GLShapeNode) {
+                    ((GLShapeNode) sub).destroyNode(node);
+                }
+            }
+        }
+    }
+    
     @Override
     public void show() {
         basic.show();
@@ -54,6 +76,8 @@ public class GLShapeNode implements GLNode{
     public void destroy() {
         basic.destroy();
         subList.forEach(GLNode::destroy);
+        subList.clear();
+        basic = GL_NOP;
     }
 
     @Override

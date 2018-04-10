@@ -66,14 +66,12 @@ public class CrudeLinkedList<T> implements Iterable<T>{
         private Node begin;
         private Node current = null;
         private CrudeIter() {
+            begin = new Node();
+            begin.next = head;
+            current = begin;
         }
         @Override
         public boolean hasNext() {
-            if(begin == null) {
-                begin = new Node();
-                begin.next = head;
-                current = begin;
-            }
             return current.next != null;
         }
         
@@ -95,6 +93,7 @@ public class CrudeLinkedList<T> implements Iterable<T>{
                 head = null;
                 tail = null;
                 current = begin;
+                begin.next = null;
                 return;
             }
             if(current == head) {// remove head element

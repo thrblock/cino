@@ -86,7 +86,7 @@ public class FontGenNode {
             GLTexture[] fullArr = new GLTexture[65535];// 用512KB换取O(1)性能
             System.arraycopy(textures, 0, fullArr, 0, textures.length);
             this.textures = fullArr;
-            LOG.info("texture array expand to 65535 for font:" + fm.getFont().toString());
+            LOG.info("texture array expand to 65535 for font:{}",fm.getFont());
         }
     }
 
