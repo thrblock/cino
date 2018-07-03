@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
-import com.thrblock.cino.glprocessor.GLEventProcessor;
+import com.thrblock.cino.glprocessor.GLScreenSizeChangeListenerHolder;
 import com.thrblock.cino.glshape.GLShape;
 
 /**
@@ -44,7 +44,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     private int flexmode;
 
     @Autowired
-    private GLEventProcessor eventProcessor;
+    private GLScreenSizeChangeListenerHolder eventProcessor;
 
     private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);

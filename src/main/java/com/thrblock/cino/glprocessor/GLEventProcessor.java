@@ -1,9 +1,5 @@
 package com.thrblock.cino.glprocessor;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.BiConsumer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +61,11 @@ public class GLEventProcessor implements GLEventListener {
 
     private boolean reshaped = false;
 
-    private List<BiConsumer<Integer, Integer>> screenChangeListener = new CopyOnWriteArrayList<>();
+//    private List<BiConsumer<Integer, Integer>> screenChangeListener = new CopyOnWriteArrayList<>();
 
+    @Autowired
+    GLScreenSizeChangeListenerHolder screenChangeListener;
+    
     @Override
     public void display(GLAutoDrawable drawable) {
         long startTime = System.currentTimeMillis();
@@ -83,7 +82,7 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         LOG.info("GL init");
-        LOG.info("The Renderer you are current using:" + gl.glGetString(GL.GL_RENDERER));
+        LOG.info("The Renderer you are current using:{}",gl.glGetString(GL.GL_RENDERER));
         LOG.info("The Renderer driver version is {}",gl.glGetString(GL.GL_VERSION));
         Thread.currentThread().setName("GL_Draw");
         if (vsync) {
@@ -107,7 +106,7 @@ public class GLEventProcessor implements GLEventListener {
 
         int glErrorCode = gl.glGetError();
         if (glErrorCode != GL.GL_NO_ERROR) {
-            LOG.warn("GL Error Status:" + glErrorCode);
+            LOG.warn("GL Error Status:{}",glErrorCode);
         }
     }
 
@@ -126,20 +125,11 @@ public class GLEventProcessor implements GLEventListener {
             gl2.glOrtho(-orthW, orthW, -orthH, orthH, 0, 1.0f);
             LOG.info("GL reshape:" + x + "," + y + "," + w + "," + h);
         }
-        screenChangeListener.forEach(e -> e.accept(w, h));
+        screenChangeListener.getScreenChangeListener().forEach(e -> e.accept(w, h));
     }
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
         LOG.info("GL dispose");
-    }
-
-    /**
-     * 注册窗体大小变化监听器
-     * 
-     * @param listener
-     */
-    public void addScreenSizeChangeListener(BiConsumer<Integer, Integer> listener) {
-        screenChangeListener.add(listener);
     }
 }
