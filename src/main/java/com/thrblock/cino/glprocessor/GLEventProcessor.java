@@ -65,7 +65,7 @@ public class GLEventProcessor implements GLEventListener {
 
     @Autowired
     GLScreenSizeChangeListenerHolder screenChangeListener;
-    
+
     @Override
     public void display(GLAutoDrawable drawable) {
         long startTime = System.currentTimeMillis();
@@ -82,8 +82,8 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         LOG.info("GL init");
-        LOG.info("The Renderer you are current using:{}",gl.glGetString(GL.GL_RENDERER));
-        LOG.info("The Renderer driver version is {}",gl.glGetString(GL.GL_VERSION));
+        LOG.info("The Renderer you are current using:{}", gl.glGetString(GL.GL_RENDERER));
+        LOG.info("The Renderer driver version is {}", gl.glGetString(GL.GL_VERSION));
         Thread.currentThread().setName("GL_Draw");
         if (vsync) {
             gl.setSwapInterval(1);
@@ -106,7 +106,7 @@ public class GLEventProcessor implements GLEventListener {
 
         int glErrorCode = gl.glGetError();
         if (glErrorCode != GL.GL_NO_ERROR) {
-            LOG.warn("GL Error Status:{}",glErrorCode);
+            LOG.warn("GL Error Status:{}", glErrorCode);
         }
     }
 
@@ -123,7 +123,7 @@ public class GLEventProcessor implements GLEventListener {
             gl2.glMatrixMode(GL2.GL_PROJECTION);
             gl2.glLoadIdentity();
             gl2.glOrtho(-orthW, orthW, -orthH, orthH, 0, 1.0f);
-            LOG.info("GL reshape:" + x + "," + y + "," + w + "," + h);
+            LOG.info("GL reshape:{},{},{},{}", x, y, w, h);
         }
         screenChangeListener.getScreenChangeListener().forEach(e -> e.accept(w, h));
     }
