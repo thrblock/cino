@@ -56,10 +56,10 @@ public class GLProgram extends AbstractGLProgram implements GLInitializable {
             gl2.glGetProgramiv(programCode, GL2.GL_INFO_LOG_LENGTH, intBuffer);
             int size = intBuffer.get(0);
             LOG.warn("GLProgram Link Error!");
-            if (size > 0) {
+            if (size > 0 && LOG.isWarnEnabled()) {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(size);
                 gl2.glGetProgramInfoLog(programCode, size, intBuffer, byteBuffer);
-                LOG.warn("GLProgram Link Error:" + new String(byteBuffer.array()));
+                LOG.warn("GLProgram Link Error:{}", new String(byteBuffer.array()));
             } else {
                 LOG.warn("GLProgram Link Error,Because of Unknow error");
             }

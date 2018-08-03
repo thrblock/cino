@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.eventbus.EventBus;
 
+/**
+ * 将AWT事件体系纳入EventBus
+ * @author thrblock
+ *
+ */
 @Component
 public class AWTEventBusBridge {
     @Autowired

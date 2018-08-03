@@ -53,7 +53,7 @@ public abstract class AbstractGLProgram {
 
     private void checkName(String name) {
         if(!names.add(name)) {
-            LOG.warn("uniform name conflict in shader,the name is %s",name);
+            LOG.warn("uniform name conflict in shader,the name is {}",name);
         }
     }
     /**

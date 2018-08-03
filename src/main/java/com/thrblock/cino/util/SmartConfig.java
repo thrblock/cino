@@ -38,7 +38,7 @@ public class SmartConfig {
      */
     public SmartConfig(String source) {
         this.source = source;
-        LOG.info("source:" + source);
+        LOG.info("source:{}", source);
     }
 
     /**
@@ -74,7 +74,7 @@ public class SmartConfig {
                 smtStream, ENCODING))) {
             String line = reader.readLine();
             while(!"#SMT END".equalsIgnoreCase(line)) {
-                LOG.debug("skip smt expression:" + line);
+                LOG.debug("skip smt expression:{}", line);
                 line = reader.readLine();
             }
             
@@ -97,14 +97,14 @@ public class SmartConfig {
             InputStream stream = seekDefault();
             File folder = dstFile.getParentFile();
             if(!folder.exists() && !folder.mkdirs()) {
-                LOG.warn("fail to create folder:" + folder);
+                LOG.warn("fail to create folder:{}", folder);
                 return stream;
             }
             if(!dstFile.createNewFile()) {
-                LOG.warn("fail to create file:" + dstFile);
+                LOG.warn("fail to create file:{}", dstFile);
                 return stream;
             }
-            LOG.info("export config file:" + dstFile);
+            LOG.info("export config file:{}", dstFile);
             byte[] cache = new byte[1024];
             try(OutputStream fos = new FileOutputStream(dstFile)) {
                 for(int realRead = 0;realRead > -1;realRead = stream.read(cache)) {
@@ -127,7 +127,7 @@ public class SmartConfig {
                 smtStream, ENCODING))) {
             String begin = reader.readLine();
             if (begin == null || !"#SMT BEGIN".equalsIgnoreCase(begin)) {
-                LOG.warn("error smt title:" + begin);
+                LOG.warn("error smt title:{}", begin);
                 return false;
             }
             String osma = reader.readLine();
@@ -149,12 +149,12 @@ public class SmartConfig {
         String[] param = line.split(" ");
         if (param.length == 3 && "#OSMAPPING".equalsIgnoreCase(param[0])) {
             if(os.indexOf(param[1].toUpperCase()) != -1) {
-                LOG.info("OS Mapped:" + os + ",Location:" + param[2]);
+                LOG.info("OS Mapped:{},Location:{}", os, param[2]);
                 this.location = param[2];
             }
             return true;
         } else {
-            LOG.warn("illegal smt expression:" + line);
+            LOG.warn("illegal smt expression:{}", line);
             return false;
         }
     }

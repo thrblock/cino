@@ -20,7 +20,7 @@ public class ReflactUtils {
         try {
             m.invoke(o, params);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            LOG.error("error when invoke annotation method:" + e);
+            LOG.error("error when invoke annotation method:{}" ,e);
         }
     }
 

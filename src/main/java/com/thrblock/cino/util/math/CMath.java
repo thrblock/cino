@@ -103,7 +103,8 @@ public class CMath {
      * @return
      */
     public static float clamp(float value, float min, float max) {
-        return value < min ? min : (value > max ? max : value);
+        float m = value > max ? max : value;
+        return value < min ? min : m;
     }
 
     /**

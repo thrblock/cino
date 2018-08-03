@@ -91,10 +91,10 @@ public class GLShader {
             if (intBuffer.get(0) != GL.GL_TRUE) {
                 gl2.glGetShaderiv(shaderCode, GL2.GL_INFO_LOG_LENGTH, intBuffer);
                 int size = intBuffer.get(0);
-                if (size > 0) {
+                if (size > 0 && LOG.isWarnEnabled()) {
                     ByteBuffer byteBuffer = ByteBuffer.allocate(size);
                     gl2.glGetShaderInfoLog(shaderCode, size, intBuffer, byteBuffer);
-                    LOG.warn("GLShader Compile Error:" + new String(byteBuffer.array()));
+                    LOG.warn("GLShader Compile Error:{}", new String(byteBuffer.array()));
                 } else {
                     LOG.warn("GLShader Compile Error,Because of Unknow error");
                 }

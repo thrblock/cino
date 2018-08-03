@@ -30,7 +30,7 @@ public class FontsInCommon {
             Font f = Font.createFont(Font.TRUETYPE_FONT, is);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f);
         } catch (IOException | FontFormatException e) {
-            LOG.warn("fail to load gnu free mono font:" + e);
+            LOG.warn("fail to load gnu free mono font:{}", e);
         }
     }
 }

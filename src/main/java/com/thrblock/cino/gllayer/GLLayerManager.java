@@ -33,7 +33,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     private static final Logger LOG = LoggerFactory.getLogger(GLLayerManager.class);
     private List<GLLayer> layerList = new CopyOnWriteArrayList<>();
     private Deque<GLFrameBufferObject> fboStack = new ArrayDeque<>();
-    private GLLayer topLayer = new GLLayer(fboStack);
+    private GLLayer topLayer;
     private Semaphore layerSp = new Semaphore(1);
 
     @Value("${cino.frame.screen.width:800}")
@@ -53,15 +53,15 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
 
     @PostConstruct
     void init() {
+        this.topLayer = new GLLayer(fboStack,frameSizeW,frameSizeH);
         eventProcessor.addScreenSizeChangeListener(topLayer::noticeScreenChange);
     }
 
     /**
      * 根据索引 获得一个绘制层结构
      * 
-     * @param index
-     *            索引 大于等于0的数字代表层数，高层覆盖底层，不存在的层将会自动创建。<br />
-     *            特别的:使用-1作为索引，会放置图形对象到预定义的最顶层，该层不会被任意其它层覆盖
+     * @param index 索引 大于等于0的数字代表层数，高层覆盖底层，不存在的层将会自动创建。<br />
+     *              特别的:使用-1作为索引，会放置图形对象到预定义的最顶层，该层不会被任意其它层覆盖
      * @return 层次对象
      */
     public GLLayer getLayer(int index) {
@@ -73,10 +73,10 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
         }
         layerSp.acquireUninterruptibly();
         if (layerList.size() <= index) {
-            LOG.warn("layer not found:" + index);
+            LOG.warn("layer not found:{}", index);
             for (int i = layerList.size(); i <= index; i++) {
-                LOG.info("layer auto generated:" + i);
-                GLLayer gen = new GLLayer(fboStack);
+                LOG.info("layer auto generated:{}", i);
+                GLLayer gen = new GLLayer(fboStack,frameSizeW,frameSizeH);
                 eventProcessor.addScreenSizeChangeListener(gen::noticeScreenChange);
                 layerList.add(gen);
             }
@@ -88,10 +88,8 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     /**
      * 将一个图形对象加入交换区，当绘制结束后会加入下次绘制的列表中
      * 
-     * @param index
-     *            层次索引
-     * @param shape
-     *            图形对象
+     * @param index 层次索引
+     * @param shape 图形对象
      */
     public void addShapeToSwap(int index, GLShape shape) {
         shape.setLayerIndex(index);
@@ -143,8 +141,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     /**
      * 按照层次绘制全部图形对象
      * 
-     * @param gl2
-     *            OpenGL2 上下文
+     * @param gl2 OpenGL2 上下文
      */
     public void drawAllLayer(GL2 gl2) {
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -182,7 +179,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
 
     private void drawLayer(GLLayer layer, GL2 gl2) {
         gl2.glBlendFunc(layer.getMixA(), layer.getMixB());
-        layer.viewOffset(gl2);
+        layer.layerTransform(gl2);
         layer.draw(gl2);
     }
 

@@ -61,8 +61,6 @@ public class GLEventProcessor implements GLEventListener {
 
     private boolean reshaped = false;
 
-//    private List<BiConsumer<Integer, Integer>> screenChangeListener = new CopyOnWriteArrayList<>();
-
     @Autowired
     GLScreenSizeChangeListenerHolder screenChangeListener;
 
@@ -82,8 +80,10 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         LOG.info("GL init");
-        LOG.info("The Renderer you are current using:{}", gl.glGetString(GL.GL_RENDERER));
-        LOG.info("The Renderer driver version is {}", gl.glGetString(GL.GL_VERSION));
+        if(LOG.isInfoEnabled()) {
+            LOG.info("The Renderer you are current using:{}", gl.glGetString(GL.GL_RENDERER));
+            LOG.info("The Renderer driver version is {}", gl.glGetString(GL.GL_VERSION));
+        }
         Thread.currentThread().setName("GL_Draw");
         if (vsync) {
             gl.setSwapInterval(1);
@@ -114,7 +114,7 @@ public class GLEventProcessor implements GLEventListener {
     public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
-
+        
         int orthW = w <= 0 ? 1 : w / 2;
         int orthH = h <= 0 ? 1 : h / 2;
         if (!reshaped || flexMode == FIX) {

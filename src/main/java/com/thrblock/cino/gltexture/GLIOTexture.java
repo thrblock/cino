@@ -38,10 +38,10 @@ public class GLIOTexture implements GLTexture {
                 this.imgType = fileName.substring(i + 1);
                 this.stream = new FileInputStream(imgFile);
             } else {
-                LOG.warn("no extension name found from file:" + imgFile);
+                LOG.warn("no extension name found from file:{}", imgFile);
             }
         } catch (IOException e) {
-            LOG.warn("IOException in registerTexture by file:" + e);
+            LOG.warn("IOException in registerTexture by file:{}", e);
         }
     }
 
@@ -65,7 +65,7 @@ public class GLIOTexture implements GLTexture {
             stream.close();
         } catch (GLException | IOException e) {
             fatalInLoad = true;
-            LOG.warn("Exception in generate gl texture:" + e);
+            LOG.warn("Exception in generate gl texture:{}", e);
         }
     }
 

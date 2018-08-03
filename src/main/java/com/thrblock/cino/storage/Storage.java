@@ -42,7 +42,7 @@ public class Storage {
         try(OutputStream os = new FileOutputStream(saveFile)) {
             prop.store(os, null);
         } catch (IOException e) {
-            LOG.warn("error when write file:" + e);
+            LOG.warn("error when write file:{}", e);
         }
     }
 
@@ -50,7 +50,7 @@ public class Storage {
         try {
             prop.setProperty(f.getName(), f.get(o).toString());
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            LOG.warn("error when set storage data from field:" + e);
+            LOG.warn("error when set storage data from field:{}", e);
         }
     }
 
@@ -72,7 +72,7 @@ public class Storage {
                 f.set(o, ReflactUtils.toObject(f.getType(), data));
             }
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            LOG.warn("error when set storage data to field:" + e);
+            LOG.warn("error when set storage data to field:{}", e);
         }
     }
     
@@ -82,10 +82,9 @@ public class Storage {
         Properties prop = new Properties();
         try(InputStream is = new FileInputStream(f)) {
             prop.load(is);
-            is.close();
             return prop;
         } catch (IOException e) {
-            LOG.warn("error when read file:" + e);
+            LOG.warn("error when read file:{}", e);
             return null;
         }
     }
@@ -94,11 +93,11 @@ public class Storage {
         try {
             File f = new File(file);
             if (!f.exists()) {
-                LOG.info("new file create for storage:" + f.createNewFile());
+                LOG.info("new file create for storage:{}", f.createNewFile());
             }
             return f;
         } catch (IOException e) {
-            LOG.warn("error when create file:" + e);
+            LOG.warn("error when create file:{}", e);
             return null;
         }
     }

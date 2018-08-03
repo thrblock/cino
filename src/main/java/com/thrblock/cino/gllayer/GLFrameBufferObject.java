@@ -88,7 +88,7 @@ public class GLFrameBufferObject {
         gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, fboDepth[0]);
         int status;
         if ((status = gl.glCheckFramebufferStatus(GL.GL_FRAMEBUFFER)) != GL.GL_FRAMEBUFFER_COMPLETE) {
-            LOG.warn("glCheckFramebufferStatus error,status:" + status);
+            LOG.warn("glCheckFramebufferStatus error,status:{}", status);
         }
         gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
     }

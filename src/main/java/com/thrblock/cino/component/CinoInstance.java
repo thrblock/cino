@@ -13,7 +13,7 @@ import java.util.Arrays;
 public abstract class CinoInstance extends CinoComponentContext {
     public void init() {
     }
-    
+
     protected void sameContextOf(CinoComponentContext context) {
         Field[] fs = CinoComponentContext.class.getDeclaredFields();
         Arrays.stream(fs).forEach(f -> setField(context, f));
@@ -21,11 +21,11 @@ public abstract class CinoInstance extends CinoComponentContext {
 
     private void setField(CinoComponentContext context, Field f) {
         try {
-            if(!Modifier.isFinal(f.getModifiers())) {
+            if (!Modifier.isFinal(f.getModifiers())) {
                 f.set(this, f.get(context));
             }
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            logger.error("Exception in component context filed set:" + e);
+            logger.error("Exception in component context filed set:{}", e);
         }
     }
 }

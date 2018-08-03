@@ -39,8 +39,10 @@ public class GLLayer {
      * @param stack
      *            帧缓冲堆栈
      */
-    public GLLayer(Deque<GLFrameBufferObject> stack) {
+    public GLLayer(Deque<GLFrameBufferObject> stack,int w,int h) {
         this.stack = stack;
+        this.frameSizeW = w;
+        this.frameSizeH = h;
     }
 
     /**
@@ -87,7 +89,7 @@ public class GLLayer {
      * @param gl
      *            opengl绘制实例
      */
-    public void viewOffset(GL2 gl) {
+    public void layerTransform(GL2 gl) {
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
@@ -243,7 +245,7 @@ public class GLLayer {
         this.frameSizeW = w;
         this.frameSizeH = h;
         swapSp.acquireUninterruptibly();
-        this.refreshFBO   = true;
+        this.refreshFBO = true;
         swapSp.release();
     }
 }
