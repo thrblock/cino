@@ -32,7 +32,7 @@ public class GLLayer {
     private int frameSizeW = 800;
     private int frameSizeH = 600;
     private boolean refreshFBO = false;
-
+    
     /**
      * 构造GLLayer
      * 
@@ -81,19 +81,6 @@ public class GLLayer {
      */
     public void setViewYOffset(float viewYOffset) {
         this.viewYOffset = viewYOffset;
-    }
-
-    /**
-     * 操作OpenGL模型矩阵进行视角偏移
-     * 
-     * @param gl
-     *            opengl绘制实例
-     */
-    public void layerTransform(GL2 gl) {
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();
-
-        gl.glTranslatef(viewXOffset, viewYOffset, 0);
     }
 
     /**

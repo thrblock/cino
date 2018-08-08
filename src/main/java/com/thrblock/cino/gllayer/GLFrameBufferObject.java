@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.thrblock.cino.glprocessor.GLEventProcessor;
 import com.thrblock.cino.glshape.GLPoint;
+import com.thrblock.cino.gltransform.GLTransformManager;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
 /**
@@ -125,7 +125,7 @@ public class GLFrameBufferObject {
             inited = false;
         }
         if(!inited) {
-            if(flexmode == GLEventProcessor.FIX) {
+            if(flexmode == GLTransformManager.FIX) {
                 initPointPosition();
             }
             initFBOByGLContext(gl);
@@ -157,6 +157,10 @@ public class GLFrameBufferObject {
      */
     public void drawAsTexture(GL gl) {
         GL2 gl2 = gl.getGL2();
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
+        gl2.glPushMatrix();
+        gl2.glLoadIdentity();
+        
         bindProgram(gl2);
         gl2.glBindTexture(GL.GL_TEXTURE_2D, fboTexture[0]);
         gl2.glEnable(GL.GL_TEXTURE_2D);
@@ -172,6 +176,7 @@ public class GLFrameBufferObject {
         gl2.glBindTexture(GL.GL_TEXTURE_2D, 0);
         gl2.glDisable(GL.GL_TEXTURE_2D);
         unBindProgram(gl2);
+        gl2.glPopMatrix();
     }
     
     private void bindProgram(GL2 gl) {

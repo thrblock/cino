@@ -9,10 +9,12 @@ import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
+import com.thrblock.cino.gltransform.GLTransformManager;
 
 /**
  * 鼠标控制器
@@ -38,10 +40,15 @@ public class MouseControl implements AWTEventListener {
     private float currentW;
     private float currentH;
 
-    private int x;
-    private int y;
+    private int scaledX;
+    private int scaledY;
 
     private boolean[] mouseButtonStatus = new boolean[64];
+
+    @Autowired
+    private GLTransformManager glTransform;
+    private int originalX;
+    private int originalY;
 
     @PostConstruct
     void init() {
@@ -50,7 +57,7 @@ public class MouseControl implements AWTEventListener {
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
-    
+
     @PreDestroy
     void destroy() {
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
@@ -60,10 +67,11 @@ public class MouseControl implements AWTEventListener {
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent e = (MouseEvent) event;
-            if (e.getID() == MouseEvent.MOUSE_MOVED
-                    || e.getID() == MouseEvent.MOUSE_DRAGGED) {
-                this.x = getConvertedX(e.getX());
-                this.y = getConvertedY(e.getY());
+            if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_DRAGGED) {
+                this.originalX = e.getX();
+                this.originalY = e.getY();
+                this.scaledX = getConvertedX(e.getX());
+                this.scaledY = getConvertedY(e.getY());
             } else if (e.getID() == MouseEvent.MOUSE_PRESSED) {
                 press(e.getButton());
             } else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
@@ -73,21 +81,51 @@ public class MouseControl implements AWTEventListener {
     }
 
     private int getConvertedX(int x) {
-        int scaledX = flexmode == 1 ? x : (int) (x * screenWidth / currentW);
-        return scaledX - ((flexmode == 1) ? (int) currentW : screenWidth) / 2;
+        return flexmode == 1 ? x : (int) (x * screenWidth / currentW);
     }
 
     private int getConvertedY(int y) {
-        int scaledY = flexmode == 1 ? y : (int) (y * screenHeight / currentH);
-        return -scaledY + ((flexmode == 1) ? (int) currentH : screenHeight) / 2;
+        return flexmode == 1 ? y : (int) (y * screenHeight / currentH);
+    }
+
+    public int getScaledMouseX() {
+        return scaledX;
+    }
+
+    public int getScaledMouseY() {
+        return scaledY;
+    }
+
+    public int getOriginalX() {
+        return originalX;
+    }
+
+    public int getOriginalY() {
+        return originalY;
+    }
+
+    public float getScaledFactorX() {
+        return flexmode == 1 ? 1.0f : (screenWidth / currentW);
+    }
+
+    public float getScaledFactorY() {
+        return flexmode == 1 ? 1.0f : (screenHeight / currentH);
     }
 
     public int getMouseX() {
-        return x;
+        return getMouseX(-1);
+    }
+
+    public int getMouseX(int layerIndex) {
+        return Math.round(glTransform.getGLTransform(layerIndex).getUnprojectedMouseData()[0]);
     }
 
     public int getMouseY() {
-        return y;
+        return getMouseY(-1);
+    }
+
+    public int getMouseY(int layerIndex) {
+        return Math.round(glTransform.getGLTransform(layerIndex).getUnprojectedMouseData()[1]);
     }
 
     private void press(int st) {
@@ -102,7 +140,7 @@ public class MouseControl implements AWTEventListener {
         }
     }
 
-    public AWTEventListener addMouseListener(Consumer<MouseEvent> mouseListener,int mouseEventID) {
+    public AWTEventListener addMouseListener(Consumer<MouseEvent> mouseListener, int mouseEventID) {
         AWTEventListener listener = event -> {
             if (event instanceof MouseEvent) {
                 MouseEvent e = (MouseEvent) event;
@@ -115,17 +153,17 @@ public class MouseControl implements AWTEventListener {
         Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.MOUSE_MOTION_EVENT_MASK);
         return listener;
     }
-    
+
     public AWTEventListener addMouseClicked(Consumer<MouseEvent> mouseClicked) {
-        return addMouseListener(mouseClicked,MouseEvent.MOUSE_CLICKED);
+        return addMouseListener(mouseClicked, MouseEvent.MOUSE_CLICKED);
     }
 
     public AWTEventListener addMousePressed(Consumer<MouseEvent> mousePressed) {
-        return addMouseListener(mousePressed,MouseEvent.MOUSE_PRESSED);
+        return addMouseListener(mousePressed, MouseEvent.MOUSE_PRESSED);
     }
 
     public AWTEventListener addMouseReleased(Consumer<MouseEvent> mouseReleased) {
-        return addMouseListener(mouseReleased,MouseEvent.MOUSE_RELEASED);
+        return addMouseListener(mouseReleased, MouseEvent.MOUSE_RELEASED);
     }
 
     public void removeMouseHolder(AWTEventListener listener) {

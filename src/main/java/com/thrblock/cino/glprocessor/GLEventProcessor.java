@@ -14,6 +14,7 @@ import com.thrblock.cino.debug.DebugPannel;
 import com.thrblock.cino.glanimate.GLAnimateManager;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayerManager;
+import com.thrblock.cino.gltransform.GLTransformManager;
 
 /**
  * GLEventProcessor 捕捉OpenGL绘制事件并进行处理，是各类组件中同步逻辑的调用者
@@ -24,19 +25,6 @@ import com.thrblock.cino.gllayer.GLLayerManager;
 @Component
 public class GLEventProcessor implements GLEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);
-
-    /**
-     * 等比例缩放
-     * 
-     * @see #setFlexMode
-     */
-    public static final int SCALE = 0;
-    /**
-     * 仅仅是画布变大，图形大小不变
-     * 
-     * @see #setFlexMode
-     */
-    public static final int FIX = 1;
 
     @Autowired
     private GLAnimateManager animateManager;
@@ -49,26 +37,22 @@ public class GLEventProcessor implements GLEventListener {
 
     @Value("${cino.frame.vsync:false}")
     private boolean vsync = false;
-
-    /**
-     * 当前缩放模式
-     */
-    @Value("${cino.frame.flexmode:" + SCALE + "}")
-    private int flexMode;
-
+    
     @Autowired
     private DebugPannel fpsCounter;
 
-    private boolean reshaped = false;
-
     @Autowired
-    GLScreenSizeChangeListenerHolder screenChangeListener;
+    private GLScreenSizeChangeListenerHolder screenChangeListener;
+    
+    @Autowired
+    private GLTransformManager transformManager;
 
     @Override
     public void display(GLAutoDrawable drawable) {
         long startTime = System.currentTimeMillis();
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
+        transformManager.initDefault(gl2);
         contextInitor.glInitializing(gl);
         layerManager.drawAllLayer(gl2);
         animateManager.runAll();
@@ -112,19 +96,7 @@ public class GLEventProcessor implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
-        GL gl = drawable.getGL();
-        GL2 gl2 = gl.getGL2();
-        
-        int orthW = w <= 0 ? 1 : w / 2;
-        int orthH = h <= 0 ? 1 : h / 2;
-        if (!reshaped || flexMode == FIX) {
-            reshaped = true;
-            gl2.glViewport(0, 0, w, h);
-            gl2.glMatrixMode(GL2.GL_PROJECTION);
-            gl2.glLoadIdentity();
-            gl2.glOrtho(-orthW, orthW, -orthH, orthH, 0, 1.0f);
-            LOG.info("GL reshape:{},{},{},{}", x, y, w, h);
-        }
+        transformManager.reshape(drawable, x, y, w, h);
         screenChangeListener.getScreenChangeListener().forEach(e -> e.accept(w, h));
     }
 

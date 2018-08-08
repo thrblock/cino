@@ -20,6 +20,7 @@ import com.jogamp.opengl.GL2;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
 import com.thrblock.cino.glprocessor.GLScreenSizeChangeListenerHolder;
 import com.thrblock.cino.glshape.GLShape;
+import com.thrblock.cino.gltransform.GLTransformManager;
 
 /**
  * GLLayerContainer 绘制层容器<br />
@@ -42,9 +43,14 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     private int frameSizeH;
     @Value("${cino.frame.flexmode:0}")
     private int flexmode;
+    @Value("${cino.layer.maxlayer:255}")
+    private int maxLayer;
 
     @Autowired
     private GLScreenSizeChangeListenerHolder eventProcessor;
+    
+    @Autowired
+    private GLTransformManager transformManager;
 
     private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
@@ -147,9 +153,9 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         beforeLayerDraw(gl2);
         for (int i = 0; i < layerList.size(); i++) {
-            drawLayer(getLayer(i), gl2);
+            drawLayer(getLayer(i), gl2,i);
         }
-        drawLayer(getLayer(-1), gl2);
+        drawLayer(getLayer(-1), gl2,-1);
         gl2.glFlush();
         afterLayerDraw(gl2);
         swap();
@@ -177,9 +183,9 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
         }
     }
 
-    private void drawLayer(GLLayer layer, GL2 gl2) {
+    private void drawLayer(GLLayer layer, GL2 gl2,int i) {
         gl2.glBlendFunc(layer.getMixA(), layer.getMixB());
-        layer.layerTransform(gl2);
+        transformManager.initBeforeLayer(gl2, i);
         layer.draw(gl2);
     }
 
