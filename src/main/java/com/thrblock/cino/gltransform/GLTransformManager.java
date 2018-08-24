@@ -33,16 +33,6 @@ public class GLTransformManager implements IGLTransForm {
      */
     @Value("${cino.frame.flexmode:" + SCALE + "}")
     private int flexMode;
-
-    @Value("${cino.gl.projectfunction:glOrtho}")
-    private String projectfunction;
-
-    @Value("${cino.gl.project.near:0.0}")
-    private double projectnear;
-
-    @Value("${cino.gl.project.far:1.0}")
-    private double projectfar;
-
     @Value("${cino.frame.screen.width:800}")
     private int initW;
     @Value("${cino.frame.screen.height:600}")
@@ -54,14 +44,17 @@ public class GLTransformManager implements IGLTransForm {
     private int currentH;
 
     private GLTransform defTransform;
+    private GLTransform topTransform;
     private GLTransform[] transformArr;
+
+    private int currentMax = 0;
 
     @Autowired
     private MouseControl mouse;
 
     @PostConstruct
     void init() {
-        defTransform = new GLTransform(projectfunction, projectnear, projectfar);
+        defTransform = new GLTransform();
         transformArr = new GLTransform[maxLayer];
     }
 
@@ -98,56 +91,63 @@ public class GLTransformManager implements IGLTransForm {
 
     @Override
     public GLTransform getGLTransform(int layerIndex) {
-        if (layerIndex > transformArr.length || layerIndex < 0) {
-            return getMaxTransform(transformArr.length - 1);
+        if (layerIndex == -1) {
+            return topTransform != null ? topTransform : getMaxTransform(currentMax);
+        }
+        if (layerIndex >= transformArr.length) {
+            return getMaxTransform(currentMax);
         } else {
             return getMaxTransform(layerIndex);
         }
     }
 
     private GLTransform getMaxTransform(int layerIndex) {
-        if (transformArr[layerIndex] != null) {
-            return transformArr[layerIndex];
-        } else {
-            for (int i = layerIndex; i >= 0; i--) {
-                if (transformArr[i] != null) {
-                    return transformArr[i];
-                }
+        for (int i = layerIndex; i >= 0; i--) {
+            if (transformArr[i] != null) {
+                return transformArr[i];
             }
         }
         return defTransform;
     }
 
     @Override
-    public void addBeforeLayer(GLTransform trans, int layerIndex) {
+    public synchronized void addBeforeLayer(GLTransform trans, int layerIndex) {
+        if (layerIndex == -1) {
+            this.topTransform = trans;
+        }
         if (layerIndex < transformArr.length) {
             transformArr[layerIndex] = trans;
+            currentMax = Math.max(currentMax, layerIndex);
         }
-    }
-
-    @Override
-    public GLTransform createTransform(boolean perspective, double near, double far) {
-        return new GLTransform(perspective, near, far);
-    }
-
-    @Override
-    public GLTransform createTransform(boolean perspective) {
-        return new GLTransform(perspective, projectnear, projectfar);
     }
 
     @Override
     public GLTransform createTransform() {
-        return new GLTransform("glFrustum".equals(projectfunction), projectnear, projectfar);
+        return new GLTransform();
     }
 
     @Override
-    public GLTransform removeTransform(int layerIndex) {
-        if (layerIndex < transformArr.length) {
-            GLTransform result = transformArr[layerIndex];
+    public synchronized GLTransform removeTransform(int layerIndex) {
+        GLTransform result = null;
+        if (layerIndex == -1) {
+            result = this.topTransform;
+            this.topTransform = null;
+        } else if (layerIndex < transformArr.length) {
+            result = transformArr[layerIndex];
+            if(layerIndex == currentMax) {
+                currentMax = seekMaxFrom(layerIndex - 1);
+            }
             transformArr[layerIndex] = null;
-            return result;
-        } else {
-            return null;
         }
+        return result;
+    }
+
+    private int seekMaxFrom(int from) {
+        for(int i = from;i >= 0;i --) {
+            if(transformArr[i] != null) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

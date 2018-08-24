@@ -118,7 +118,7 @@ public class GLFrameBufferObject {
      * 将当前绘制上下文绑定在此缓冲区上
      * @param gl
      */
-    public void bindFBO(GL gl) {
+    public void bindFBO(GL gl,boolean clearBuffer) {
         if(resize) {
             destroyFBOByGLContext(gl);
             resize = false;
@@ -132,15 +132,9 @@ public class GLFrameBufferObject {
             inited = true;
         }
         gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-    }
-    
-    /**
-     * 重回绑定 但不清除缓冲区
-     * @param gl
-     */
-    public void reBindFBO(GL gl) {
-        gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, fbo[0]);
+        if(clearBuffer) {
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        }
     }
     
     /**
@@ -157,11 +151,9 @@ public class GLFrameBufferObject {
      */
     public void drawAsTexture(GL gl) {
         GL2 gl2 = gl.getGL2();
-        gl2.glMatrixMode(GL2.GL_MODELVIEW);
-        gl2.glPushMatrix();
-        gl2.glLoadIdentity();
-        
+        pushCurrentMat(gl2);
         bindProgram(gl2);
+        
         gl2.glBindTexture(GL.GL_TEXTURE_2D, fboTexture[0]);
         gl2.glEnable(GL.GL_TEXTURE_2D);
 
@@ -176,7 +168,33 @@ public class GLFrameBufferObject {
         gl2.glBindTexture(GL.GL_TEXTURE_2D, 0);
         gl2.glDisable(GL.GL_TEXTURE_2D);
         unBindProgram(gl2);
+        
+        popMat(gl2);
+    }
+
+    private void popMat(GL2 gl2) {
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
         gl2.glPopMatrix();
+        
+        if(flexmode == GLTransformManager.FIX) {
+            gl2.glMatrixMode(GL2.GL_PROJECTION);
+            gl2.glPopMatrix();
+        }
+        
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
+    }
+
+    private void pushCurrentMat(GL2 gl2) {
+        if(flexmode == GLTransformManager.FIX) {
+            gl2.glMatrixMode(GL2.GL_PROJECTION);
+            gl2.glPushMatrix();
+            gl2.glLoadIdentity();
+            gl2.glOrthof(-frameSizeW / 2f, frameSizeW / 2f, -frameSizeH / 2f, frameSizeH / 2f, 0.0f, 1.0f);
+        }
+        
+        gl2.glMatrixMode(GL2.GL_MODELVIEW);
+        gl2.glPushMatrix();
+        gl2.glLoadIdentity();
     }
     
     private void bindProgram(GL2 gl) {

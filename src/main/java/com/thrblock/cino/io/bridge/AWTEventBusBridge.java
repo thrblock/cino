@@ -31,6 +31,7 @@ public class AWTEventBusBridge {
         tk.addAWTEventListener(listener, AWTEvent.KEY_EVENT_MASK);
         tk.addAWTEventListener(listener, AWTEvent.MOUSE_EVENT_MASK);
         tk.addAWTEventListener(listener, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        tk.addAWTEventListener(listener, AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     }
 
     @PreDestroy

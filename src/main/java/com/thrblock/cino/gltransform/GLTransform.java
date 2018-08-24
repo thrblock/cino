@@ -9,30 +9,17 @@ import com.thrblock.cino.glmatrix.GLMatrixData;
 
 public final class GLTransform {
 
-    private String projectfunction;
+    private float translateX;
+    private float translateY;
 
-    private double projectnear;
-
-    private double projectfar;
-
-    private float viewOffsetX;
-    private float viewOffsetY;
+    private float scaleX = 1.0f;
+    private float scaleY = 1.0f;
 
     private GLMatrixData glmat = new GLMatrixData();
     private GLU glu = new GLU();
     private float[] unprojectedMouseData = new float[3];
 
     FloatBuffer buffer = FloatBuffer.allocate(1);
-    
-    GLTransform(boolean perspective, double projectnear, double projectfar) {
-        this(perspective ? "glFrustum" : "glOrtho", projectnear, projectfar);
-    }
-
-    GLTransform(String projectfunction, double projectnear, double projectfar) {
-        this.projectfunction = projectfunction;
-        this.projectnear = projectnear;
-        this.projectfar = projectfar;
-    }
 
     public void transform(GL gl, int hW, int hH, int orgX, int orgY) {
         GL2 gl2 = gl.getGL2();
@@ -52,57 +39,51 @@ public final class GLTransform {
     private void project(GL2 gl, int hW, int hH) {
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        if ("glOrtho".equals(projectfunction)) {
-            gl.glOrtho(-hW, hW, -hH, hH, projectnear, projectfar);
-        } else {
-            gl.glFrustum(-hW, hW, -hH, hH, projectnear, projectfar);
-        }
+        gl.glOrtho(-hW, hW, -hH, hH, 0.0f, 1.0f);
     }
 
     private void modelAndView(GL2 gl2) {
         gl2.glMatrixMode(GL2.GL_MODELVIEW);
         gl2.glLoadIdentity();
-        gl2.glTranslatef(viewOffsetX, viewOffsetY, -(float) projectnear);
+        gl2.glTranslatef(translateX, translateY, 0f);
+        gl2.glScalef(scaleX, scaleY, 1.0f);
     }
 
-    public float getViewOffsetX() {
-        return viewOffsetX;
+    public float getTranslateX() {
+        return translateX;
     }
 
-    public void setViewOffsetX(float viewOffsetX) {
-        this.viewOffsetX = viewOffsetX;
+    public void setTranslateX(float translateX) {
+        this.translateX = translateX;
     }
 
-    public float getViewOffsetY() {
-        return viewOffsetY;
+    public float getTranslateY() {
+        return translateY;
     }
 
-    public void setViewOffsetY(float viewOffsetY) {
-        this.viewOffsetY = viewOffsetY;
+    public void setTranslateY(float translateY) {
+        this.translateY = translateY;
     }
 
-    public String getProjectfunction() {
-        return projectfunction;
+    public float getScaleX() {
+        return scaleX;
     }
 
-    public void setProjectfunction(String projectfunction) {
-        this.projectfunction = projectfunction;
+    public void setScaleX(float scaleX) {
+        this.scaleX = scaleX;
     }
 
-    public double getProjectnear() {
-        return projectnear;
+    public float getScaleY() {
+        return scaleY;
     }
 
-    public void setProjectnear(double projectnear) {
-        this.projectnear = projectnear;
+    public void setScaleY(float scaleY) {
+        this.scaleY = scaleY;
     }
 
-    public double getProjectfar() {
-        return projectfar;
-    }
-
-    public void setProjectfar(double projectfar) {
-        this.projectfar = projectfar;
+    public void setScale(float factor) {
+        this.scaleX = factor;
+        this.scaleY = factor;
     }
 
     public float[] getUnprojectedMouseData() {

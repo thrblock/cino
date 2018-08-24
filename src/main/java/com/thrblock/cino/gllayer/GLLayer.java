@@ -1,5 +1,6 @@
 package com.thrblock.cino.gllayer;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +28,9 @@ public class GLLayer {
     private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
 
-    private GLFrameBufferObject[] st = new GLFrameBufferObject[0];
+    private GLFrameBufferObject[] fboArr = new GLFrameBufferObject[0];
+    
+    private Deque<GLFrameBufferObject> globalFBOStack;
     private Deque<GLFrameBufferObject> stack;
     private int frameSizeW = 800;
     private int frameSizeH = 600;
@@ -39,8 +42,9 @@ public class GLLayer {
      * @param stack
      *            帧缓冲堆栈
      */
-    public GLLayer(Deque<GLFrameBufferObject> stack,int w,int h) {
-        this.stack = stack;
+    public GLLayer(Deque<GLFrameBufferObject> globalStack,int w,int h) {
+        this.globalFBOStack = globalStack;
+        this.stack = new ArrayDeque<>();
         this.frameSizeW = w;
         this.frameSizeH = h;
     }
@@ -140,7 +144,7 @@ public class GLLayer {
         if(refreshFBO) {
             swapSp.acquireUninterruptibly();
             refreshFBO = false;
-            for(GLFrameBufferObject fbo:st) {
+            for(GLFrameBufferObject fbo:fboArr) {
                 fbo.resize(frameSizeW, frameSizeH);
             }
             swapSp.release();
@@ -153,12 +157,12 @@ public class GLLayer {
         }
         if (!fboSwap.isEmpty()) {
             swapSp.acquireUninterruptibly();
-            int totalLength = st.length + fboSwap.size();
+            int totalLength = fboArr.length + fboSwap.size();
             GLFrameBufferObject[] arr = new GLFrameBufferObject[totalLength];
-            System.arraycopy(st, 0, arr, 0, st.length);
+            System.arraycopy(fboArr, 0, arr, 0, fboArr.length);
             Object[] fboSwapArr = fboSwap.toArray();
-            System.arraycopy(fboSwapArr, 0, arr, st.length, fboSwapArr.length);
-            this.st = arr;
+            System.arraycopy(fboSwapArr, 0, arr, fboArr.length, fboSwapArr.length);
+            this.fboArr = arr;
             fboSwap.clear();
             swapSp.release();
         }
@@ -187,20 +191,24 @@ public class GLLayer {
     }
 
     private void beforeDraw(GL2 gl2) {
-        if (st.length > 0) {
-            for (int i = 0; i < st.length; i++) {
-                stack.push(st[i]);
-                st[i].bindFBO(gl2);
+        if (fboArr.length > 0) {
+            for (int i = 0; i < fboArr.length; i++) {
+                stack.push(fboArr[i]);
+                if(i == fboArr.length - 1) {
+                    fboArr[i].bindFBO(gl2,true);
+                }
             }
         }
     }
 
     private void afterDraw(GL2 gl) {
-        for (int i = 0; i < st.length; i++) {
+        for (int i = 0; i < fboArr.length; i++) {
             GLFrameBufferObject crt = stack.pop();
             GLFrameBufferObject next = stack.peek();
             if (next != null) {
-                next.reBindFBO(gl);
+                next.bindFBO(gl,true);
+            } else if(!globalFBOStack.isEmpty()){
+                globalFBOStack.peek().bindFBO(gl,false);
             } else {
                 crt.unBindFBO(gl);
             }

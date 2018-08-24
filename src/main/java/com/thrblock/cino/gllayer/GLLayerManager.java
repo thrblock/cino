@@ -33,7 +33,7 @@ import com.thrblock.cino.gltransform.GLTransformManager;
 public class GLLayerManager implements IGLFrameBufferObjectManager {
     private static final Logger LOG = LoggerFactory.getLogger(GLLayerManager.class);
     private List<GLLayer> layerList = new CopyOnWriteArrayList<>();
-    private Deque<GLFrameBufferObject> fboStack = new ArrayDeque<>();
+    private Deque<GLFrameBufferObject> globalFBOStack = new ArrayDeque<>();
     private GLLayer topLayer;
     private Semaphore layerSp = new Semaphore(1);
 
@@ -48,18 +48,18 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
 
     @Autowired
     private GLScreenSizeChangeListenerHolder eventProcessor;
-    
+
     @Autowired
     private GLTransformManager transformManager;
 
     private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
-    private GLFrameBufferObject[] st = new GLFrameBufferObject[0];
+    private GLFrameBufferObject[] globalFBOArr = new GLFrameBufferObject[0];
     private boolean refreshFBO = false;
 
     @PostConstruct
     void init() {
-        this.topLayer = new GLLayer(fboStack,frameSizeW,frameSizeH);
+        this.topLayer = new GLLayer(globalFBOStack, frameSizeW, frameSizeH);
         eventProcessor.addScreenSizeChangeListener(topLayer::noticeScreenChange);
     }
 
@@ -82,7 +82,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
             LOG.warn("layer not found:{}", index);
             for (int i = layerList.size(); i <= index; i++) {
                 LOG.info("layer auto generated:{}", i);
-                GLLayer gen = new GLLayer(fboStack,frameSizeW,frameSizeH);
+                GLLayer gen = new GLLayer(globalFBOStack, frameSizeW, frameSizeH);
                 eventProcessor.addScreenSizeChangeListener(gen::noticeScreenChange);
                 layerList.add(gen);
             }
@@ -113,19 +113,19 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
         if (refreshFBO) {
             swapSp.acquireUninterruptibly();
             refreshFBO = false;
-            for (GLFrameBufferObject fbo : st) {
+            for (GLFrameBufferObject fbo : globalFBOArr) {
                 fbo.resize(frameSizeW, frameSizeH);
             }
             swapSp.release();
         }
         if (!fboSwap.isEmpty()) {
             swapSp.acquireUninterruptibly();
-            int totalLength = st.length + fboSwap.size();
+            int totalLength = globalFBOArr.length + fboSwap.size();
             GLFrameBufferObject[] arr = new GLFrameBufferObject[totalLength];
-            System.arraycopy(st, 0, arr, 0, st.length);
+            System.arraycopy(globalFBOArr, 0, arr, 0, globalFBOArr.length);
             Object[] fboSwapArr = fboSwap.toArray();
-            System.arraycopy(fboSwapArr, 0, arr, st.length, fboSwapArr.length);
-            this.st = arr;
+            System.arraycopy(fboSwapArr, 0, arr, globalFBOArr.length, fboSwapArr.length);
+            this.globalFBOArr = arr;
             fboSwap.clear();
             swapSp.release();
         }
@@ -151,22 +151,22 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
      */
     public void drawAllLayer(GL2 gl2) {
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        beforeLayerDraw(gl2);
+        beforeAllLayerDraw(gl2);
         for (int i = 0; i < layerList.size(); i++) {
-            drawLayer(getLayer(i), gl2,i);
+            drawLayer(getLayer(i), gl2, i);
         }
-        drawLayer(getLayer(-1), gl2,-1);
+        drawLayer(getLayer(-1), gl2, -1);
         gl2.glFlush();
-        afterLayerDraw(gl2);
+        afterAllLayerDraw(gl2);
         swap();
     }
 
-    private void afterLayerDraw(GL2 gl2) {
-        while (!fboStack.isEmpty()) {
-            GLFrameBufferObject crt = fboStack.pop();
-            GLFrameBufferObject next = fboStack.peek();
+    private void afterAllLayerDraw(GL2 gl2) {
+        while (!globalFBOStack.isEmpty()) {
+            GLFrameBufferObject crt = globalFBOStack.pop();
+            GLFrameBufferObject next = globalFBOStack.peek();
             if (next != null) {
-                next.reBindFBO(gl2);
+                next.bindFBO(gl2, true);
             } else {
                 crt.unBindFBO(gl2);
             }
@@ -174,16 +174,18 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
         }
     }
 
-    private void beforeLayerDraw(GL2 gl2) {
-        if (st.length > 0) {
-            for (int i = 0; i < st.length; i++) {
-                fboStack.push(st[i]);
-                st[i].bindFBO(gl2);
+    private void beforeAllLayerDraw(GL2 gl2) {
+        if (globalFBOArr.length > 0) {
+            for (int i = 0; i < globalFBOArr.length; i++) {
+                globalFBOStack.push(globalFBOArr[i]);
+                if (i == globalFBOArr.length - 1) {
+                    globalFBOArr[i].bindFBO(gl2, true);
+                }
             }
         }
     }
 
-    private void drawLayer(GLLayer layer, GL2 gl2,int i) {
+    private void drawLayer(GLLayer layer, GL2 gl2, int i) {
         gl2.glBlendFunc(layer.getMixA(), layer.getMixB());
         transformManager.initBeforeLayer(gl2, i);
         layer.draw(gl2);
