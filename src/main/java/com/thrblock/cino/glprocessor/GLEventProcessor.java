@@ -11,6 +11,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.debug.DebugPannel;
+import com.thrblock.cino.debug.GLDebugHelper;
 import com.thrblock.cino.glanimate.GLAnimateManager;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayerManager;
@@ -37,13 +38,13 @@ public class GLEventProcessor implements GLEventListener {
 
     @Value("${cino.frame.vsync:false}")
     private boolean vsync = false;
-    
+
     @Autowired
     private DebugPannel fpsCounter;
 
     @Autowired
     private GLScreenSizeChangeListenerHolder screenChangeListener;
-    
+
     @Autowired
     private GLTransformManager transformManager;
 
@@ -57,6 +58,8 @@ public class GLEventProcessor implements GLEventListener {
         layerManager.drawAllLayer(gl2);
         animateManager.runAll();
         fpsCounter.noticeDrawCall(System.currentTimeMillis() - startTime);
+        
+        GLDebugHelper.logIfError(gl2);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class GLEventProcessor implements GLEventListener {
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
         LOG.info("GL init");
-        if(LOG.isInfoEnabled()) {
+        if (LOG.isInfoEnabled()) {
             LOG.info("The Renderer you are current using:{}", gl.glGetString(GL.GL_RENDERER));
             LOG.info("The Renderer driver version is {}", gl.glGetString(GL.GL_VERSION));
         }
@@ -88,10 +91,7 @@ public class GLEventProcessor implements GLEventListener {
         gl2.glEnable(GL.GL_LINE_SMOOTH);
         gl2.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
 
-        int glErrorCode = gl.glGetError();
-        if (glErrorCode != GL.GL_NO_ERROR) {
-            LOG.warn("GL Error Status:{}", glErrorCode);
-        }
+        GLDebugHelper.logIfError(gl2);
     }
 
     @Override

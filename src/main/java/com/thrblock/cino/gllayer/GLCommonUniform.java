@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
 import com.thrblock.cino.glanimate.IPureFragment;
+import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.shader.AbstractGLProgram;
 import com.thrblock.cino.shader.data.GLUniformFloat;
 import com.thrblock.cino.shader.data.GLUniformInt;
@@ -37,6 +38,27 @@ public class GLCommonUniform {
             iFrame.setValue(iFrame.getValue() + 1);
             iResolution[0] = frameSizeW;
             iResolution[1] = frameSizeH;
+        };
+        
+        program.bindDataAsFloatVec("iResolution", iResolution);
+        program.bindDataAsFloat(iGlobalTime);
+        program.bindDataAsInt(iFrame);
+        return res;
+    }
+    
+    public IPureFragment setCommonUniform(AbstractGLProgram program,GLRect r) {
+        //时间 单位 秒
+        GLUniformFloat iGlobalTime = new GLUniformFloat("iGlobalTime");
+        //渲染次数
+        GLUniformInt iFrame = new GLUniformInt("iFrame");
+        
+        //视窗尺寸 单位 像素
+        float[] iResolution = new float[2];
+        IPureFragment res = () -> {
+            iGlobalTime.setValue(iGlobalTime.getValue() + 1f / fps);
+            iFrame.setValue(iFrame.getValue() + 1);
+            iResolution[0] = r.getWidth();
+            iResolution[1] = r.getHeight();
         };
         
         program.bindDataAsFloatVec("iResolution", iResolution);

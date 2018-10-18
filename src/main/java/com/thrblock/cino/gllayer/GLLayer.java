@@ -18,8 +18,6 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
  * @author thrblock
  */
 public class GLLayer {
-    private float viewXOffset;
-    private float viewYOffset;
     private int mixA = GL.GL_SRC_ALPHA;
     private int mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
     private CrudeLinkedList<GLShape> shapeList = new CrudeLinkedList<>();
@@ -47,44 +45,6 @@ public class GLLayer {
         this.stack = new ArrayDeque<>();
         this.frameSizeW = w;
         this.frameSizeH = h;
-    }
-
-    /**
-     * 获得 次层次的视角X偏移量
-     * 
-     * @return 偏移量
-     */
-    public float getViewXOffset() {
-        return viewXOffset;
-    }
-
-    /**
-     * 设置此层次的X偏移量
-     * 
-     * @param viewXOffset
-     *            X偏移量
-     */
-    public void setViewXOffset(float viewXOffset) {
-        this.viewXOffset = viewXOffset;
-    }
-
-    /**
-     * 获得 次层次的视角Y偏移量
-     * 
-     * @return 偏移量
-     */
-    public float getViewYOffset() {
-        return viewYOffset;
-    }
-
-    /**
-     * 设置此层次的Y偏移量
-     * 
-     * @param viewYOffset
-     *            Y偏移量
-     */
-    public void setViewYOffset(float viewYOffset) {
-        this.viewYOffset = viewYOffset;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.thrblock.cino.glshape.factory;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * GLShapeNode 图形节点 GLNode的纯结构实现
@@ -10,7 +10,7 @@ import java.util.List;
 public class GLShapeNode implements GLNode{
     private static final GLNode GL_NOP = new GLNop();//放置basic为空
     private GLNode basic = GL_NOP;
-    private List<GLNode> subList = new ArrayList<>();
+    private List<GLNode> subList = new CopyOnWriteArrayList<>();
     private GLShapeNode parent;
     
     /**

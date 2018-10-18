@@ -114,8 +114,7 @@ public class GLTransformManager implements IGLTransForm {
     public synchronized void addBeforeLayer(GLTransform trans, int layerIndex) {
         if (layerIndex == -1) {
             this.topTransform = trans;
-        }
-        if (layerIndex < transformArr.length) {
+        } else if (layerIndex < transformArr.length) {
             transformArr[layerIndex] = trans;
             currentMax = Math.max(currentMax, layerIndex);
         }

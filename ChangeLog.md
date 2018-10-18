@@ -10,10 +10,14 @@ ChangeLog:
 鼠标坐标兼容屏幕缩放模式 重新抽象了ComponentContext类型
 2018-03-28
 删除了NEWT部分
-TODO:   
-支持多种投影模式[大坑]   
+2018-09-01
+支持了投影变换 鼠标利用饭投影函数计算
+MouseEvent\KeyEvent已纳入EventBus
+TODO:    
 图形结构中绘制部分与算法部分剥离<-重新考虑必要性
+引入与GLSL类似的VEC类型
+考虑利用lombok简化代码
 对js的原生中断支持
 较为容易的UI设计方式（已失败多次，下次需要总结失败教训并认真考虑）
-MouseEvent\KeyEvent是否纳入EventBus
 使用纯代码进行UI设计代价高昂，需要专门的设计工具，这里可能有临界点需要突破
+对于树形结构感觉有点怪
