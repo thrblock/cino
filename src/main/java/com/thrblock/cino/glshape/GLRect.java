@@ -6,17 +6,14 @@ package com.thrblock.cino.glshape;
  * @author lizepu
  */
 public class GLRect extends GLPolygonShape {
+
     /**
      * 构造一个矩形图形对象
      * 
-     * @param x
-     *            中心横坐标
-     * @param y
-     *            中心纵坐标
-     * @param width
-     *            宽度
-     * @param height
-     *            高度
+     * @param x      中心横坐标
+     * @param y      中心纵坐标
+     * @param width  宽度
+     * @param height 高度
      */
     public GLRect(float x, float y, float width, float height) {
         super(new GLPoint(x - width / 2, y + height / 2), new GLPoint(x + width / 2, y + height / 2),
@@ -44,8 +41,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 设置 矩形宽度
      * 
-     * @param width
-     *            矩形宽度
+     * @param width 矩形宽度
      */
     public void setWidth(float width) {
         if (width > 0) {
@@ -62,8 +58,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 设置 矩形高度
      * 
-     * @param height
-     *            矩形高度
+     * @param height 矩形高度
      */
     public void setHeight(float height) {
         if (height > 0) {
@@ -88,8 +83,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的左侧
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void leftOf(GLRect another, float margin) {
         sameStatusOf(another);
@@ -103,8 +97,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的内左侧
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void leftOfInner(GLRect another, float margin) {
         sameStatusOf(another);
@@ -122,8 +115,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的右侧
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void rightOf(GLRect another, float margin) {
         sameStatusOf(another);
@@ -141,8 +133,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的右侧
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void rightOfInner(GLRect another, float margin) {
         sameStatusOf(another);
@@ -160,8 +151,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的上边
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void topOf(GLRect another, float margin) {
         sameStatusOf(another);
@@ -179,8 +169,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的上边
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void topOfInner(GLRect another, float margin) {
         sameStatusOf(another);
@@ -198,8 +187,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的上边
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void bottomOf(GLRect another, float margin) {
         sameStatusOf(another);
@@ -217,8 +205,7 @@ public class GLRect extends GLPolygonShape {
     /**
      * 将此矩形放置于另一矩形的上边
      * 
-     * @param another
-     *            另一矩形
+     * @param another 另一矩形
      */
     public void bottomOfInner(GLRect another, float margin) {
         sameStatusOf(another);

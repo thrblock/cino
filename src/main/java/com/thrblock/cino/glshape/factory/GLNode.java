@@ -2,6 +2,7 @@ package com.thrblock.cino.glshape.factory;
 
 import com.thrblock.cino.glshape.proxy.NodeAlphaProxy;
 import com.thrblock.cino.glshape.proxy.NodeMotivationProxy;
+import com.thrblock.cino.vec.Vec2;
 
 /**
  * 一个抽象节点，一个节点大可代表一个场景，小可代表一个图形<br />
@@ -33,6 +34,12 @@ public interface GLNode {
      * @param y 纵坐标y
      */
     public void setY(float y);
+    
+    /**
+     * 设置位置坐标 xy,具体效果依赖于GLNode实现类
+     * @param xy vec2
+     */
+    public void setXy(Vec2 xy);
     /**
      * 获得位置坐标x
      * @return 横坐标x
@@ -45,6 +52,12 @@ public interface GLNode {
     public float getY();
     
     /**
+     * 获得位置坐标xy
+     * @return
+     */
+    public Vec2 getXy();
+    
+    /**
      * 获得 中心坐标x,具体效果依赖于GLNode实现类
      * @return 中心坐标x
      */
@@ -54,6 +67,12 @@ public interface GLNode {
      * @return 中心坐标y
      */
     public float getCentralY();
+    
+    /**
+     * 获得 中心坐标xy,具体效果依赖于GLNode实现类
+     * @return
+     */
+    public Vec2 getCentral();
     /**
      * 设置 中心坐标x,具体效果依赖于GLNode实现类
      * @param x 中心坐标x
@@ -64,6 +83,12 @@ public interface GLNode {
      * @param y 中心坐标y
      */
     public void setCentralY(float y);
+    
+    /**
+     * 设置 中心坐标xy,具体效果依赖于GLNode实现类
+     * @param xy
+     */
+    public void setCentral(Vec2 xy);
     
     /**
      * 设置 通道参数alpha,具体效果依赖于GLNode实现类

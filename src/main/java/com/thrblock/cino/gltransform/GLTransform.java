@@ -1,6 +1,7 @@
 package com.thrblock.cino.gltransform;
 
 import java.nio.FloatBuffer;
+import java.util.function.BiConsumer;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -15,11 +16,63 @@ public final class GLTransform {
     private float scaleX = 1.0f;
     private float scaleY = 1.0f;
 
+    private float angle = 0;
+
     private GLMatrixData glmat = new GLMatrixData();
     private GLU glu = new GLU();
     private float[] unprojectedMouseData = new float[3];
 
     FloatBuffer buffer = FloatBuffer.allocate(1);
+
+    @FunctionalInterface
+    interface OrderedTransform extends BiConsumer<GLTransform, GL2> {
+    }
+
+    private OrderedTransform orderedTransformfun;
+    /**
+     * 平移-缩放-旋转 变换（默认)
+     */
+    public static final OrderedTransform TSR = (tr, gl2) -> {
+        gl2.glTranslatef(tr.translateX, tr.translateY, 0f);
+
+        gl2.glScalef(tr.scaleX, tr.scaleY, 1.0f);
+        gl2.glRotatef(tr.angle, 0, 0, 1.0f);
+    };
+    /**
+     * 缩放-旋转-平移 变换
+     */
+    public static final OrderedTransform SRT = (tr, gl2) -> {
+        gl2.glScalef(tr.scaleX, tr.scaleY, 1.0f);
+        gl2.glRotatef(tr.angle, 0, 0, 1.0f);
+
+        gl2.glTranslatef(tr.translateX, tr.translateY, 0f);
+    };
+
+    /**
+     * 缩放-平移-旋转 变换
+     */
+    public static final OrderedTransform STR = (tr, gl2) -> {
+        gl2.glScalef(tr.scaleX, tr.scaleY, 1.0f);
+        gl2.glTranslatef(tr.translateX, tr.translateY, 0f);
+        gl2.glRotatef(tr.angle, 0, 0, 1.0f);
+    };
+
+    /**
+     * 旋转-平移-缩放 变换
+     */
+    public static final OrderedTransform RTS = (tr, gl2) -> {
+        gl2.glRotatef(tr.angle, 0, 0, 1.0f);
+        gl2.glTranslatef(tr.translateX, tr.translateY, 0f);
+        gl2.glScalef(tr.scaleX, tr.scaleY, 1.0f);
+    };
+
+    public GLTransform() {
+        this.orderedTransformfun = TSR;
+    }
+
+    public GLTransform(OrderedTransform tr) {
+        this.orderedTransformfun = tr;
+    }
 
     public void transform(GL gl, int hW, int hH, int orgX, int orgY) {
         GL2 gl2 = gl.getGL2();
@@ -45,8 +98,8 @@ public final class GLTransform {
     private void modelAndView(GL2 gl2) {
         gl2.glMatrixMode(GL2.GL_MODELVIEW);
         gl2.glLoadIdentity();
-        gl2.glTranslatef(translateX, translateY, 0f);
-        gl2.glScalef(scaleX, scaleY, 1.0f);
+
+        orderedTransformfun.accept(this, gl2);
     }
 
     public float getTranslateX() {
@@ -63,6 +116,14 @@ public final class GLTransform {
 
     public void setTranslateY(float translateY) {
         this.translateY = translateY;
+    }
+
+    public void setRoteAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public float getRoteAngle() {
+        return angle;
     }
 
     public float getScaleX() {

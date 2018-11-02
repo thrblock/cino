@@ -15,6 +15,7 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
  * A GLSL Program
+ * 
  * @author zepu.li
  *
  */
@@ -23,20 +24,24 @@ public abstract class AbstractGLProgram {
     private CrudeLinkedList<Consumer<GL2>> uniforms = new CrudeLinkedList<>();
     private CrudeLinkedList<Consumer<GL2>>.CrudeIter uniIter = uniforms.genCrudeIter();
     private Set<String> names = new HashSet<>();
+
     /**
      * bind the program to gl context
+     * 
      * @param gl
      */
     public abstract void bind(GL2 gl);
 
     /**
      * unbind the program from gl context
+     * 
      * @param gl
      */
     public abstract void unBind(GL2 gl);
 
     /**
      * get glsl code in gl context
+     * 
      * @param gl
      * @return
      */
@@ -52,12 +57,14 @@ public abstract class AbstractGLProgram {
     }
 
     private void checkName(String name) {
-        if(!names.add(name)) {
-            LOG.warn("uniform name conflict in shader,the name is {}",name);
+        if (!names.add(name)) {
+            LOG.warn("uniform name conflict in shader,the name is {}", name);
         }
     }
+
     /**
      * bind a int data source to uniform int
+     * 
      * @param data
      */
     public void bindDataAsInt(GLUniformInt data) {
@@ -65,12 +72,15 @@ public abstract class AbstractGLProgram {
         uniforms.add(gl2 -> {
             int pgcode = getProgramCode(gl2);
             int loc = gl2.glGetUniformLocation(pgcode, data.getName());
-            gl2.glUniform1i(loc, data.getValue());
+            if (loc != -1) {
+                gl2.glUniform1i(loc, data.getValue());
+            }
         });
     }
 
     /**
      * bind a float data source to uniform float
+     * 
      * @param data
      */
     public void bindDataAsFloat(GLUniformFloat data) {
@@ -78,12 +88,15 @@ public abstract class AbstractGLProgram {
         uniforms.add(gl2 -> {
             int pgcode = getProgramCode(gl2);
             int loc = gl2.glGetUniformLocation(pgcode, data.getName());
-            gl2.glUniform1f(loc, data.getValue());
+            if (loc != -1) {
+                gl2.glUniform1f(loc, data.getValue());
+            }
         });
     }
 
     /**
      * bind a float array data source to uniform float array
+     * 
      * @param name
      * @param data
      */
@@ -92,12 +105,15 @@ public abstract class AbstractGLProgram {
         uniforms.add(gl2 -> {
             int pgcode = getProgramCode(gl2);
             int loc = gl2.glGetUniformLocation(pgcode, name);
-            gl2.glUniform1iv(loc, data.length, data, 0);
+            if (loc != -1) {
+                gl2.glUniform1iv(loc, data.length, data, 0);
+            }
         });
     }
 
     /**
      * bind a float array data source to uniform float vec
+     * 
      * @param name
      * @param data
      */
@@ -106,6 +122,9 @@ public abstract class AbstractGLProgram {
         uniforms.add(gl2 -> {
             int pgcode = getProgramCode(gl2);
             int loc = gl2.glGetUniformLocation(pgcode, name);
+            if (loc == -1) {
+                return;
+            }
             switch (data.length) {
             case 2:
                 gl2.glUniform2i(loc, data[0], data[1]);
@@ -121,9 +140,10 @@ public abstract class AbstractGLProgram {
             }
         });
     }
-    
+
     /**
      * bind a uniform int array
+     * 
      * @param name
      * @param data
      */
@@ -132,12 +152,15 @@ public abstract class AbstractGLProgram {
         uniforms.add(gl2 -> {
             int pgcode = getProgramCode(gl2);
             int loc = gl2.glGetUniformLocation(pgcode, name);
-            gl2.glUniform1fv(loc, data.length, data, 0);
+            if (loc != -1) {
+                gl2.glUniform1fv(loc, data.length, data, 0);
+            }
         });
     }
-    
+
     /**
      * bind a uniform float array
+     * 
      * @param name
      * @param data
      */
@@ -146,6 +169,9 @@ public abstract class AbstractGLProgram {
         uniforms.add(gl2 -> {
             int pgcode = getProgramCode(gl2);
             int loc = gl2.glGetUniformLocation(pgcode, name);
+            if (loc == -1) {
+                return;
+            }
             switch (data.length) {
             case 2:
                 gl2.glUniform2f(loc, data[0], data[1]);

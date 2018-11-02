@@ -96,4 +96,9 @@ public class Vec3 {
     public void setXy(Vec2 xy) {
         System.arraycopy(xy.value, 0, value, 0, xy.value.length);
     }
+    
+    @Override
+    public String toString() {
+        return "Vec3" + Arrays.toString(value);
+    }
 }

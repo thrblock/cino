@@ -27,20 +27,19 @@ public class GLLayer {
     private Semaphore swapSp = new Semaphore(1);
 
     private GLFrameBufferObject[] fboArr = new GLFrameBufferObject[0];
-    
+
     private Deque<GLFrameBufferObject> globalFBOStack;
     private Deque<GLFrameBufferObject> stack;
     private int frameSizeW = 800;
     private int frameSizeH = 600;
     private boolean refreshFBO = false;
-    
+
     /**
      * 构造GLLayer
      * 
-     * @param stack
-     *            帧缓冲堆栈
+     * @param stack 帧缓冲堆栈
      */
-    public GLLayer(Deque<GLFrameBufferObject> globalStack,int w,int h) {
+    public GLLayer(Deque<GLFrameBufferObject> globalStack, int w, int h) {
         this.globalFBOStack = globalStack;
         this.stack = new ArrayDeque<>();
         this.frameSizeW = w;
@@ -59,8 +58,7 @@ public class GLLayer {
     /**
      * 设置混合因子 alpha
      * 
-     * @param mixA
-     *            混合因子alpha
+     * @param mixA 混合因子alpha
      */
     public void setMixA(int mixA) {
         this.mixA = mixA;
@@ -78,8 +76,7 @@ public class GLLayer {
     /**
      * 设置混合因子 beta
      * 
-     * @param mixB
-     *            混合因子beta
+     * @param mixB 混合因子beta
      */
     public void setMixB(int mixB) {
         this.mixB = mixB;
@@ -88,8 +85,7 @@ public class GLLayer {
     /**
      * 向此层次的交换区插入一个图形对象，交换区会在单次绘制完成后进行实际的同步插入
      * 
-     * @param shape
-     *            图形对象
+     * @param shape 图形对象
      */
     public void addShapeToSwap(GLShape shape) {
         swapSp.acquireUninterruptibly();
@@ -101,10 +97,10 @@ public class GLLayer {
      * 执行同步插入，将交换区的对象插入实际绘制区
      */
     public void swap() {
-        if(refreshFBO) {
+        if (refreshFBO) {
             swapSp.acquireUninterruptibly();
             refreshFBO = false;
-            for(GLFrameBufferObject fbo:fboArr) {
+            for (GLFrameBufferObject fbo : fboArr) {
                 fbo.resize(frameSizeW, frameSizeH);
             }
             swapSp.release();
@@ -154,8 +150,8 @@ public class GLLayer {
         if (fboArr.length > 0) {
             for (int i = 0; i < fboArr.length; i++) {
                 stack.push(fboArr[i]);
-                if(i == fboArr.length - 1) {
-                    fboArr[i].bindFBO(gl2,true);
+                if (i == fboArr.length - 1) {
+                    fboArr[i].bindFBO(gl2, true);
                 }
             }
         }
@@ -166,9 +162,9 @@ public class GLLayer {
             GLFrameBufferObject crt = stack.pop();
             GLFrameBufferObject next = stack.peek();
             if (next != null) {
-                next.bindFBO(gl,true);
-            } else if(!globalFBOStack.isEmpty()){
-                globalFBOStack.peek().bindFBO(gl,false);
+                next.bindFBO(gl, true);
+            } else if (!globalFBOStack.isEmpty()) {
+                globalFBOStack.peek().bindFBO(gl, false);
             } else {
                 crt.unBindFBO(gl);
             }
@@ -178,12 +174,13 @@ public class GLLayer {
 
     /**
      * 创建一个属于此层次的帧缓冲对象
+     * 
      * @param w
      * @param h
      * @param flexmode 缩放模式
      * @return
      */
-    public GLFrameBufferObject generageFBO(int w, int h,int flexmode) {
+    public GLFrameBufferObject generageFBO(int w, int h, int flexmode) {
         swapSp.acquireUninterruptibly();
         GLFrameBufferObject result = new GLFrameBufferObject(w, h, flexmode);
         fboSwap.add(result);
@@ -193,6 +190,7 @@ public class GLLayer {
 
     /**
      * 通知渲染窗口大小变化
+     * 
      * @param w
      * @param h
      */

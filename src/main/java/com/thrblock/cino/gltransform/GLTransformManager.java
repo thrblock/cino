@@ -111,18 +111,17 @@ public class GLTransformManager implements IGLTransForm {
     }
 
     @Override
-    public synchronized void addBeforeLayer(GLTransform trans, int layerIndex) {
+    public synchronized boolean addBeforeLayer(GLTransform trans, int layerIndex) {
+        boolean result = true;
         if (layerIndex == -1) {
+            result = this.topTransform == null;
             this.topTransform = trans;
         } else if (layerIndex < transformArr.length) {
+            result = transformArr[layerIndex] == null;
             transformArr[layerIndex] = trans;
             currentMax = Math.max(currentMax, layerIndex);
         }
-    }
-
-    @Override
-    public GLTransform createTransform() {
-        return new GLTransform();
+        return result;
     }
 
     @Override

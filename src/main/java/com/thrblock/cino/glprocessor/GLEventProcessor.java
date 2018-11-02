@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.debug.DebugPannel;
@@ -39,6 +40,9 @@ public class GLEventProcessor implements GLEventListener {
     @Value("${cino.frame.vsync:false}")
     private boolean vsync = false;
 
+    @Value("${cino.debug.enable:false}")
+    private boolean debug;
+
     @Autowired
     private DebugPannel fpsCounter;
 
@@ -53,21 +57,40 @@ public class GLEventProcessor implements GLEventListener {
         long startTime = System.currentTimeMillis();
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
+
         transformManager.initDefault(gl2);
+        GLDebugHelper.logIfError(gl2, "init default transform");
+
         contextInitor.glInitializing(gl);
+        GLDebugHelper.logIfError(gl2, "glInitializing");
+
         layerManager.drawAllLayer(gl2);
+        GLDebugHelper.logIfError(gl2, "drawAllLayer");
+
         animateManager.runAll();
+        GLDebugHelper.logIfError(gl2, "runAllAnimate");
+
         fpsCounter.noticeDrawCall(System.currentTimeMillis() - startTime);
-        
-        GLDebugHelper.logIfError(gl2);
     }
 
     @Override
     public void init(GLAutoDrawable drawable) {
+        int[] version = new int[2];
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
+        gl2.glGetIntegerv(GL2.GL_MAJOR_VERSION, version, 0);
+        gl2.glGetIntegerv(GL2.GL_MINOR_VERSION, version, 1);
+        if (debug) {
+            GLDebugHelper.enable(version);
+            if(version[0] * 10 + version[1] >= 43) {
+                GL4 gl4 = gl2.getGL4();
+                gl4.glEnable(GL4.GL_DEBUG_OUTPUT);
+                LOG.info("Opengl debug output enabled.");
+            }
+        }
         LOG.info("GL init");
         if (LOG.isInfoEnabled()) {
+            LOG.info("The opengl version you are current using:{}", version);
             LOG.info("The Renderer you are current using:{}", gl.glGetString(GL.GL_RENDERER));
             LOG.info("The Renderer driver version is {}", gl.glGetString(GL.GL_VERSION));
         }
@@ -91,17 +114,19 @@ public class GLEventProcessor implements GLEventListener {
         gl2.glEnable(GL.GL_LINE_SMOOTH);
         gl2.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
 
-        GLDebugHelper.logIfError(gl2);
+        GLDebugHelper.logIfError(gl2, "glinit");
     }
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
         transformManager.reshape(drawable, x, y, w, h);
         screenChangeListener.getScreenChangeListener().forEach(e -> e.accept(w, h));
+        GLDebugHelper.logIfError(drawable.getGL(), "glreshape");
     }
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
         LOG.info("GL dispose");
+        GLDebugHelper.logIfError(drawable.getGL(), "gldispose");
     }
 }

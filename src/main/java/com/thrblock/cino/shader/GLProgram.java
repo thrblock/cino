@@ -26,8 +26,7 @@ public class GLProgram extends AbstractGLProgram implements GLInitializable {
     /**
      * 由复数个着色器构造一个OpenGL程序
      * 
-     * @param shaders
-     *            着色器数组
+     * @param shaders 着色器数组
      */
     public GLProgram(GLShader... shaders) {
         this.shaders = shaders;
@@ -98,9 +97,10 @@ public class GLProgram extends AbstractGLProgram implements GLInitializable {
             gl.glUseProgram(0);
         }
     }
-    
+
     /**
      * 创建一个着色程序代理-使用相同着色程序但具有独立参数空间的结构
+     * 
      * @return
      */
     public GLProgramProxy genProxy() {

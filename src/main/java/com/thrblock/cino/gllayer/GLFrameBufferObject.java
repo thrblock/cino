@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.debug.GLDebugHelper;
 import com.thrblock.cino.glshape.GLPoint;
 import com.thrblock.cino.gltransform.GLTransformManager;
 import com.thrblock.cino.shader.AbstractGLProgram;
@@ -92,6 +93,7 @@ public class GLFrameBufferObject {
             LOG.warn("glCheckFramebufferStatus error,status:{}", status);
         }
         gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+        GLDebugHelper.logIfError(gl, "initFBOByGLContext");
     }
 
     /**

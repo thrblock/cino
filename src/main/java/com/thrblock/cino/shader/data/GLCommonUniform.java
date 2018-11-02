@@ -1,4 +1,4 @@
-package com.thrblock.cino.gllayer;
+package com.thrblock.cino.shader.data;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -7,8 +7,6 @@ import com.thrblock.cino.annotation.ScreenSizeChangeListener;
 import com.thrblock.cino.glanimate.IPureFragment;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.shader.AbstractGLProgram;
-import com.thrblock.cino.shader.data.GLUniformFloat;
-import com.thrblock.cino.shader.data.GLUniformInt;
 
 /**
  * Shader用 Commons Uniform
@@ -23,7 +21,6 @@ public class GLCommonUniform {
     private int frameSizeW;
     @Value("${cino.frame.screen.height:600}")
     private int frameSizeH;
-    
 
     public IPureFragment setCommonUniform(AbstractGLProgram program) {
         //时间 单位 秒
@@ -33,6 +30,7 @@ public class GLCommonUniform {
         
         //视窗尺寸 单位 像素
         float[] iResolution = new float[2];
+        
         IPureFragment res = () -> {
             iGlobalTime.setValue(iGlobalTime.getValue() + 1f / fps);
             iFrame.setValue(iFrame.getValue() + 1);
@@ -40,8 +38,8 @@ public class GLCommonUniform {
             iResolution[1] = frameSizeH;
         };
         
-        program.bindDataAsFloatVec("iResolution", iResolution);
         program.bindDataAsFloat(iGlobalTime);
+        program.bindDataAsFloatVec("iResolution", iResolution);
         program.bindDataAsInt(iFrame);
         return res;
     }
@@ -61,8 +59,8 @@ public class GLCommonUniform {
             iResolution[1] = r.getHeight();
         };
         
-        program.bindDataAsFloatVec("iResolution", iResolution);
         program.bindDataAsFloat(iGlobalTime);
+        program.bindDataAsFloatVec("iResolution", iResolution);
         program.bindDataAsInt(iFrame);
         return res;
     }

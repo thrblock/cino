@@ -122,4 +122,9 @@ public class Vec4 {
     public void setXy(Vec2 xy) {
         System.arraycopy(xy.value, 0, value, 0, xy.value.length);
     }
+    
+    @Override
+    public String toString() {
+        return "Vec4" + Arrays.toString(value);
+    }
 }

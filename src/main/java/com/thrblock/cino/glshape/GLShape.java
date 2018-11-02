@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.debug.GLDebugHelper;
 import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
@@ -137,6 +138,7 @@ public abstract class GLShape implements GLNode {
         if (program != null) {
             program.bind(gl);
         }
+        GLDebugHelper.logIfError(gl,"before shape draw:" + this.toString());
     }
 
     /**
@@ -156,6 +158,7 @@ public abstract class GLShape implements GLNode {
         if (program != null) {
             program.unBind(gl);
         }
+        GLDebugHelper.logIfError(gl,"after shape draw:" + this.toString());
     }
     
     /**
