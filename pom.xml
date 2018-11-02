@@ -2,8 +2,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.thrblock</groupId>
-	<artifactId>cino-core</artifactId>
-	<version>0.0.2</version>
+	<artifactId>cino-root</artifactId>
+	<version>${cino.version}</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>cino-core</module>
+		<module>cino-util</module>
+		<module>cino-demo</module>
+		<module>cino-glcomponent</module>
+	</modules>
+	<properties>
+		<cino.version>0.0.3</cino.version>
+		<spring-framework.version>4.2.5.RELEASE</spring-framework.version>
+		<jogl.version>2.3.1</jogl.version>
+		<slf4j.version>1.7.21</slf4j.version>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -17,35 +30,43 @@
 			</plugin>
 		</plugins>
 	</build>
-	<properties>
-		<!-- Spring -->
-		<spring-framework.version>4.2.5.RELEASE</spring-framework.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.jogamp.jogl</groupId>
-			<artifactId>jogl-all-main</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jogamp.gluegen</groupId>
-			<artifactId>gluegen-rt-main</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring-framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.21</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>22.0</version>
-		</dependency>
-	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.thrblock</groupId>
+				<artifactId>cino-core</artifactId>
+				<version>${cino.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thrblock</groupId>
+				<artifactId>cino-util</artifactId>
+				<version>${cino.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thrblock</groupId>
+				<artifactId>cino-glcomponent</artifactId>
+				<version>${cino.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring-framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jogamp.jogl</groupId>
+				<artifactId>jogl-all-main</artifactId>
+				<version>${jogl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jogamp.gluegen</groupId>
+				<artifactId>gluegen-rt-main</artifactId>
+				<version>${jogl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

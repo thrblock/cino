@@ -1,0 +1,8 @@
+uniform sampler2D fbo_texture;
+uniform float iGlobalTime;
+uniform vec2 iResolution;
+void main(void) {
+  vec2 position = gl_FragCoord.xy / iResolution;
+  position.x += sin(10. * position.y * 2. *3.14159 + iGlobalTime * 3.) * 0.005;
+  gl_FragColor = texture2D(fbo_texture, position);
+}

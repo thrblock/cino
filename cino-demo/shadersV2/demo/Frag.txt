@@ -1,0 +1,22 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+#define PI 3.141592653589793
+
+//MODS BY NRLABS 2016
+
+uniform float time;
+uniform vec2 iResolution;
+void main( void ) {
+	vec2 resolution = iResolution;
+	vec2 coord = (gl_FragCoord.xy / resolution.xy);
+
+	float lineWidth = max(0.0, sin(coord.x * PI)+sin(coord.y * PI)) * (2.0 - sin(coord.x * PI) * 0.5);
+ 	float lineRepeat = resolution.y;
+ 	float lineStep = sin((coord.y * PI) * lineRepeat+ sin(time)) * 0.25 + 0.275;
+ 	float line = pow(smoothstep(1.0 - lineWidth, 1.0, lineStep), 0.5);
+
+	float alpha = min(smoothstep(0.0, 1.0, line), 1.0);
+	
+	gl_FragColor = vec4(vec3(alpha), 1.0);
+}

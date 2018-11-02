@@ -3,7 +3,7 @@
 *.war
 *.ear
 *.log
-/target/
-/.settings/
+target/
+.settings/
 .project
 .classpath
