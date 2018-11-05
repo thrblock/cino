@@ -14,7 +14,7 @@ public class ComponentDemo {
         AWTFrameFactory builder = context.getBean(AWTFrameFactory.class);
         builder.buildFrame();
 
-        CinoComponent d = context.getBean(ShaderToy.class);
+        CinoComponent d = context.getBean(CharAreaDemo.class);
         d.activited();
     }
 }

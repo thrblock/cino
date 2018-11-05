@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.concept.Point;
 import com.thrblock.cino.vec.Vec2;
 import com.thrblock.cino.vec.Vec3;
 import com.thrblock.cino.vec.Vec4;
@@ -13,11 +14,9 @@ import com.thrblock.cino.vec.Vec4;
  * 
  * @author lizepu
  */
-public class GLPoint extends GLShape {
+public class GLPoint extends GLShape<Point> {
     private float pointSize = 1f;
-    private Vec2 point;
     private Vec4 color = new Vec4(1.0f);
-    private float theta = 0;
 
     /**
      * 使用坐标构造一个图形对象
@@ -26,15 +25,25 @@ public class GLPoint extends GLShape {
      * @param y 顶点纵坐标
      */
     public GLPoint(float x, float y) {
-        this.point = new Vec2(x, y);
+        this(new Vec2(x, y));
     }
-    
+
     /**
      * 使用坐标构造一个图形对象
+     * 
      * @param xy vec2
      */
     public GLPoint(Vec2 xy) {
-        this.point = new Vec2(xy);
+        super(new Point(xy));
+    }
+
+    /**
+     * 使用概念进行构造
+     * 
+     * @param p
+     */
+    public GLPoint(Point p) {
+        super(p);
     }
 
     /**
@@ -93,7 +102,7 @@ public class GLPoint extends GLShape {
     public void setB(float b) {
         color.setB(b);
     }
-    
+
     public void setRgba(Vec4 rgba) {
         color.setRgba(rgba);
     }
@@ -124,9 +133,10 @@ public class GLPoint extends GLShape {
     public float getB() {
         return color.getB();
     }
-    
+
     /**
      * 获得颜色
+     * 
      * @return
      */
     public Vec4 getRgba() {
@@ -148,7 +158,7 @@ public class GLPoint extends GLShape {
      */
     @Override
     public float getX() {
-        return point.getX();
+        return concept.getX();
     }
 
     /**
@@ -157,7 +167,7 @@ public class GLPoint extends GLShape {
      */
     @Override
     public void setX(float x) {
-        point.setX(x);
+        concept.setX(x);
     }
 
     /**
@@ -166,7 +176,7 @@ public class GLPoint extends GLShape {
      */
     @Override
     public void setXOffset(float offset) {
-        point.setX(point.getX() + offset);
+        concept.setX(concept.getX() + offset);
     }
 
     /**
@@ -175,7 +185,7 @@ public class GLPoint extends GLShape {
      */
     @Override
     public float getY() {
-        return point.getY();
+        return concept.getY();
     }
 
     /**
@@ -184,7 +194,7 @@ public class GLPoint extends GLShape {
      */
     @Override
     public void setY(float y) {
-        point.setY(y);
+        concept.setY(y);
     }
 
     /**
@@ -193,7 +203,7 @@ public class GLPoint extends GLShape {
      */
     @Override
     public void setYOffset(float offset) {
-        point.setY(point.getY() + offset);
+        concept.setY(concept.getY() + offset);
     }
 
     /**
@@ -225,7 +235,7 @@ public class GLPoint extends GLShape {
         gl.glPointSize(pointSize);
         gl.glBegin(GL.GL_POINTS);
         gl.glColor4f(color.getR(), color.getG(), color.getB(), color.getA());
-        gl.glVertex2f(point.getX(), point.getY());
+        gl.glVertex2f(concept.getX(), concept.getY());
         gl.glEnd();
     }
 
@@ -236,9 +246,7 @@ public class GLPoint extends GLShape {
      * @return 距离的平方值
      */
     public float getDistanceSquare(GLPoint point) {
-        float xl = getX() - point.getX();
-        float yl = getY() - point.getY();
-        return xl * xl + yl * yl;
+        return concept.getDistanceSquare(point.concept);
     }
 
     /**
@@ -249,9 +257,7 @@ public class GLPoint extends GLShape {
      * @return 距离的平方值
      */
     public float getDistanceSquare(float ax, float ay) {
-        float xl = getX() - ax;
-        float yl = getY() - ay;
-        return xl * xl + yl * yl;
+        return concept.getDistanceSquare(ax, ay);
     }
 
     /**
@@ -261,7 +267,7 @@ public class GLPoint extends GLShape {
      * @return 距离
      */
     public float getDistance(GLPoint point) {
-        return (float) Math.sqrt(getDistanceSquare(point));
+        return concept.getDistance(point.concept);
     }
 
     /**
@@ -272,7 +278,7 @@ public class GLPoint extends GLShape {
      * @return 距离
      */
     public float getDistance(float ax, float ay) {
-        return (float) Math.sqrt(getDistanceSquare(ax, ay));
+        return concept.getDistance(ax, ay);
     }
 
     @Override
@@ -309,45 +315,41 @@ public class GLPoint extends GLShape {
      */
     @Override
     public float getRadian() {
-        return theta;
+        return concept.getRadian();
     }
 
     /**
      * {@inheritDoc}<br />
-     * 设置 旋转角度，该设置不会影响到点图形的显示，但会影响其子节点
+     * 设置 旋转角度，point无自旋定义，该设置不会影响到点图形的显示，但会影响其子节点
      */
     @Override
     public void setRadian(float dstTheta) {
-        this.theta = dstTheta;
+        concept.setRadian(dstTheta);
     }
 
     /**
      * {@inheritDoc}<br />
-     * 设置 旋转角度，指定旋转轴
+     * 指定旋转轴进行转动 dstTheta为相对量
      */
     @Override
-    public void setRadian(float dstTheta, float cx, float cy) {
-        float offset = dstTheta - this.theta;
-        float nx = revolveX(getX(), getY(), cx, cy, offset);
-        float ny = revolveY(getX(), getY(), cx, cy, offset);
-        setX(nx);
-        setY(ny);
-        this.theta = dstTheta;
+    public void revolve(float dstTheta, float cx, float cy) {
+        exuviate().revolve(cx, cy, dstTheta);
     }
 
     @Override
     public String toString() {
-        return "GLPoint[" + point + "]";
+        return "GLPoint[" + concept + "]";
     }
 
     @Override
     public void setXy(Vec2 xy) {
-        point.setXy(xy);
+        concept.setX(xy.getX());
+        concept.setY(xy.getY());
     }
 
     @Override
     public Vec2 getXy() {
-        return new Vec2(point);
+        return new Vec2(concept.getX(), concept.getY());
     }
 
     @Override
@@ -359,5 +361,5 @@ public class GLPoint extends GLShape {
     public void setCentral(Vec2 xy) {
         setXy(xy);
     }
-    
+
 }

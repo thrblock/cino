@@ -3,6 +3,7 @@ package com.thrblock.cino.glshape;
 import java.awt.Color;
 import java.util.Arrays;
 
+import com.thrblock.cino.concept.MultiPoint;
 import com.thrblock.cino.vec.Vec2;
 
 /**
@@ -11,23 +12,15 @@ import com.thrblock.cino.vec.Vec2;
  * @author lizepu
  *
  */
-public abstract class GLMultiPointShape extends GLShape {
+public abstract class GLMultiPointShape<R extends MultiPoint> extends GLShape<R> {
     protected float lineWidth = 1.0f;
     protected final GLPoint[] points;
-    private float theta = 0;
 
-    public GLMultiPointShape(Vec2... points) {
-        this(Arrays.stream(points).map(GLPoint::new).toArray(GLPoint[]::new));
+    public GLMultiPointShape(R r) {
+        super(r);
+        this.points = Arrays.stream(r.getPoints()).map(GLPoint::new).toArray(GLPoint[]::new);
     }
-    /**
-     * 使用点数组构造一个多点图形对象
-     * 
-     * @param points 点数组
-     */
-    public GLMultiPointShape(GLPoint... points) {
-        this.points = points;
-    }
-
+    
     /**
      * 获得顶点的最大索引值
      * 
@@ -200,7 +193,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public float getRadian() {
-        return theta;
+        return concept.getRadian();
     }
 
     /**
@@ -209,22 +202,16 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public void setRadian(float dstTheta) {
-        setRadian(dstTheta, getCentralX(), getCentralY());
+        concept.setRadian(dstTheta);
     }
 
     /**
      * {@inheritDoc}<br />
-     * 以x,y为轴旋转图形,定义为逆时针方向旋转的弧度
+     * 以x,y为轴旋转图形,定义为逆时针方向旋转的相对弧度
      */
-    public void setRadian(float dstTheta, float x, float y) {
-        float offset = dstTheta - getRadian();
-        for (GLPoint point : points) {
-            float dx = revolveX(point.getX(), point.getY(), x, y, offset);
-            float dy = revolveY(point.getX(), point.getY(), x, y, offset);
-            point.setX(dx);
-            point.setY(dy);
-        }
-        this.theta = dstTheta;
+    @Override
+    public void revolve(float dstTheta, float x, float y) {
+        concept.revolve(x, y, dstTheta);
     }
 
     /**
@@ -298,11 +285,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public float getCentralX() {
-        float result = 0;
-        for (int i = 0; i < points.length; i++) {
-            result += points[i].getX();
-        }
-        return result / points.length;
+        return concept.getCentralX();
     }
 
     /**
@@ -311,7 +294,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public void setCentralX(float x) {
-        setXOffset(x - getCentralX());
+        concept.setCentralX(x);
     }
 
     /**
@@ -320,11 +303,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public float getCentralY() {
-        float result = 0;
-        for (int i = 0; i < points.length; i++) {
-            result += points[i].getY();
-        }
-        return result / points.length;
+        return concept.getCentralY();
     }
 
     /**
@@ -333,7 +312,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public void setCentralY(float y) {
-        setYOffset(y - getCentralY());
+        concept.setCentralY(y);
     }
 
     /**
@@ -342,9 +321,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public void setXOffset(float offset) {
-        for (int i = 0; i < points.length; i++) {
-            points[i].setXOffset(offset);
-        }
+        concept.setXOffset(offset);
     }
 
     /**
@@ -353,9 +330,7 @@ public abstract class GLMultiPointShape extends GLShape {
      */
     @Override
     public void setYOffset(float offset) {
-        for (int i = 0; i < points.length; i++) {
-            points[i].setYOffset(offset);
-        }
+        concept.setYOffset(offset);
     }
 
     @Override
@@ -369,14 +344,12 @@ public abstract class GLMultiPointShape extends GLShape {
         return builder.toString();
     }
 
-    public void sameCentralOf(GLMultiPointShape shape) {
-        setCentralX(shape.getCentralX());
-        setCentralY(shape.getCentralY());
+    public void sameCentralOf(GLMultiPointShape<?> shape) {
+        concept.sameCentralOf(shape.concept);
     }
 
-    public void sameStatusOf(GLMultiPointShape shape) {
-        sameCentralOf(shape);
-        setRadian(shape.getRadian());
+    public void sameStatusOf(GLMultiPointShape<?> shape) {
+        concept.sameStatusOf(shape.concept);
     }
 
     @Override

@@ -113,11 +113,12 @@ public class GLCharArea extends GLRect {
 
     @Override
     public void setRadian(float dstTheta) {
+        float offset = dstTheta - getRadian();
         super.setRadian(dstTheta);
         float rolx = getCentralX();
         float roly = getCentralY();
         for (int i = 0; i < imgs.length; i++) {
-            imgs[i].setRadian(dstTheta, rolx, roly);
+            imgs[i].revolve(offset, rolx, roly);
         }
     }
 }

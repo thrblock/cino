@@ -2,7 +2,7 @@ package com.thrblock.cino.glshape;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.thrblock.cino.util.math.CMath;
+import com.thrblock.cino.concept.Line;
 import com.thrblock.cino.vec.Vec2;
 
 /**
@@ -11,8 +11,14 @@ import com.thrblock.cino.vec.Vec2;
  * @author lizepu
  *
  */
-public class GLLine extends GLMultiPointShape {
+public class GLLine extends GLMultiPointShape<Line> {
 
+    /**
+     * @param line
+     */
+    public GLLine(Line line) {
+        super(line);
+    }
     /**
      * 使用两点构造一个直线对象
      * 
@@ -20,7 +26,7 @@ public class GLLine extends GLMultiPointShape {
      * @param end   vec2
      */
     public GLLine(Vec2 start, Vec2 end) {
-        super(start, end);
+        super(new Line(start, end));
     }
 
     /**
@@ -32,7 +38,7 @@ public class GLLine extends GLMultiPointShape {
      * @param y2 点2纵坐标
      */
     public GLLine(float x1, float y1, float x2, float y2) {
-        super(new Vec2(x1, y1), new Vec2(x2, y2));
+        this(new Vec2(x1, y1), new Vec2(x2, y2));
     }
 
     /**
@@ -41,7 +47,7 @@ public class GLLine extends GLMultiPointShape {
      */
     @Override
     public float getRadian() {
-        return CMath.getQuadrantTheta(getPointX(0), getPointY(0), getPointX(1), getPointY(1));
+        return concept.getRadian();
     }
 
     /**

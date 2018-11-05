@@ -113,22 +113,22 @@ public interface GLNode {
     public void setYOffset(float offset);
     
     /**
-     * 获得 旋转角 弧度制 具体效果依赖于GLNode实现类
+     * 获得 旋转角（自旋角） 弧度制 具体效果依赖于GLNode实现类
      * @return 旋转角
      */
     public float getRadian();
     /**
-     * 设置 旋转角 弧度制 具体效果依赖于GLNode实现类
-     * @param dstTheta 要设置的角度
+     * 设置 旋转角（自旋角） 弧度制 具体效果依赖于GLNode实现类
+     * @param dstTheta 要设置的绝对自旋角
      */
     public void setRadian(float dstTheta);
     /**
      * 设置 旋转角 弧度制 以指定转轴进行旋转变换,具体效果依赖于GLNode实现类
-     * @param dstTheta 要设置的角度
+     * @param radian 要设置的相对角度
      * @param x 转轴x
      * @param y 转轴y
      */
-    public void setRadian(float dstTheta,float x,float y);
+    public void revolve(float radian,float x,float y);
     
     /**
      * 得到自身的通道操作类

@@ -166,36 +166,39 @@ public class GLShapeNode implements GLNode {
 
     @Override
     public void setRadian(float dstTheta) {
+        float offset = dstTheta - basic.getRadian();
         basic.setRadian(dstTheta);
         float rolx = basic.getCentralX();
         float roly = basic.getCentralY();
-        subList.forEach(e -> e.setRadian(dstTheta, rolx, roly));
+        subList.forEach(e -> e.revolve(offset, rolx, roly));
     }
 
     @Override
-    public void setRadian(float dstTheta, float x, float y) {
-        basic.setRadian(dstTheta, x, y);
-        subList.forEach(e -> e.setRadian(dstTheta, x, y));
+    public void revolve(float dstTheta, float x, float y) {
+        basic.revolve(dstTheta, x, y);
+        subList.forEach(e -> e.revolve(dstTheta, x, y));
     }
 
     @Override
     public void setXy(Vec2 xy) {
-
+        setX(xy.getX());
+        setY(xy.getY());
     }
 
     @Override
     public Vec2 getXy() {
-        return null;
+        return new Vec2(getX(), getY());
     }
 
     @Override
     public Vec2 getCentral() {
-        return null;
+        return new Vec2(getCentralX(), getCentralY());
     }
 
     @Override
     public void setCentral(Vec2 xy) {
-
+        setCentralX(xy.getX());
+        setCentralY(xy.getY());
     }
 }
 
@@ -293,7 +296,7 @@ class GLNop implements GLNode {
     }
 
     @Override
-    public void setRadian(float dstTheta, float x, float y) {
+    public void revolve(float dstTheta, float x, float y) {
         // Nop 不会对任何操作进行实际处理
     }
 

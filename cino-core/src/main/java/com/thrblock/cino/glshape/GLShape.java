@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.concept.GeometricConcept;
 import com.thrblock.cino.debug.GLDebugHelper;
 import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.shader.AbstractGLProgram;
@@ -14,7 +15,7 @@ import com.thrblock.cino.shader.AbstractGLProgram;
  * @author lizepu
  *
  */
-public abstract class GLShape implements GLNode {
+public abstract class GLShape<T extends GeometricConcept> implements GLNode {
     private static final AtomicLong ATOMIC_UUID = new AtomicLong();
     private final long uuid = ATOMIC_UUID.incrementAndGet();
     private boolean visible = false;
@@ -23,6 +24,16 @@ public abstract class GLShape implements GLNode {
     private int mixAlpha = GL.GL_SRC_ALPHA;
     private int mixBeta = GL.GL_ONE_MINUS_SRC_ALPHA;
     protected AbstractGLProgram program;
+
+    protected T concept;
+    
+    public GLShape(T concept) {
+        this.concept = concept;
+    }
+    
+    public T exuviate() {
+        return concept;
+    }
 
     public int getLayerIndex() {
         return layerIndex;
@@ -117,18 +128,6 @@ public abstract class GLShape implements GLNode {
         this.program = program;
     }
 
-    protected float revolveX(float x, float y, float cx, float cy, float theta) {
-        float cdx = x - cx;
-        float cdy = y - cy;
-        return (float) (cdx * Math.cos(theta) - cdy * Math.sin(theta)) + cx;
-    }
-
-    protected float revolveY(float x, float y, float cx, float cy, float theta) {
-        float cdx = x - cx;
-        float cdy = y - cy;
-        return (float) (cdx * Math.sin(theta) + cdy * Math.cos(theta)) + cy;
-    }
-
     /**
      * 绘制前处理
      * 
@@ -166,7 +165,7 @@ public abstract class GLShape implements GLNode {
      * @param shape
      * @return
      */
-    public boolean isTopThan(GLShape shape) {
+    public boolean isTopThan(GLShape<?> shape) {
         if(getLayerIndex() != shape.getLayerIndex()) {
             return getLayerIndex() > shape.getLayerIndex();
         } else {

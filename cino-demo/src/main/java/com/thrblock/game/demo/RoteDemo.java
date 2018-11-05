@@ -16,23 +16,26 @@ public class RoteDemo {
     public static void main(String[] args) {
         AbstractApplicationContext context = CinoInitor.getContextByXml();
         AWTFrameFactory config = context.getBean(AWTFrameFactory.class);
-		config.buildFrame();
-        
-		KeyControlStack keyIO = context.getBean(KeyControlStack.class);
+        config.buildFrame();
+
+        KeyControlStack keyIO = context.getBean(KeyControlStack.class);
         GLShapeFactory builder = context.getBean(GLShapeFactory.class);
-        
-        GLRect cRect = builder.buildGLRect(400f, 300f, 100f,30f);
+
+        GLRect cRect = builder.buildGLRect(400f, 300f, 100f, 30f);
         cRect.setAllPointColor(Color.RED);
         cRect.show();
-        
-        GLRect directRef = builder.buildGLRect(cRect.getPointX(0) - 50f,cRect.getPointY(0) - 50,40f, 20f);
+
+        GLRect directRef = builder.buildGLRect(cRect.getPointX(0) - 50f, cRect.getPointY(0) - 50, 40f, 20f);
         directRef.setAllPointColor(Color.GREEN);
         directRef.show();
-        
+
         context.getBean(GLAnimateFactory.class).build(() -> {
-            if(keyIO.isKeyDown(KeyEvent.VK_SPACE)) {
+            if (keyIO.isKeyDown(KeyEvent.VK_A)) {
                 cRect.setRadian(cRect.getRadian() + 0.05f);
-                directRef.setRadian(cRect.getRadian(),cRect.getCentralX(),cRect.getCentralY());
+                directRef.revolve(0.05f, cRect.getCentralX(), cRect.getCentralY());
+            } else if (keyIO.isKeyDown(KeyEvent.VK_S)) {
+                cRect.setRadian(cRect.getRadian() - 0.05f);
+                directRef.revolve(-0.05f, cRect.getCentralX(), cRect.getCentralY());
             }
         }).enable();
     }

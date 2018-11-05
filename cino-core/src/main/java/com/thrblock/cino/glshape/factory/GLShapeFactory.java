@@ -1,5 +1,6 @@
 package com.thrblock.cino.glshape.factory;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Iterables;
+import com.thrblock.cino.concept.Point;
+import com.thrblock.cino.concept.Polygon;
 import com.thrblock.cino.gllayer.GLLayerManager;
 import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLImage;
@@ -252,12 +255,13 @@ public class GLShapeFactory {
      * @param ys
      * @return
      */
-    public GLPolygonShape buildGLPolygon(float[] xs, float[] ys) {
-        List<GLPoint> pointList = new LinkedList<>();
+    public GLPolygonShape<Polygon> buildGLPolygon(float[] xs, float[] ys) {
+        List<Point> pointList = new LinkedList<>();
         for (int i = 0; i < xs.length; i++) {
-            pointList.add(new GLPoint(xs[i], ys[i]));
+            pointList.add(new Point(xs[i], ys[i]));
         }
-        GLPolygonShape polygon = new GLPolygonShape(Iterables.toArray(pointList, GLPoint.class));
+        Polygon concept = new Polygon(Iterables.toArray(pointList, Point.class));
+        GLPolygonShape<Polygon> polygon = new GLPolygonShape<>(concept);
         layerContainer.addShapeToSwap(layer, polygon);
         if (currentNode != null) {
             currentNode.addSubNode(polygon);
@@ -265,8 +269,9 @@ public class GLShapeFactory {
         return polygon;
     }
 
-    public GLPolygonShape buildGLPolygon(Vec2... points) {
-        GLPolygonShape polygon = new GLPolygonShape(points);
+    public GLPolygonShape<Polygon> buildGLPolygon(Vec2... points) {
+        Polygon concept = new Polygon(Arrays.stream(points).map(Point::new).toArray(Point[]::new));
+        GLPolygonShape<Polygon> polygon = new GLPolygonShape<>(concept);
         layerContainer.addShapeToSwap(layer, polygon);
         if (currentNode != null) {
             currentNode.addSubNode(polygon);

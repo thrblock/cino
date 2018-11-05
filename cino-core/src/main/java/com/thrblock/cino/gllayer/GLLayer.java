@@ -20,9 +20,9 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
 public class GLLayer {
     private int mixA = GL.GL_SRC_ALPHA;
     private int mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
-    private CrudeLinkedList<GLShape> shapeList = new CrudeLinkedList<>();
-    private CrudeLinkedList<GLShape>.CrudeIter crudeIter = shapeList.genCrudeIter();
-    private List<GLShape> shapSwap = new LinkedList<>();
+    private CrudeLinkedList<GLShape<?>> shapeList = new CrudeLinkedList<>();
+    private CrudeLinkedList<GLShape<?>>.CrudeIter crudeIter = shapeList.genCrudeIter();
+    private List<GLShape<?>> shapSwap = new LinkedList<>();
     private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
     private Semaphore swapSp = new Semaphore(1);
 
@@ -87,7 +87,7 @@ public class GLLayer {
      * 
      * @param shape 图形对象
      */
-    public void addShapeToSwap(GLShape shape) {
+    public void addShapeToSwap(GLShape<?> shape) {
         swapSp.acquireUninterruptibly();
         shapSwap.add(shape);
         swapSp.release();
@@ -132,7 +132,7 @@ public class GLLayer {
     public void draw(GL2 gl2) {
         beforeDraw(gl2);
         while (crudeIter.hasNext()) {
-            GLShape shape = crudeIter.next();
+            GLShape<?> shape = crudeIter.next();
             if (shape.isVisible()) {
                 shape.beforeDraw(gl2);
                 shape.drawShape(gl2);

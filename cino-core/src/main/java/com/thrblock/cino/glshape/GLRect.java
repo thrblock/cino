@@ -1,11 +1,18 @@
 package com.thrblock.cino.glshape;
 
+import com.thrblock.cino.concept.Point;
+import com.thrblock.cino.concept.Rect;
+
 /**
  * 一个矩形图形对象
  * 
  * @author lizepu
  */
-public class GLRect extends GLPolygonShape {
+public class GLRect extends GLPolygonShape<Rect> {
+
+    public GLRect(Rect r) {
+        super(r);
+    }
 
     /**
      * 构造一个矩形图形对象
@@ -16,8 +23,8 @@ public class GLRect extends GLPolygonShape {
      * @param height 高度
      */
     public GLRect(float x, float y, float width, float height) {
-        super(new GLPoint(x - width / 2, y + height / 2), new GLPoint(x + width / 2, y + height / 2),
-                new GLPoint(x + width / 2, y - height / 2), new GLPoint(x - width / 2, y - height / 2));
+        super(new Rect(new Point(x - width / 2, y + height / 2), new Point(x + width / 2, y + height / 2),
+                new Point(x + width / 2, y - height / 2), new Point(x - width / 2, y - height / 2)));
     }
 
     /**
@@ -26,7 +33,7 @@ public class GLRect extends GLPolygonShape {
      * @return 矩形宽度
      */
     public float getWidth() {
-        return points[0].getDistance(points[1]);
+        return concept.getWidth();
     }
 
     /**
@@ -35,7 +42,7 @@ public class GLRect extends GLPolygonShape {
      * @return 矩形高度
      */
     public float getHeight() {
-        return points[1].getDistance(points[2]);
+        return concept.getHeight();
     }
 
     /**
@@ -44,15 +51,7 @@ public class GLRect extends GLPolygonShape {
      * @param width 矩形宽度
      */
     public void setWidth(float width) {
-        if (width > 0) {
-            float m = getWidth();
-            float k = width / m;
-
-            points[1].setX(k * (points[1].getX() - points[0].getX()) + points[0].getX());
-            points[2].setX(k * (points[2].getX() - points[3].getX()) + points[3].getX());
-            points[1].setY(k * (points[1].getY() - points[0].getY()) + points[0].getY());
-            points[2].setY(k * (points[2].getY() - points[3].getY()) + points[3].getY());
-        }
+        concept.setWidth(width);
     }
 
     /**
@@ -61,23 +60,15 @@ public class GLRect extends GLPolygonShape {
      * @param height 矩形高度
      */
     public void setHeight(float height) {
-        if (height > 0) {
-            float m = getHeight();
-            float k = height / m;
-
-            points[2].setX(k * (points[2].getX() - points[1].getX()) + points[1].getX());
-            points[3].setX(k * (points[3].getX() - points[0].getX()) + points[0].getX());
-            points[2].setY(k * (points[2].getY() - points[1].getY()) + points[1].getY());
-            points[3].setY(k * (points[3].getY() - points[0].getY()) + points[0].getY());
-        }
+        concept.setHeight(height);
     }
 
     public void leftOf(GLRect another) {
-        leftOf(another, 0);
+        concept.leftOf(another.concept, 0);
     }
 
     public void leftOfInner(GLRect another) {
-        leftOfInner(another, 0);
+        concept.leftOfInner(another.concept, 0);
     }
 
     /**
@@ -86,12 +77,7 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void leftOf(GLRect another, float margin) {
-        sameStatusOf(another);
-        float w = (getWidth() + another.getWidth()) / 2 + margin;
-        float yoffset = (float) Math.sin(getRadian()) * w;
-        float xoffset = (float) Math.cos(getRadian()) * w;
-        setCentralX(getCentralX() - xoffset);
-        setCentralY(getCentralY() - yoffset);
+        concept.leftOf(another.concept, margin);
     }
 
     /**
@@ -100,16 +86,11 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void leftOfInner(GLRect another, float margin) {
-        sameStatusOf(another);
-        float w = (another.getWidth() - getWidth()) / 2 - margin;
-        float yoffset = (float) Math.sin(getRadian()) * w;
-        float xoffset = (float) Math.cos(getRadian()) * w;
-        setCentralX(getCentralX() - xoffset);
-        setCentralY(getCentralY() - yoffset);
+        concept.leftOfInner(another.concept, margin);
     }
 
     public void rightOf(GLRect another) {
-        rightOf(another, 0);
+        concept.rightOf(another.concept, 0);
     }
 
     /**
@@ -118,16 +99,11 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void rightOf(GLRect another, float margin) {
-        sameStatusOf(another);
-        float w = (getWidth() + another.getWidth()) / 2 + margin;
-        float yoffset = (float) Math.sin(getRadian()) * w;
-        float xoffset = (float) Math.cos(getRadian()) * w;
-        setCentralX(getCentralX() + xoffset);
-        setCentralY(getCentralY() + yoffset);
+        concept.rightOf(another.concept, margin);
     }
 
     public void rightOfInner(GLRect another) {
-        rightOfInner(another, 0);
+        concept.rightOfInner(another.concept);
     }
 
     /**
@@ -136,16 +112,11 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void rightOfInner(GLRect another, float margin) {
-        sameStatusOf(another);
-        float w = (another.getWidth() - getWidth()) / 2 - margin;
-        float yoffset = (float) Math.sin(getRadian()) * w;
-        float xoffset = (float) Math.cos(getRadian()) * w;
-        setCentralX(getCentralX() + xoffset);
-        setCentralY(getCentralY() + yoffset);
+        concept.rightOfInner(another.concept, margin);
     }
 
     public void topOf(GLRect another) {
-        topOf(another, 0);
+        concept.topOf(another.concept, 0);
     }
 
     /**
@@ -154,16 +125,11 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void topOf(GLRect another, float margin) {
-        sameStatusOf(another);
-        float h = (getHeight() + another.getHeight()) / 2 + margin;
-        float yoffset = (float) Math.cos(getRadian()) * h;
-        float xoffset = (float) Math.sin(getRadian()) * h;
-        setCentralX(getCentralX() - xoffset);
-        setCentralY(getCentralY() + yoffset);
+        concept.topOf(another.concept, margin);
     }
 
     public void topOfInner(GLRect another) {
-        topOfInner(another, 0);
+        concept.topOfInner(another.concept, 0);
     }
 
     /**
@@ -172,16 +138,11 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void topOfInner(GLRect another, float margin) {
-        sameStatusOf(another);
-        float h = (another.getHeight() - getHeight()) / 2 - margin;
-        float yoffset = (float) Math.cos(getRadian()) * h;
-        float xoffset = (float) Math.sin(getRadian()) * h;
-        setCentralX(getCentralX() - xoffset);
-        setCentralY(getCentralY() + yoffset);
+        concept.topOfInner(another.concept, margin);
     }
 
     public void bottomOf(GLRect another) {
-        bottomOf(another, 0);
+        concept.bottomOf(another.concept, 0);
     }
 
     /**
@@ -190,16 +151,11 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void bottomOf(GLRect another, float margin) {
-        sameStatusOf(another);
-        float h = (getHeight() + another.getHeight()) / 2 + margin;
-        float yoffset = (float) Math.cos(getRadian()) * h;
-        float xoffset = (float) Math.sin(getRadian()) * h;
-        setCentralX(getCentralX() + xoffset);
-        setCentralY(getCentralY() - yoffset);
+        concept.bottomOf(another.concept, margin);
     }
 
     public void bottomOfInner(GLRect another) {
-        bottomOfInner(another, 0);
+        concept.bottomOfInner(another.concept, 0);
     }
 
     /**
@@ -208,11 +164,6 @@ public class GLRect extends GLPolygonShape {
      * @param another 另一矩形
      */
     public void bottomOfInner(GLRect another, float margin) {
-        sameStatusOf(another);
-        float h = (another.getHeight() - getHeight()) / 2 - margin;
-        float yoffset = (float) Math.cos(getRadian()) * h;
-        float xoffset = (float) Math.sin(getRadian()) * h;
-        setCentralX(getCentralX() + xoffset);
-        setCentralY(getCentralY() - yoffset);
+        concept.bottomOfInner(another.concept, margin);
     }
 }

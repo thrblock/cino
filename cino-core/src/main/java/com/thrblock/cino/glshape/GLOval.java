@@ -2,6 +2,8 @@ package com.thrblock.cino.glshape;
 
 import java.util.Arrays;
 
+import com.thrblock.cino.concept.Point;
+import com.thrblock.cino.concept.Polygon;
 import com.thrblock.cino.vec.Vec2;
 
 /**
@@ -9,19 +11,10 @@ import com.thrblock.cino.vec.Vec2;
  * 
  * @author lizepu
  */
-public class GLOval extends GLPolygonShape {
+public class GLOval extends GLPolygonShape<Polygon> {
 
     public GLOval(Vec2... points) {
-        this(Arrays.stream(points).map(GLPoint::new).toArray(GLPoint[]::new));
-    }
-
-    /**
-     * 由顶点数组构造一个椭圆，仅供内部实例化使用
-     * 
-     * @param points 顶点数组
-     */
-    private GLOval(GLPoint[] points) {
-        super(points);
+        super(new Polygon(Arrays.stream(points).map(Point::new).toArray(Point[]::new)));
     }
 
     /**
@@ -36,11 +29,11 @@ public class GLOval extends GLPolygonShape {
      */
     public static GLOval generate(float x, float y, float axisA, float axisB, int accuracy) {
         double thetaAcc = 2 * Math.PI / accuracy;
-        GLPoint[] ovalpoints = new GLPoint[accuracy];
+        Vec2[] ovalpoints = new Vec2[accuracy];
         for (int i = 0; i < ovalpoints.length; i++) {
             float px = (axisA / 2) * (float) Math.cos(thetaAcc * i);
             float py = (axisB / 2) * (float) Math.sin(thetaAcc * i);
-            ovalpoints[i] = new GLPoint(px, py);
+            ovalpoints[i] = new Vec2(px, py);
         }
         GLOval result = new GLOval(ovalpoints);
         result.setCentralX(x);
