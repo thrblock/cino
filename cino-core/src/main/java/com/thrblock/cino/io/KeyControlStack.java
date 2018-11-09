@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.IntFunction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -22,11 +23,13 @@ import org.springframework.stereotype.Component;
 public class KeyControlStack implements AWTEventListener {
     private boolean[] keyStatus = new boolean[1024];
     private Deque<KeyListener> listenerStack = new ConcurrentLinkedDeque<>();
-
+    private IntFunction<Boolean> getLockingKeyState;
 
     @PostConstruct
     void init() {
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
+        Toolkit tookit = Toolkit.getDefaultToolkit();
+        tookit.addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
+        getLockingKeyState = tookit::getLockingKeyState;
     }
     
     @PreDestroy
@@ -57,6 +60,14 @@ public class KeyControlStack implements AWTEventListener {
         } else {
             return false;
         }
+    }
+    
+    public boolean getLockingKeyState(int keyCode) {
+        return getLockingKeyState.apply(keyCode);
+    }
+    
+    public boolean useCapital() {
+        return getLockingKeyState(KeyEvent.VK_CAPS_LOCK) ^ isKeyDown(KeyEvent.VK_SHIFT);
     }
 
     private KeyListener peekKeyListener() {

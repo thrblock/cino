@@ -20,7 +20,6 @@ import com.thrblock.cino.gllayer.GLFrameBufferObject;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.GLImage;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.glshape.factory.GLShapeNode;
 import com.thrblock.cino.gltexture.GLIOTexture;
 import com.thrblock.cino.gltexture.GLTexture;
 import com.thrblock.cino.shader.GLProgram;
@@ -56,9 +55,11 @@ public class SmtPhy extends CinoComponent {
 
     @Override
     public void init() throws IOException {
+        autoShowHide();
+        autoKeyPushPop();
         GLShader vex = new GLShader(GL2.GL_VERTEX_SHADER, new File("./shadersV2/demo/Vertex.txt"));
-        GLShader frgA = new GLShader(GL2.GL_FRAGMENT_SHADER, new File("./shadersV2/demo/Frag_40034.2"));
-        GLShader frgB = new GLShader(GL2.GL_FRAGMENT_SHADER, new File("./shadersV2/demo/Frag_pixel"));
+        GLShader frgA = new GLShader(GL2.GL_FRAGMENT_SHADER, new File("./shadersV2/demo/Frag_graylize"));
+        GLShader frgB = new GLShader(GL2.GL_FRAGMENT_SHADER, new File("./shadersV2/demo/Frag_shake"));
         GLProgram programA = new GLProgram(vex, frgA);
         GLUniformFloat graylize = new GLUniformFloat("factor");
         programA.bindDataAsFloat(graylize);
@@ -74,7 +75,6 @@ public class SmtPhy extends CinoComponent {
         binder.setRestitution(0.8f);
         binder.setAnimateFactory(animateFactory);
 
-        GLShapeNode compNode = shapeFactory.createNewNode();
         GLRect backGround = shapeFactory.buildGLRect(0, 0, 800f, 600f);
         backGround.setFill(true);
         backGround.setAllPointColor(Color.GRAY);
@@ -91,9 +91,9 @@ public class SmtPhy extends CinoComponent {
         right.setAllPointColor(Color.DARK_GRAY);
         right.setFill(true);
 
-        binder.bindRectToRect(bottom, false);
-        binder.bindRectToRect(left, false);
-        binder.bindRectToRect(right, false);
+        binder.bindRectToRect(bottom.exuviate(), false);
+        binder.bindRectToRect(left.exuviate(), false);
+        binder.bindRectToRect(right.exuviate(), false);
 
         GLTexture funny = new GLIOTexture(getClass().getResourceAsStream("haha.png"), "png");
         shapeFactory.setLayer(1);
@@ -101,7 +101,7 @@ public class SmtPhy extends CinoComponent {
             GLImage img = shapeFactory.buildGLImage(0, 0, FUNNY_RADIS, FUNNY_RADIS, funny);
             img.setCentralY(300 + i * FUNNY_RADIS);
             img.setCentralX(CRand.getRandomNum(-300, 300));
-            bds[i] = binder.bindRectToCircle(img, true);
+            bds[i] = binder.bindRectToCircle(img.exuviate(), true);
         }
 
         shapeFactory.setLayer(2);
@@ -113,19 +113,16 @@ public class SmtPhy extends CinoComponent {
         auto(() -> world.step(1f / frame.getFramesPerSecond(), 6, 2));
         auto(commonsUniform.setCommonUniform(programA));
         auto(commonsUniform.setCommonUniform(programB));
+
         onActivited(() -> {
             fps.activited();
-            compNode.show();
             fboA.setGLProgram(programA);
             fboB.setGLProgram(programB);
-            keyIO.pushKeyListener(this);
         });
         onDeactivited(() -> {
             fps.deactivited();
-            compNode.hide();
             fboA.setGLProgram(null);
             fboB.setGLProgram(null);
-            keyIO.popKeyListener();
             reset();
         });
     }

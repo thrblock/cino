@@ -2,8 +2,8 @@ package com.thrblock.cino.b2dplugin;
 
 import org.jbox2d.dynamics.Body;
 
+import com.thrblock.cino.concept.Polygon;
 import com.thrblock.cino.glanimate.IPureFragment;
-import com.thrblock.cino.glshape.GLPolygonShape;
 
 /**
  * Box2d 绑定帧逻辑<br />
@@ -12,14 +12,14 @@ import com.thrblock.cino.glshape.GLPolygonShape;
  *
  */
 public abstract class B2dBinderFragment implements IPureFragment {
-    private GLPolygonShape glShape;
+    private Polygon shape;
     private Body bindBody;
-    protected B2dBinderFragment(GLPolygonShape glShape,Body bindBody) {
-        this.glShape = glShape;
+    protected B2dBinderFragment(Polygon shape,Body bindBody) {
+        this.shape = shape;
         this.bindBody = bindBody;
     }
-    public GLPolygonShape getGlShape() {
-        return glShape;
+    public Polygon getShape() {
+        return shape;
     }
     public Body getBindBody() {
         return bindBody;

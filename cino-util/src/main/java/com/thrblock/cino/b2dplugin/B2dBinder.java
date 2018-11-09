@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.CinoFrameConfig;
+import com.thrblock.cino.concept.Polygon;
+import com.thrblock.cino.concept.Rect;
 import com.thrblock.cino.glanimate.GLAnimateFactory;
-import com.thrblock.cino.glshape.GLPolygonShape;
-import com.thrblock.cino.glshape.GLRect;
 
 /**
  * Box2d 图形绑定工具
@@ -106,33 +106,33 @@ public class B2dBinder {
     /**
      * 将GLRect绑定为圆形刚体 圆形为矩形内切
      * 
-     * @param glRect
-     *            gl矩形
+     * @param rect
+     *            矩形
      * @param dynamci
      *            是否是动态图形
      * @return B2dBinderFragment 绘制片段逻辑
      */
-    public B2dBinderFragment bindRectToCircleAsFrag(GLRect glRect, boolean dynamci) {
+    public B2dBinderFragment bindRectToCircleAsFrag(Rect rect, boolean dynamci) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = dynamci ? BodyType.DYNAMIC : BodyType.STATIC;
-        bodyDef.position.set(glRect.getCentralX() / meterToPixel, glRect.getCentralY() / meterToPixel);
+        bodyDef.position.set(rect.getCentralX() / meterToPixel, rect.getCentralY() / meterToPixel);
         Body body = world.createBody(bodyDef);
 
         CircleShape shape = new CircleShape();
-        float radius = glRect.getWidth() > glRect.getHeight() ? glRect.getHeight() / 2 : glRect.getWidth() / 2;
+        float radius = rect.getWidth() > rect.getHeight() ? rect.getHeight() / 2 : rect.getWidth() / 2;
         shape.setRadius(radius / meterToPixel);
 
         Fixture fixture = body.createFixture(shape, density);
         fixture.setFriction(friction);
         fixture.setRestitution(restitution);
         
-        return generate(glRect, body);
+        return generate(rect, body);
     }
     
     /**
      * 将GLRect绑定为圆形刚体 圆形为矩形内切
      * 
-     * @param glRect
+     * @param rect
      *            gl矩形
      * @param dynamci
      *            是否是动态图形
@@ -140,14 +140,14 @@ public class B2dBinder {
      *            是否自动启动片段
      * @return Body 与指定GLRect相关的b2d body
      */
-    public Body bindRectToCircle(GLRect glRect, boolean dynamci, boolean enable) {
+    public Body bindRectToCircle(Rect rect, boolean dynamci, boolean enable) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = dynamci ? BodyType.DYNAMIC : BodyType.STATIC;
-        bodyDef.position.set(glRect.getCentralX() / meterToPixel, glRect.getCentralY() / meterToPixel);
+        bodyDef.position.set(rect.getCentralX() / meterToPixel, rect.getCentralY() / meterToPixel);
         Body body = world.createBody(bodyDef);
 
         CircleShape shape = new CircleShape();
-        float radius = glRect.getWidth() > glRect.getHeight() ? glRect.getHeight() / 2 : glRect.getWidth() / 2;
+        float radius = rect.getWidth() > rect.getHeight() ? rect.getHeight() / 2 : rect.getWidth() / 2;
         shape.setRadius(radius / meterToPixel);
 
         Fixture fixture = body.createFixture(shape, density);
@@ -155,7 +155,7 @@ public class B2dBinder {
         fixture.setRestitution(restitution);
         
         if(enable) {
-            B2dBinderFragment frag = generate(glRect, body);
+            B2dBinderFragment frag = generate(rect, body);
             animateFactory.build(frag).enable();
         }
         return body;
@@ -164,20 +164,20 @@ public class B2dBinder {
     /**
      * 将GLRect绑定为圆形刚体 圆形为矩形内切
      * 
-     * @param glRect
-     *            gl矩形
+     * @param rect
+     *            矩形
      * @param dynamci
      *            是否是动态图形
      * @return Body 与指定GLRect相关的b2d body
      */
-    public Body bindRectToCircle(GLRect glRect,boolean dynamci) {
-        return bindRectToCircle(glRect,dynamci,true);
+    public Body bindRectToCircle(Rect rect,boolean dynamci) {
+        return bindRectToCircle(rect,dynamci,true);
     }
 
     /**
      * 将GLRect绑定为矩形刚体
      * 
-     * @param glRect
+     * @param rect
      *            gl矩形
      * @param dynamci
      *            是否是动态图形
@@ -185,19 +185,19 @@ public class B2dBinder {
      *            是否自动启动
      * @return B2dBinderFragment 绘制片段逻辑
      */
-    public B2dBinderFragment bindRectToRectAsFrag(GLRect glRect, boolean dynamci, boolean enable) {
+    public B2dBinderFragment bindRectToRectAsFrag(Rect rect, boolean dynamci, boolean enable) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = dynamci ? BodyType.DYNAMIC : BodyType.STATIC;
-        bodyDef.position.set(glRect.getCentralX() / meterToPixel, glRect.getCentralY() / meterToPixel);
+        bodyDef.position.set(rect.getCentralX() / meterToPixel, rect.getCentralY() / meterToPixel);
         Body body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox((glRect.getWidth() / 2) / meterToPixel, (glRect.getHeight() / 2) / meterToPixel);
+        shape.setAsBox((rect.getWidth() / 2) / meterToPixel, (rect.getHeight() / 2) / meterToPixel);
 
         Fixture fixture = body.createFixture(shape, density);
         fixture.setFriction(friction);
         fixture.setRestitution(restitution);
-        B2dBinderFragment frag = generate(glRect, body);
+        B2dBinderFragment frag = generate(rect, body);
         if(enable) {
             animateFactory.build(frag).enable();
         }
@@ -207,28 +207,28 @@ public class B2dBinder {
     /**
      * 将GLRect绑定为矩形刚体
      * 
-     * @param glRect
-     *            gl矩形
+     * @param rect
+     *            矩形
      * @param dynamci
      *            是否是动态图形
      * @param enable
      *            是否自动启动
      * @return Body 与指定GLRect相关的b2d body
      */
-    public Body bindRectToRect(GLRect glRect, boolean dynamci, boolean enable) {
+    public Body bindRectToRect(Rect rect, boolean dynamci, boolean enable) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = dynamci ? BodyType.DYNAMIC : BodyType.STATIC;
-        bodyDef.position.set(glRect.getCentralX() / meterToPixel, glRect.getCentralY() / meterToPixel);
+        bodyDef.position.set(rect.getCentralX() / meterToPixel, rect.getCentralY() / meterToPixel);
         Body body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox((glRect.getWidth() / 2) / meterToPixel, (glRect.getHeight() / 2) / meterToPixel);
+        shape.setAsBox((rect.getWidth() / 2) / meterToPixel, (rect.getHeight() / 2) / meterToPixel);
 
         Fixture fixture = body.createFixture(shape, density);
         fixture.setFriction(friction);
         fixture.setRestitution(restitution);
 
-        B2dBinderFragment frag = generate(glRect, body);
+        B2dBinderFragment frag = generate(rect, body);
         if(enable) {
             animateFactory.build(frag).enable();
         }
@@ -238,17 +238,17 @@ public class B2dBinder {
     /**
      * 将GLRect绑定为矩形刚体
      * 
-     * @param glRect
+     * @param rect
      *            gl矩形
      * @param dynamci
      *            是否是动态图形
      * @return Body 与指定GLRect相关的b2d body
      */
-    public Body bindRectToRect(GLRect glRect, boolean dynamci) {
-        return bindRectToRect(glRect,dynamci,true);
+    public Body bindRectToRect(Rect rect, boolean dynamci) {
+        return bindRectToRect(rect,dynamci,true);
     }
 
-    private B2dBinderFragment generate(GLPolygonShape shape, Body body) {
+    private B2dBinderFragment generate(Polygon shape, Body body) {
         return new B2dBinderFragment(shape, body) {
             @Override
             public void fragment() {

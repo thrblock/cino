@@ -21,7 +21,7 @@ public class RoteDemo {
         KeyControlStack keyIO = context.getBean(KeyControlStack.class);
         GLShapeFactory builder = context.getBean(GLShapeFactory.class);
 
-        GLRect cRect = builder.buildGLRect(400f, 300f, 100f, 30f);
+        GLRect cRect = builder.buildGLRect(0, 0, 100f, 30f);
         cRect.setAllPointColor(Color.RED);
         cRect.show();
 

@@ -1,6 +1,5 @@
 package com.thrblock.cino.util.charprocess;
 
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
 /**
@@ -60,7 +59,7 @@ public class CharArrayInput {
      * @param c
      */
     public void append(char c) {
-        if(isPrintableChar(c) && currentIndex < src.length) {
+        if(CharUtils.isPrintableChar(c) && currentIndex < src.length) {
             src[currentIndex] = c;
             currentIndex ++;
             if(currentIndex < src.length) {
@@ -75,11 +74,5 @@ public class CharArrayInput {
      */
     public char[] getArray() {
         return src;
-    }
-    
-    private boolean isPrintableChar(char c) {
-        Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
-        return (!Character.isISOControl(c)) && c != KeyEvent.CHAR_UNDEFINED && block != null
-                && block != Character.UnicodeBlock.SPECIALS;
     }
 }
