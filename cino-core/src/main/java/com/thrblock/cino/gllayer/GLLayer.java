@@ -2,14 +2,11 @@ package com.thrblock.cino.gllayer;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.thrblock.cino.gllifecycle.GLCycle;
 import com.thrblock.cino.glshape.GLShape;
-import com.thrblock.cino.util.structure.CrudeLinkedList;
 
 /**
  * 绘制层<br />
@@ -20,19 +17,10 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
 public class GLLayer {
     private int mixA = GL.GL_SRC_ALPHA;
     private int mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
-    private CrudeLinkedList<GLShape<?>> shapeList = new CrudeLinkedList<>();
-    private CrudeLinkedList<GLShape<?>>.CrudeIter crudeIter = shapeList.genCrudeIter();
-    private List<GLShape<?>> shapSwap = new LinkedList<>();
-    private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
-    private Semaphore swapSp = new Semaphore(1);
-
-    private GLFrameBufferObject[] fboArr = new GLFrameBufferObject[0];
-
+    private GLCycle<GLFrameBufferObject> fboCycle = new GLCycle<>(GLFrameBufferObject[]::new);
+    private GLCycle<GLShape<?>> shapeCycle = new GLCycle<>(GLShape<?>[]::new);
     private Deque<GLFrameBufferObject> globalFBOStack;
     private Deque<GLFrameBufferObject> stack;
-    private int frameSizeW = 800;
-    private int frameSizeH = 600;
-    private boolean refreshFBO = false;
 
     /**
      * 构造GLLayer
@@ -42,8 +30,6 @@ public class GLLayer {
     public GLLayer(Deque<GLFrameBufferObject> globalStack, int w, int h) {
         this.globalFBOStack = globalStack;
         this.stack = new ArrayDeque<>();
-        this.frameSizeW = w;
-        this.frameSizeH = h;
     }
 
     /**
@@ -88,40 +74,13 @@ public class GLLayer {
      * @param shape 图形对象
      */
     public void addShapeToSwap(GLShape<?> shape) {
-        swapSp.acquireUninterruptibly();
-        shapSwap.add(shape);
-        swapSp.release();
+        shapeCycle.safeAdd(shape);
     }
 
     /**
      * 执行同步插入，将交换区的对象插入实际绘制区
      */
     public void swap() {
-        if (refreshFBO) {
-            swapSp.acquireUninterruptibly();
-            refreshFBO = false;
-            for (GLFrameBufferObject fbo : fboArr) {
-                fbo.resize(frameSizeW, frameSizeH);
-            }
-            swapSp.release();
-        }
-        if (!shapSwap.isEmpty()) {
-            swapSp.acquireUninterruptibly();
-            shapeList.addAll(shapSwap);
-            shapSwap.clear();
-            swapSp.release();
-        }
-        if (!fboSwap.isEmpty()) {
-            swapSp.acquireUninterruptibly();
-            int totalLength = fboArr.length + fboSwap.size();
-            GLFrameBufferObject[] arr = new GLFrameBufferObject[totalLength];
-            System.arraycopy(fboArr, 0, arr, 0, fboArr.length);
-            Object[] fboSwapArr = fboSwap.toArray();
-            System.arraycopy(fboSwapArr, 0, arr, fboArr.length, fboSwapArr.length);
-            this.fboArr = arr;
-            fboSwap.clear();
-            swapSp.release();
-        }
     }
 
     /**
@@ -131,22 +90,23 @@ public class GLLayer {
      */
     public void draw(GL2 gl2) {
         beforeDraw(gl2);
-        while (crudeIter.hasNext()) {
-            GLShape<?> shape = crudeIter.next();
+        GLShape<?>[] arr = shapeCycle.safeHold();
+        for (int i = 0; i < arr.length; i++) {
+            GLShape<?> shape = arr[i];
             if (shape.isVisible()) {
                 shape.beforeDraw(gl2);
                 shape.drawShape(gl2);
                 shape.afterDraw(gl2);
             }
             if (shape.isDestory()) {
-                crudeIter.remove();
+                shapeCycle.safeRemove(shape);
             }
         }
-        crudeIter.reset();
         afterDraw(gl2);
     }
 
     private void beforeDraw(GL2 gl2) {
+        GLFrameBufferObject[] fboArr = fboCycle.safeHold();
         if (fboArr.length > 0) {
             for (int i = 0; i < fboArr.length; i++) {
                 stack.push(fboArr[i]);
@@ -158,7 +118,7 @@ public class GLLayer {
     }
 
     private void afterDraw(GL2 gl) {
-        for (int i = 0; i < fboArr.length; i++) {
+        while (!stack.isEmpty()) {
             GLFrameBufferObject crt = stack.pop();
             GLFrameBufferObject next = stack.peek();
             if (next != null) {
@@ -181,10 +141,8 @@ public class GLLayer {
      * @return
      */
     public GLFrameBufferObject generageFBO(int w, int h, int flexmode) {
-        swapSp.acquireUninterruptibly();
         GLFrameBufferObject result = new GLFrameBufferObject(w, h, flexmode);
-        fboSwap.add(result);
-        swapSp.release();
+        fboCycle.safeAdd(result);
         return result;
     }
 
@@ -195,10 +153,6 @@ public class GLLayer {
      * @param h
      */
     public void noticeScreenChange(int w, int h) {
-        this.frameSizeW = w;
-        this.frameSizeH = h;
-        swapSp.acquireUninterruptibly();
-        this.refreshFBO = true;
-        swapSp.release();
+        fboCycle.safeUpdate(fbo -> fbo.resize(w, h));
     }
 }

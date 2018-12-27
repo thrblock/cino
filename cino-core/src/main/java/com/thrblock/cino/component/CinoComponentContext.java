@@ -8,10 +8,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javax.script.ScriptEngine;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.eventbus.EventBus;
@@ -46,6 +49,9 @@ abstract class CinoComponentContext {
 
     @Value("${cino.frame.screen.height:600}")
     protected int screenH;
+
+    @Autowired
+    protected AutowireCapableBeanFactory autowireCapable;
     /**
      * local storage
      */
@@ -98,9 +104,12 @@ abstract class CinoComponentContext {
 
     @Autowired
     protected IGLTransForm transformManager;
-    
+
     @Autowired
     protected EventBus eventBus;
+
+    @Autowired
+    protected ScriptEngine scriptEngine;
 
     /**
      * sceneRoot是场景自动创建的GLNode根节点
@@ -111,6 +120,7 @@ abstract class CinoComponentContext {
 
     protected List<VoidConsumer> activitedHolder;
     protected List<VoidConsumer> deactivitedHolder;
+    protected List<VoidConsumer> destroyHolder;
     protected List<AWTEventListener> mouseHolder;
     protected List<Object> eventHolder;
 
@@ -218,6 +228,10 @@ abstract class CinoComponentContext {
     protected final void onDeactivited(VoidConsumer v) {
         deactivitedHolder.add(v);
     }
+    
+    protected final void onDestroy(VoidConsumer v) {
+        destroyHolder.add(v);
+    }
 
     protected AWTEventListener shapeClicked(GLPolygonShape<?> shape, Consumer<MouseEvent> e) {
         return mouseHook(shape, e, mouseIO::addMouseClicked);
@@ -258,7 +272,7 @@ abstract class CinoComponentContext {
 
     protected final boolean isMouseInside(GLPolygonShape<?> shape) {
         int layerIndex = shape.getLayerIndex();
-        return shape.isVisible() && !shape.isDestory() && shape.isPointInside(
-                mouseIO.getMouseX(layerIndex), mouseIO.getMouseY(layerIndex));
+        return shape.isVisible() && !shape.isDestory()
+                && shape.isPointInside(mouseIO.getMouseX(layerIndex), mouseIO.getMouseY(layerIndex));
     }
 }

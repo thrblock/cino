@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Iterables;
+import com.thrblock.cino.concept.Line;
 import com.thrblock.cino.concept.Point;
 import com.thrblock.cino.concept.Polygon;
+import com.thrblock.cino.concept.Rect;
 import com.thrblock.cino.gllayer.GLLayerManager;
 import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLImage;
@@ -66,6 +68,20 @@ public class GLShapeFactory {
         }
         return point;
     }
+    
+    /**
+     * 构造一个点
+     * @param p 概念点
+     * @return
+     */
+    public GLPoint buildGLPoint(Point p) {
+        GLPoint point = new GLPoint(p);
+        layerContainer.addShapeToSwap(layer, point);
+        if (currentNode != null) {
+            currentNode.addSubNode(point);
+        }
+        return point;
+    }
 
     /**
      * 构造一个点
@@ -88,6 +104,20 @@ public class GLShapeFactory {
      */
     public GLLine buildGLLine(float x1, float y1, float x2, float y2) {
         GLLine line = new GLLine(x1, y1, x2, y2);
+        layerContainer.addShapeToSwap(layer, line);
+        if (currentNode != null) {
+            currentNode.addSubNode(line);
+        }
+        return line;
+    }
+    
+    /**
+     * 构造一条直线
+     * @param l 概念线
+     * @return
+     */
+    public GLLine buildGLLine(Line l) {
+        GLLine line = new GLLine(l);
         layerContainer.addShapeToSwap(layer, line);
         if (currentNode != null) {
             currentNode.addSubNode(line);
@@ -117,6 +147,20 @@ public class GLShapeFactory {
      */
     public GLRect buildGLRect(float x, float y, float width, float height) {
         GLRect rect = new GLRect(x, y, width, height);
+        layerContainer.addShapeToSwap(layer, rect);
+        if (currentNode != null) {
+            currentNode.addSubNode(rect);
+        }
+        return rect;
+    }
+    
+    /**
+     * 构造一个矩形
+     * @param r 概念矩形
+     * @return
+     */
+    public GLRect buildGLRect(Rect r) {
+        GLRect rect = new GLRect(r);
         layerContainer.addShapeToSwap(layer, rect);
         if (currentNode != null) {
             currentNode.addSubNode(rect);
@@ -189,6 +233,21 @@ public class GLShapeFactory {
      */
     public GLImage buildGLImage(float x, float y, float width, float height, GLTexture texture) {
         GLImage image = new GLImage(x, y, width, height, texture);
+        layerContainer.addShapeToSwap(layer, image);
+        if (currentNode != null) {
+            currentNode.addSubNode(image);
+        }
+        return image;
+    }
+    
+    /**
+     * 创建一个贴图对象
+     * @param r 概念矩形
+     * @param texture 使用的贴图纹理
+     * @return
+     */
+    public GLImage buildGLImage(Rect r, GLTexture texture) {
+        GLImage image = new GLImage(r, texture);
         layerContainer.addShapeToSwap(layer, image);
         if (currentNode != null) {
             currentNode.addSubNode(image);

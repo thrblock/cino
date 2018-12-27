@@ -1,14 +1,10 @@
 package com.thrblock.cino.glanimate;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-
 import javax.annotation.PreDestroy;
 
 import org.springframework.stereotype.Component;
 
-import com.thrblock.cino.util.structure.CrudeLinkedList;
+import com.thrblock.cino.gllifecycle.GLCycle;
 
 /**
  * GLAnimateManager 片段逻辑容器，为各类片段逻辑提供线程安全的插入、删除、遍历操作
@@ -16,10 +12,7 @@ import com.thrblock.cino.util.structure.CrudeLinkedList;
  */
 @Component
 public class GLAnimateManager {
-    private CrudeLinkedList<GLAnimate> frags = new CrudeLinkedList<>();
-    private CrudeLinkedList<GLAnimate>.CrudeIter fragIt = frags.genCrudeIter();
-    private List<GLAnimate> swap = new LinkedList<>();
-    private Semaphore swapSp = new Semaphore(1);
+    private GLCycle<GLAnimate> aniCycle = new GLCycle<>(GLAnimate[]::new);
     private boolean pause = false;
     private boolean destroy = false;
     private GLAnimateManager(){
@@ -29,27 +22,17 @@ public class GLAnimateManager {
         if(pause) {
             return;
         }
-        while(fragIt.hasNext()) {
-            GLAnimate frag = fragIt.next();
+        for(GLAnimate frag : aniCycle.safeHold()) {
             if(frag.isDestory()) {
-                fragIt.remove();
+                aniCycle.safeRemove(frag);
             } else if(frag.isEnable()) {
                 frag.animate();
             }
         }
-        fragIt.reset();
-        if(!swap.isEmpty()) {
-            swapSp.acquireUninterruptibly();
-            frags.addAll(swap);
-            swap.clear();
-            swapSp.release();
-        }
     }
 
     public void addAnimate(GLAnimate frag) {
-        swapSp.acquireUninterruptibly();
-        swap.add(frag);
-        swapSp.release();
+        aniCycle.safeAdd(frag);
     }
     
     /**

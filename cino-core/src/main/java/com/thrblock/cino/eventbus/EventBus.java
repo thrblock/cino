@@ -1,9 +1,5 @@
 package com.thrblock.cino.eventbus;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
 import javax.annotation.PreDestroy;
@@ -11,19 +7,18 @@ import javax.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.function.VoidConsumer;
+import com.thrblock.cino.gllifecycle.GLCycle;
 
 @Component
 public class EventBus {
 
-    private ArrayList<MapEntry<?>> lst = new ArrayList<>();
-    private List<Object> removeLst = new LinkedList<>();
-    private Semaphore removeSp = new Semaphore(1);
+    private GLCycle<Object> entryCycle = new GLCycle<>(Object[]::new);
 
     public <T> Object mapEvent(Class<T> clz, Consumer<T> con) {
         MapEntry<T> ent = new MapEntry<>();
         ent.clz = clz;
         ent.con = con;
-        lst.add(ent);
+        entryCycle.safeAdd(ent);
         return ent;
     }
 
@@ -31,34 +26,24 @@ public class EventBus {
         MapEntry<Object> ent = new MapEntry<>();
         ent.obj = obj;
         ent.con = e -> con.accept();
-        lst.add(ent);
+        entryCycle.safeAdd(ent);
         return ent;
     }
 
     public void removeEvent(Object holder) {
-        removeSp.acquireUninterruptibly();
-        removeLst.add(holder);
-        removeSp.release();
+        entryCycle.safeRemove(holder);
     }
 
     @PreDestroy
     public void clear() {
-        removeSp.acquireUninterruptibly();
-        lst.clear();
-        removeLst.clear();
-        removeSp.release();
+        entryCycle.safeHold(true);
     }
 
     @SuppressWarnings("unchecked")
     public void pushEvent(Object event) {
-        if (!removeLst.isEmpty()) {
-            removeSp.acquireUninterruptibly();
-            lst.removeAll(removeLst);
-            removeLst.clear();
-            removeSp.release();
-        }
-        for (int i = 0; i < lst.size(); i++) {
-            MapEntry<Object> ent = (MapEntry<Object>) lst.get(i);
+        Object[] lst = entryCycle.safeHold();
+        for (int i = 0; i < lst.length; i++) {
+            MapEntry<Object> ent = (MapEntry<Object>) lst[i];
             if (ent.check(event)) {
                 ent.con.accept(event);
             }

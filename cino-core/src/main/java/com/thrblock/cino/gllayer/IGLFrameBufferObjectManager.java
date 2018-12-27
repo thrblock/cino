@@ -16,4 +16,10 @@ public interface IGLFrameBufferObjectManager {
      * @return
      */
     public GLFrameBufferObject generateGlobalFBO();
+    
+    /**
+     * 删除一个fbo对象
+     * @param fbo
+     */
+    public void removeFBO(GLFrameBufferObject fbo);
 }

@@ -1,8 +1,9 @@
-package com.thrblock.cino;
+package com.thrblock.cino.annotation.proc;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +18,13 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.thrblock.cino.annotation.BootComponent;
+import com.thrblock.cino.annotation.ECMAComponent;
+import com.thrblock.cino.annotation.EnableECMAScript;
 import com.thrblock.cino.annotation.EnableLocalStorage;
 import com.thrblock.cino.annotation.GLAutoInit;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
 import com.thrblock.cino.annotation.SubCompOf;
 import com.thrblock.cino.component.CinoComponent;
-import com.thrblock.cino.component.ComponentAnnotationProcessor;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.glprocessor.GLScreenSizeChangeListenerHolder;
@@ -51,14 +53,20 @@ class CinoAnnotationProcessor
     @Autowired
     private ComponentAnnotationProcessor cinoComponentAnnoProc;
 
+    @Autowired
+    private ECMAAnnotationProcessor ecmaAnnotationProcessor;
+
     private ApplicationContext applicationContext;
 
     private List<VoidConsumer> afterProcessed = new LinkedList<>();
-    
+
     private CinoComponent bootComp;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        ECMAComponent ecmaComp = AnnotationUtils.findAnnotation(bean.getClass(), ECMAComponent.class);
+        Optional.ofNullable(ecmaComp)
+                .ifPresent(e -> ecmaAnnotationProcessor.processComponentECMA((CinoComponent) bean, e));
         return bean;
     }
 
@@ -77,9 +85,7 @@ class CinoAnnotationProcessor
     public void onApplicationEvent(ContextRefreshedEvent event) {
         afterProcessed.forEach(VoidConsumer::accept);
         afterProcessed.clear();
-        if(bootComp != null) {
-            bootComp.activited();
-        }
+        Optional.ofNullable(bootComp).ifPresent(CinoComponent::activited);
     }
 
     private void processBean(Object o) {
@@ -88,25 +94,25 @@ class CinoAnnotationProcessor
         Arrays.stream(ReflactUtils.findAnnotationMethod(GLAutoInit.class, o))
                 .forEach(m -> glInitor.addGLInitializable(gl -> ReflactUtils.invokeMethod(o, m, gl)));
 
-        BootComponent boot = AnnotationUtils.findAnnotation(o.getClass(), BootComponent.class);
-        if (boot != null && o instanceof CinoComponent) {
-            CinoComponent comp = (CinoComponent) o;
-            LOG.info("boot component found:{}", comp);
-            this.bootComp = comp;
-        }
+        Optional.ofNullable(AnnotationUtils.findAnnotation(o.getClass(), BootComponent.class))
+                .filter(b -> o instanceof CinoComponent).ifPresent(boot -> {
+                    CinoComponent comp = (CinoComponent) o;
+                    LOG.info("boot component found:{}", comp);
+                    this.bootComp = comp;
+                });
 
         EnableLocalStorage st = AnnotationUtils.findAnnotation(o.getClass(), EnableLocalStorage.class);
-        if (st != null) {
-            afterProcessed.add(() -> storage.load(o));
-        }
+        Optional.ofNullable(st).ifPresent(s -> afterProcessed.add(() -> storage.load(o)));
 
-        SubCompOf sub = AnnotationUtils.findAnnotation(o.getClass(), SubCompOf.class);
-        if (sub != null) {
+        Optional.ofNullable(AnnotationUtils.findAnnotation(o.getClass(), SubCompOf.class)).ifPresent(sub -> {
             afterProcessed.add(() -> Arrays.stream(sub.value()).forEach(clazz -> {
                 CinoComponent masterComp = applicationContext.getBean(clazz);
                 cinoComponentAnnoProc.asSub(masterComp, (CinoComponent) o);
             }));
-        }
+        });
+
+        EnableECMAScript ecma = AnnotationUtils.findAnnotation(o.getClass(), EnableECMAScript.class);
+        Optional.ofNullable(ecma).ifPresent(e -> afterProcessed.add(() -> ecmaAnnotationProcessor.processByECMA(o, e)));
     }
 
 }

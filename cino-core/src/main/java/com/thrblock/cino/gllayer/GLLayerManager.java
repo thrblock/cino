@@ -2,7 +2,6 @@ package com.thrblock.cino.gllayer;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
+import com.thrblock.cino.gllifecycle.GLCycle;
 import com.thrblock.cino.glprocessor.GLScreenSizeChangeListenerHolder;
 import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.gltransform.GLTransformManager;
@@ -52,10 +52,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     @Autowired
     private GLTransformManager transformManager;
 
-    private List<GLFrameBufferObject> fboSwap = new LinkedList<>();
-    private Semaphore swapSp = new Semaphore(1);
-    private GLFrameBufferObject[] globalFBOArr = new GLFrameBufferObject[0];
-    private boolean refreshFBO = false;
+    private GLCycle<GLFrameBufferObject> fboCycle = new GLCycle<>(GLFrameBufferObject[]::new);
 
     @PostConstruct
     void init() {
@@ -110,25 +107,6 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
      * 将交换区内的图形对象加入绘制队列，一般由绘制同步逻辑进行调用
      */
     public void swap() {
-        if (refreshFBO) {
-            swapSp.acquireUninterruptibly();
-            refreshFBO = false;
-            for (GLFrameBufferObject fbo : globalFBOArr) {
-                fbo.resize(frameSizeW, frameSizeH);
-            }
-            swapSp.release();
-        }
-        if (!fboSwap.isEmpty()) {
-            swapSp.acquireUninterruptibly();
-            int totalLength = globalFBOArr.length + fboSwap.size();
-            GLFrameBufferObject[] arr = new GLFrameBufferObject[totalLength];
-            System.arraycopy(globalFBOArr, 0, arr, 0, globalFBOArr.length);
-            Object[] fboSwapArr = fboSwap.toArray();
-            System.arraycopy(fboSwapArr, 0, arr, globalFBOArr.length, fboSwapArr.length);
-            this.globalFBOArr = arr;
-            fboSwap.clear();
-            swapSp.release();
-        }
         for (int i = 0; i < layerList.size(); i++) {
             layerList.get(i).swap();
         }
@@ -175,6 +153,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     }
 
     private void beforeAllLayerDraw(GL2 gl2) {
+        GLFrameBufferObject[] globalFBOArr = fboCycle.safeHold();
         if (globalFBOArr.length > 0) {
             for (int i = 0; i < globalFBOArr.length; i++) {
                 globalFBOStack.push(globalFBOArr[i]);
@@ -198,10 +177,8 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
 
     @Override
     public GLFrameBufferObject generateGlobalFBO() {
-        swapSp.acquireUninterruptibly();
         GLFrameBufferObject result = new GLFrameBufferObject(frameSizeW, frameSizeH, flexmode);
-        fboSwap.add(result);
-        swapSp.release();
+        fboCycle.safeAdd(result);
         return result;
     }
 
@@ -215,9 +192,12 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
     public void noticeScreenChange(int w, int h) {
         this.frameSizeW = w;
         this.frameSizeH = h;
-        swapSp.acquireUninterruptibly();
-        this.refreshFBO = true;
-        swapSp.release();
+        fboCycle.safeUpdate(fbo -> fbo.resize(w, h));
+    }
+
+    @Override
+    public void removeFBO(GLFrameBufferObject fbo) {
+        fboCycle.safeRemove(fbo);
     }
 
 }

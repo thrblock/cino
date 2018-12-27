@@ -3,6 +3,7 @@ package com.thrblock.cino.glshape;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
+import com.thrblock.cino.concept.Rect;
 import com.thrblock.cino.gltexture.GLBufferedTexture;
 import com.thrblock.cino.gltexture.GLTexture;
 import com.thrblock.cino.util.BufferedImageUtil;
@@ -52,6 +53,16 @@ public class GLImage extends GLRect {
      */
     public GLImage(float x, float y, float width, float height,GLTexture texture) {
         super(x, y, width, height);
+        this.gltexture = texture;
+    }
+    
+    /**
+     * 构造一个贴图图形对象
+     * @param r 概念矩形
+     * @param texture 纹理
+     */
+    public GLImage(Rect r,GLTexture texture) {
+        super(r);
         this.gltexture = texture;
     }
     
