@@ -23,10 +23,6 @@ public class ECMACompDemo extends CinoComponent {
     public void init() throws Exception {
     }
 
-    public void test() {
-        logger.info("this is test");
-    }
-    
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_R && keyIO.isKeyDown(KeyEvent.VK_CONTROL)) {

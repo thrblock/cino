@@ -37,6 +37,7 @@ public abstract class CinoComponent extends CinoComponentContext implements KeyL
         activitedSupplier = () -> activited;
         activitedHolder = new LinkedList<>();
         deactivitedHolder = new LinkedList<>();
+        destroyHolder = new LinkedList<>();
         eventHolder = new LinkedList<>();
         mouseHolder = new LinkedList<>();
         compAni = rootAni.generateSubContainer();

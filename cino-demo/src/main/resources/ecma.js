@@ -7,11 +7,13 @@ var GLProgram = Java.type('com.thrblock.cino.shader.GLProgram');
 var GLCommonUniform = Java.type('com.thrblock.cino.shader.data.GLCommonUniform');
 var GLFrameBufferObject = Java.type('com.thrblock.cino.gllayer.GLFrameBufferObject');
 
+$.autoKeyPushPop();
 var vex = new GLShader(GL2ES2.GL_VERTEX_SHADER, new File("./shadersV2/demo/Vertex.txt"));
-var frg = new GLShader(GL2ES2.GL_FRAGMENT_SHADER, new File("./shadersV2/demo/Frag_49899.0"));
+var frg = new GLShader(GL2ES2.GL_FRAGMENT_SHADER, new File("./shadersV2/demo/Frag_48324.0"));
 var program = new GLProgram(vex, frg);
 $.auto(commonsUniform.setCommonUniform(program));
 var fbo = fboManager.generateLayerFBO(0);
+$.onDestroy(function() {fboManager.removeFBO(fbo);});
 $.onActivited(function() {fbo.setGLProgram(program);});
 $.onDeactivited(function() {fbo.setGLProgram(null);});
 pannel.activited();

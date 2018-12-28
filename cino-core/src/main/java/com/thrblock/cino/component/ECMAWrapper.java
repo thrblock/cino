@@ -91,6 +91,10 @@ public class ECMAWrapper {
     public void onDeactivited(VoidConsumer v) {
         c.onDeactivited(v);
     }
+    
+    public void onDestroy(VoidConsumer v) {
+        c.onDestroy(v);
+    }
 
     public AWTEventListener shapeClicked(GLPolygonShape<?> shape, Consumer<MouseEvent> e) {
         return c.shapeClicked(shape, e);
