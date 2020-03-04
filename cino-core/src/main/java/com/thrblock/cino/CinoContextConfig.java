@@ -40,6 +40,7 @@ public class CinoContextConfig {
     @Bean
     @Primary
     public static ScriptEngine nashornEngine() {
+        System.setProperty("nashorn.args", "--language=es6");
         return new ScriptEngineManager().getEngineByName("nashorn");
     }
 

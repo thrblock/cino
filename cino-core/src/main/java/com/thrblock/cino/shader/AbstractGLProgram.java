@@ -12,6 +12,7 @@ import com.jogamp.opengl.GL2;
 import com.thrblock.cino.shader.data.GLUniformFloat;
 import com.thrblock.cino.shader.data.GLUniformInt;
 import com.thrblock.cino.util.structure.CrudeLinkedList;
+import com.thrblock.cino.util.structure.FloatBoxer;
 
 /**
  * A GLSL Program
@@ -92,6 +93,10 @@ public abstract class AbstractGLProgram {
                 gl2.glUniform1f(loc, data.getValue());
             }
         });
+    }
+    
+    public void bindDataAsFloat(String name,FloatBoxer data) {
+        
     }
 
     /**

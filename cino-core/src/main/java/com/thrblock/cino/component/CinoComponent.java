@@ -111,6 +111,10 @@ public abstract class CinoComponent extends CinoComponentContext implements KeyL
     public void init() throws Exception {
     }
 
+    /**
+     * for debug only.
+     * @throws Exception
+     */
     public final void reload() throws Exception {
         deactivited();
         preDestroy();

@@ -56,7 +56,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
 
     @PostConstruct
     void init() {
-        this.topLayer = new GLLayer(globalFBOStack, frameSizeW, frameSizeH);
+        this.topLayer = new GLLayer(globalFBOStack);
         eventProcessor.addScreenSizeChangeListener(topLayer::noticeScreenChange);
     }
 
@@ -79,7 +79,7 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
             LOG.warn("layer not found:{}", index);
             for (int i = layerList.size(); i <= index; i++) {
                 LOG.info("layer auto generated:{}", i);
-                GLLayer gen = new GLLayer(globalFBOStack, frameSizeW, frameSizeH);
+                GLLayer gen = new GLLayer(globalFBOStack);
                 eventProcessor.addScreenSizeChangeListener(gen::noticeScreenChange);
                 layerList.add(gen);
             }
@@ -101,16 +101,6 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
             return;
         }
         getLayer(index).addShapeToSwap(shape);
-    }
-
-    /**
-     * 将交换区内的图形对象加入绘制队列，一般由绘制同步逻辑进行调用
-     */
-    public void swap() {
-        for (int i = 0; i < layerList.size(); i++) {
-            layerList.get(i).swap();
-        }
-        topLayer.swap();
     }
 
     /**
@@ -136,7 +126,6 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
         drawLayer(getLayer(-1), gl2, -1);
         gl2.glFlush();
         afterAllLayerDraw(gl2);
-        swap();
     }
 
     private void afterAllLayerDraw(GL2 gl2) {

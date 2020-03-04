@@ -1,0 +1,38 @@
+uniform float iGlobalTime;
+uniform vec2 iResolution;
+uniform float sc;
+uniform vec2 offset;
+uniform float max_iter;
+
+mat2 scale(vec2 _scale){
+    return mat2(_scale.x,0.0,
+                0.0,_scale.y);
+}
+
+void main(void)
+{
+    vec2 st = (2. * gl_FragCoord.xy - iResolution) / min(iResolution.x,iResolution.y);
+    
+    st = scale(sc) * st;
+    st += offset;
+    
+    vec2 res = vec2(0);
+    float i = 0.;
+    
+    for(;i < max_iter && dot(res,res) < 1. + 3. * abs(sin(iGlobalTime/2.));i++) 
+    {
+        float r = (res.x * res.x) - (res.y * res.y) + st.x;
+        float i = (res.x * res.y) + (res.y * res.x) + st.y;
+        res.x = r;
+        res.y = i;
+    }
+    if(i < max_iter)
+    {
+        float v = (i / max_iter);
+        gl_FragColor = vec4(0,1. - dot(res,res) / 4.,v,1.);
+    }
+    else
+    {
+        gl_FragColor = vec4(0.);
+    }
+}

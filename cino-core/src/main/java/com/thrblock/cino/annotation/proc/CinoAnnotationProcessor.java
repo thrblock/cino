@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -63,7 +62,7 @@ class CinoAnnotationProcessor
     private CinoComponent bootComp;
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
         ECMAComponent ecmaComp = AnnotationUtils.findAnnotation(bean.getClass(), ECMAComponent.class);
         Optional.ofNullable(ecmaComp)
                 .ifPresent(e -> ecmaAnnotationProcessor.processComponentECMA((CinoComponent) bean, e));
@@ -71,7 +70,7 @@ class CinoAnnotationProcessor
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
         processBean(bean);
         return bean;
     }
@@ -104,12 +103,11 @@ class CinoAnnotationProcessor
         EnableLocalStorage st = AnnotationUtils.findAnnotation(o.getClass(), EnableLocalStorage.class);
         Optional.ofNullable(st).ifPresent(s -> afterProcessed.add(() -> storage.load(o)));
 
-        Optional.ofNullable(AnnotationUtils.findAnnotation(o.getClass(), SubCompOf.class)).ifPresent(sub -> {
-            afterProcessed.add(() -> Arrays.stream(sub.value()).forEach(clazz -> {
-                CinoComponent masterComp = applicationContext.getBean(clazz);
-                cinoComponentAnnoProc.asSub(masterComp, (CinoComponent) o);
-            }));
-        });
+        Optional.ofNullable(AnnotationUtils.findAnnotation(o.getClass(), SubCompOf.class))
+                .ifPresent(sub -> afterProcessed.add(() -> Arrays.stream(sub.value()).forEach(clazz -> {
+                    CinoComponent masterComp = applicationContext.getBean(clazz);
+                    cinoComponentAnnoProc.asSub(masterComp, (CinoComponent) o);
+                })));
 
         EnableECMAScript ecma = AnnotationUtils.findAnnotation(o.getClass(), EnableECMAScript.class);
         Optional.ofNullable(ecma).ifPresent(e -> afterProcessed.add(() -> ecmaAnnotationProcessor.processByECMA(o, e)));

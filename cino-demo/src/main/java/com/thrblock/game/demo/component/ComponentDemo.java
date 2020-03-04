@@ -9,7 +9,7 @@ import com.thrblock.springcontext.CinoInitor;
 public class ComponentDemo {
     public static void main(String[] args) throws Exception {
         AbstractApplicationContext context = CinoInitor.getCustomContext(DemoContext.class);
-        CinoComponent d = context.getBean(ECMACompDemo.class);
+        CinoComponent d = context.getBean(MandelbrotExplorer.class);
         d.activited();
     }
 }

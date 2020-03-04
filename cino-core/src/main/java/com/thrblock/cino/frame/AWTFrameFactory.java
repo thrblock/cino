@@ -16,7 +16,6 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +25,7 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.thrblock.cino.CinoFrameConfig;
 
 /**
  * GL渲染窗体设置
@@ -46,50 +46,9 @@ public class AWTFrameFactory {
      */
     private GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
-    @Value("${cino.frame.title:title}")
-    private String frameTitle = "title";
-    /**
-     * 开启双缓冲
-     */
-    @Value("${cino.frame.doublebuffer:true}")
-    private boolean doubleBuffer = true;
-    /**
-     * 开启垂直同步
-     */
-    @Value("${cino.frame.vsync:false}")
-    private boolean vsync = false;
-    /**
-     * 是否全屏
-     */
-    @Value("${cino.frame.fullscreen:false}")
-    private boolean fullScreen = false;
-    /**
-     * FPS 每秒绘制速率，垂直同步开启时无效
-     */
-    @Value("${cino.frame.fps:60}")
-    private int framesPerSecond = 60;
-    /**
-     * 窗体是否可变，全屏时无效
-     */
-    @Value("${cino.frame.flexible:false}")
-    private boolean flexible = false;
-    /**
-     * 隐藏鼠标
-     */
-    @Value("${cino.frame.hidemouse:true}")
-    private boolean hideMouse = true;
-
-    /**
-     * 渲染位置宽度 （像素）
-     */
-    @Value("${cino.frame.screen.width:800}")
-    private int screenWidth = 800;
-    /**
-     * 渲染位置高度（像素）
-     */
-    @Value("${cino.frame.screen.height:600}")
-    private int screenHeight = 600;
-
+    @Autowired
+    private CinoFrameConfig frameConfig;
+    
     private BiConsumer<Integer, Integer> resizeFunction;
 
     /**
@@ -99,7 +58,7 @@ public class AWTFrameFactory {
      */
     public JFrame buildFrame() {
         JFrame frame = new JFrame();
-        frame.setTitle(frameTitle);
+        frame.setTitle(frameConfig.getFrameTitle());
         return buildFrame(frame, frame.getContentPane(), true);
     }
 
@@ -117,25 +76,25 @@ public class AWTFrameFactory {
     public JFrame buildFrame(JFrame frame, Container container, boolean pack) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GLCapabilities glcaps = new GLCapabilities(GLProfile.getDefault());
-        glcaps.setDoubleBuffered(doubleBuffer);
+        glcaps.setDoubleBuffered(frameConfig.isDoubleBuffer());
         GLCanvas canvas = new GLCanvas(glcaps);
         canvas.addGLEventListener(glEventListener);
         LOG.info("graphics device you are current using:{}",graphicsDevice);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        if (fullScreen) {
+        if (frameConfig.isFullScreen()) {
             frame.setUndecorated(true);
             container.add(canvas);
             graphicsDevice.setFullScreenWindow(frame);
         } else {
-            frame.setResizable(flexible);
-            canvas.setPreferredSize(new Dimension(screenWidth, screenHeight));
+            frame.setResizable(frameConfig.isFlexible());
+            canvas.setPreferredSize(new Dimension(frameConfig.getScreenWidth(), frameConfig.getScreenHeight()));
             container.add(canvas);
             if (pack) {
                 frame.pack();
             }
             frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height / 2 - frame.getSize().height / 2);
         }
-        if (vsync) {
+        if (frameConfig.isVsync()) {
             Animator animator = new Animator(canvas);
             animator.setRunAsFastAsPossible(false);
             SwingUtilities.invokeLater(() -> {
@@ -143,13 +102,13 @@ public class AWTFrameFactory {
                 animator.start();
             });
         } else {
-            FPSAnimator animator = new FPSAnimator(canvas, framesPerSecond, true);
+            FPSAnimator animator = new FPSAnimator(canvas, frameConfig.getFramesPerSecond(), true);
             SwingUtilities.invokeLater(() -> {
                 frame.setVisible(true);
                 animator.start();
             });
         }
-        if (hideMouse) {
+        if (frameConfig.isHideMouse()) {
             BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
             Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(), null);
             frame.getContentPane().setCursor(blankCursor);

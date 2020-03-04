@@ -5,16 +5,16 @@ import java.util.stream.Stream;
 import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
-import com.thrblock.cino.function.BiFloatFunction;
+import com.thrblock.cino.function.FloatUnaryOperator;
 import com.thrblock.cino.util.math.CubeBezier;
 import com.thrblock.cino.util.structure.Point2D;
 
 public class BezierCurveFiter {
     private static final int DEF_PRECISION = 128;
-    public BiFloatFunction fitPolynomial(CubeBezier cubeBezier, int degree) {
+    public FloatUnaryOperator fitPolynomial(CubeBezier cubeBezier, int degree) {
         return fitPolynomial(cubeBezier, DEF_PRECISION, degree);
     }
-    public BiFloatFunction fitPolynomial(CubeBezier cubeBezier, int precision, int degree) {
+    public FloatUnaryOperator fitPolynomial(CubeBezier cubeBezier, int precision, int degree) {
         Point2D start = cubeBezier.getStart();
         Point2D end = cubeBezier.getEnd();
         WeightedObservedPoints obs = new WeightedObservedPoints();

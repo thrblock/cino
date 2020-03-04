@@ -1,0 +1,25 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#extension GL_OES_standard_derivatives : enable
+
+uniform float iGlobalTime;
+uniform vec2 iResolution;
+
+//--- spiralPattern.glsl ---
+
+#define SPIRAL_SPEED 0.02*iGlobalTime
+
+float spiralPattern(vec2 m) 
+{
+  m = mod(m, 0.2) - vec2(0.1);
+  float a = atan(m.y, m.x);
+  return sin(100.*(sqrt(length(m))-0.02*a -SPIRAL_SPEED));
+}
+
+void main()
+{
+  vec2 uv = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
+  gl_FragColor = vec4(vec3(spiralPattern(uv)), 1.0);   
+}

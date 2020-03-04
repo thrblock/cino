@@ -11,7 +11,7 @@ import com.thrblock.cino.debug.DebugPannel;
 import com.thrblock.cino.shader.data.GLCommonUniform;
 
 @Component
-@ECMAComponent("ecma.js")
+@ECMAComponent
 public class ECMACompDemo extends CinoComponent {
     @Autowired
     GLCommonUniform commonsUniform;

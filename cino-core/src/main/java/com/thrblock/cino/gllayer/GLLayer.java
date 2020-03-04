@@ -27,7 +27,7 @@ public class GLLayer {
      * 
      * @param stack 帧缓冲堆栈
      */
-    public GLLayer(Deque<GLFrameBufferObject> globalStack, int w, int h) {
+    public GLLayer(Deque<GLFrameBufferObject> globalStack) {
         this.globalFBOStack = globalStack;
         this.stack = new ArrayDeque<>();
     }
@@ -75,12 +75,6 @@ public class GLLayer {
      */
     public void addShapeToSwap(GLShape<?> shape) {
         shapeCycle.safeAdd(shape);
-    }
-
-    /**
-     * 执行同步插入，将交换区的对象插入实际绘制区
-     */
-    public void swap() {
     }
 
     /**

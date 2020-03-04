@@ -12,6 +12,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class CinoInitor {
     private static AbstractApplicationContext context;
 
+    static {
+        System.setProperty("sun.java2d.uiScale", "1.0");
+    }
     CinoInitor() {
     }
 
