@@ -2,6 +2,9 @@ package com.thrblock.cino.vec;
 
 import java.util.Arrays;
 
+import lombok.Data;
+
+@Data
 public class Vec2 {
     float[] value = new float[2];
 

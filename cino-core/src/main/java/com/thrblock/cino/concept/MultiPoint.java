@@ -1,14 +1,15 @@
 package com.thrblock.cino.concept;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public abstract class MultiPoint extends GeometricConcept {
     protected Point[] points;
 
     public MultiPoint(Point... multi) {
         this.points = multi;
-    }
-
-    public Point[] getPoints() {
-        return points;
     }
 
     @Override

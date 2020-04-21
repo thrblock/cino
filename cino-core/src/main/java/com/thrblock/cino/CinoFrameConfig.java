@@ -3,12 +3,15 @@ package com.thrblock.cino;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.Data;
+
 /**
  * GL渲染窗体设置
  * @author thrblock
  *
  */
 @Component
+@Data
 public class CinoFrameConfig {
     @Value("${cino.frame.title:title}")
     private String frameTitle = "title";
@@ -53,40 +56,4 @@ public class CinoFrameConfig {
      */
     @Value("${cino.frame.screen.height:600}")
     private int screenHeight = 600;
-    
-    public String getFrameTitle() {
-        return frameTitle;
-    }
-
-    public boolean isDoubleBuffer() {
-        return doubleBuffer;
-    }
-
-    public boolean isVsync() {
-        return vsync;
-    }
-
-    public boolean isFullScreen() {
-        return fullScreen;
-    }
-
-    public int getFramesPerSecond() {
-        return framesPerSecond;
-    }
-
-    public boolean isFlexible() {
-        return flexible;
-    }
-
-    public boolean isHideMouse() {
-        return hideMouse;
-    }
-
-    public int getScreenWidth() {
-        return screenWidth;
-    }
-
-    public int getScreenHeight() {
-        return screenHeight;
-    }
 }

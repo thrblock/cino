@@ -2,6 +2,10 @@ package com.thrblock.cino.concept;
 
 import com.thrblock.cino.vec.Vec2;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Point extends GeometricConcept {
 
     private Vec2 vec;

@@ -14,7 +14,7 @@
 	</modules>
 	<properties>
 		<cino.version>0.0.3</cino.version>
-		<spring-framework.version>4.2.5.RELEASE</spring-framework.version>
+		<spring-framework.version>5.2.4.RELEASE</spring-framework.version>
 		<jogl.version>2.3.1</jogl.version>
 		<slf4j.version>1.7.21</slf4j.version>
 	</properties>
@@ -88,4 +88,12 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.0</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>
