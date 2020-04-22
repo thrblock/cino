@@ -35,6 +35,7 @@ public class CharAreaDemo extends CinoComponent {
         area = shapeFactory.buildGLCharArea(0, 0, 400, 300, config);
         area.setSimpleStyle(img -> img.setAllPointColor(Color.BLACK));
         area.setContent(builder.toString());
+        
         autoShowHide();
         autoKeyPushPop();
         auto(() -> {

@@ -14,8 +14,9 @@
 	</modules>
 	<properties>
 		<cino.version>0.0.3</cino.version>
-		<spring-framework.version>5.2.4.RELEASE</spring-framework.version>
-		<jogl.version>2.3.1</jogl.version>
+		<spring-framework.version>5.2.5.RELEASE</spring-framework.version>
+		<springframework.boot.version>2.2.6.RELEASE</springframework.boot.version>
+		<jogl.version>2.3.2</jogl.version>
 		<slf4j.version>1.7.21</slf4j.version>
 	</properties>
 	<build>
@@ -53,6 +54,24 @@
 				<artifactId>spring-context</artifactId>
 				<version>${spring-framework.version}</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot</artifactId>
+				<version>${springframework.boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot</artifactId>
+				<version>${springframework.boot.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-autoconfigure</artifactId>
+				<version>${springframework.boot.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.jogamp.jogl</groupId>
 				<artifactId>jogl-all-main</artifactId>
@@ -80,7 +99,6 @@
 				<artifactId>commons-pool2</artifactId>
 				<version>2.6.0</version>
 			</dependency>
-
 			<dependency>
 				<groupId>javax.annotation</groupId>
 				<artifactId>javax.annotation-api</artifactId>

@@ -94,6 +94,10 @@ public class GLCharArea extends GLRect {
             this.charArray[i] = '\0';
         }
     }
+    
+    public String getContent() {
+        return new String(charArray);
+    }
 
     @Override
     public void setAllPointColor(Color c) {

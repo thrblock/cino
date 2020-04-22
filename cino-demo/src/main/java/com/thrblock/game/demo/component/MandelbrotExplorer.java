@@ -71,5 +71,4 @@ public class MandelbrotExplorer extends CinoComponent {
         this.onDeactivited(() -> fbo.setGLProgram(null));
         pannel.activited();
     }
-
 }
