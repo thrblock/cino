@@ -61,14 +61,14 @@ public class GLSliderBar extends GLRectBase {
         });
 
         autoShapePressed(bouy, e -> {
-            ctX = mouseIO.getMouseX();
+            ctX = mouseIO.getMouseX(shapeFactory.getLayer());
             ctProgress = progress;
             incontrol = true;
         });
 
         autoMouseReleased(e -> incontrol = false);
         auto(() -> incontrol, () -> {
-            int offset = mouseIO.getMouseX() - ctX;
+            int offset = mouseIO.getMouseX(shapeFactory.getLayer()) - ctX;
             float aimProgress = CMath.clamp(ctProgress + offset / getWidth(), 0f, 1f);
             if (!CMath.floatEqual(progress, aimProgress)) {
                 progressChange.forEach(f -> f.accept(aimProgress));

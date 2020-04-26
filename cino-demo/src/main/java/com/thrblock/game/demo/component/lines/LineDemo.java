@@ -1,14 +1,14 @@
 package com.thrblock.game.demo.component.lines;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.component.CinoComponent;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.glshape.factory.GLNode;
+import com.thrblock.cino.glshape.factory.GLShapeNode;
 import com.thrblock.cino.lintersection.AbstractVector;
 import com.thrblock.cino.lintersection.InstersectionResultHolder;
 import com.thrblock.cino.lintersection.LIntersectionCounter;
@@ -23,30 +23,39 @@ public class LineDemo extends CinoComponent {
 
     @Override
     public void init() throws Exception {
-        GLNode n = shapeFactory.createNewNode();
-        GLRect bg = shapeFactory.buildGLRect(0, 0, 800f, 600f);
+        autoShowHide();
+        GLRect bg = shapeFactory.buildGLRect(0, 0, screenW, screenH);
         bg.setFill(true);
         bg.setAllPointColor(Color.DARK_GRAY);
         for (int i = 0; i < LINE_NUM; i++) {
-            float x1 = CRand.getRandomNum(-360, 360);
-            float y1 = CRand.getRandomNum(-260, 260);
-            float x2 = CRand.getRandomNum(-360, 360);
-            float y2 = CRand.getRandomNum(-260, 260);
+            float x1 = CRand.getRandomNum(-screenW / 2, screenW / 2);
+            float y1 = CRand.getRandomNum(-screenH / 2, screenH / 2);
+            float x2 = CRand.getRandomNum(-screenW / 2, screenW / 2);
+            float y2 = CRand.getRandomNum(-screenH / 2, screenH / 2);
             GLLine line = shapeFactory.buildGLLine(x1, y1, x2, y2);
             line.setAllPointColor(CRand.getRandomColdColor());
             line.setLineWidth(3.0f);
             lines.addLine(convert(line));
         }
         
-        //4 vectors
-        GLNode fourLine = shapeFactory.createNode();
-        AbstractVector[] vecs = new  AbstractVector[4];
-        vecs[0] = convert(shapeFactory.buildGLLine(0, 0, 0, 300f));
-        vecs[1] = convert(shapeFactory.buildGLLine(0, 0, 0, -300f));
-        vecs[2] = convert(shapeFactory.buildGLLine(0, 0, -300, 0));
-        vecs[3] = convert(shapeFactory.buildGLLine(0, 0, 300, 0));
-        shapeFactory.backtrack();
+        GLShapeNode fourLine = shapeFactory.nodeSession()
+        .glLine(0, 0, 0, 300f)
+        .glLine(0, 0, 0, -300f)
+        .glLine(0, 0, -300, 0)
+        .glLine(0, 0, 300, 0)
+        .then(line -> line.setAllPointColor(Color.ORANGE))
+        .consumeStream(this::buildVectors, GLLine.class)
+        .get();
         
+        auto(() -> {
+            fourLine.setCentralX(mouseIO.getMouseX(shapeFactory.getLayer()));
+            fourLine.setCentralY(mouseIO.getMouseY(shapeFactory.getLayer()) + 150f);
+        });
+        
+    }
+
+    private void buildVectors(Stream<GLLine> s) {
+        AbstractVector[] vecs = s.map(this::convert).toArray(AbstractVector[]::new);
         //4 sign
         GLRect[] signs = new GLRect[4];
         for(int i = 0;i < signs.length;i++) {
@@ -54,18 +63,6 @@ public class LineDemo extends CinoComponent {
             signs[i].setFill(true);
             signs[i].setAllPointColor(Color.GRAY);
         }
-        auto(() -> {
-            if(keyIO.isKeyDown(KeyEvent.VK_W)) {
-                fourLine.setYOffset(2f);
-            } else if(keyIO.isKeyDown(KeyEvent.VK_S)) {
-                fourLine.setYOffset(-2f);
-            }
-            if(keyIO.isKeyDown(KeyEvent.VK_A)) {
-                fourLine.setXOffset(-2f);
-            } else if(keyIO.isKeyDown(KeyEvent.VK_D)) {
-                fourLine.setXOffset(2f);
-            }
-        });
         
         auto(() -> {
             for(int i = 0;i < vecs.length;i++) {
@@ -81,9 +78,6 @@ public class LineDemo extends CinoComponent {
                 }
             }
         });
-        
-        onActivited(n::show);
-        onDeactivited(n::hide);
     }
 
     private AbstractVector convert(GLLine line) {

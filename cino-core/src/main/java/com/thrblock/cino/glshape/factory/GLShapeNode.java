@@ -1,8 +1,11 @@
 package com.thrblock.cino.glshape.factory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
+import com.google.common.collect.Lists;
 import com.thrblock.cino.vec.Vec2;
 
 /**
@@ -11,7 +14,7 @@ import com.thrblock.cino.vec.Vec2;
  * @author lizepu
  */
 public class GLShapeNode implements GLNode {
-    private static final GLNode GL_NOP = new GLNop();// 放置basic为空
+    private static final GLNode GL_NOP = new GLNop();// 防止basic为空
     private GLNode basic = GL_NOP;
     private List<GLNode> subList = new CopyOnWriteArrayList<>();
     private GLShapeNode parent;
@@ -199,6 +202,14 @@ public class GLShapeNode implements GLNode {
     public void setCentral(Vec2 xy) {
         setCentralX(xy.getX());
         setCentralY(xy.getY());
+    }
+    
+    public Stream<GLNode> stream() {
+        return Optional.ofNullable(basic).map(b -> {
+            List<GLNode> lst = Lists.newArrayList(b);
+            lst.addAll(subList);
+            return lst.stream();
+        }).orElse(Stream.empty());
     }
 }
 

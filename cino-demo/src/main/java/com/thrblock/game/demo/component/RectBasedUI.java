@@ -30,6 +30,9 @@ public class RectBasedUI extends CinoComponent {
     @Autowired
     DebugPannel pannel;
     
+//    @Autowired
+//    GLRectBaseFactory uiFactory;
+    
     @Override
     public void init() throws Exception {
         onActivited(pannel::activited);
@@ -41,24 +44,24 @@ public class RectBasedUI extends CinoComponent {
         buildCheckBox();
         buildRadioGroup();
 
-        GLContainer container = injectInstance(new GLContainer(120, 320, new VerticalAdaptLayout()));
+        GLContainer container = warpPrototype(new GLContainer(120, 320, new VerticalAdaptLayout()));
         container.setX(200);
         container.setY(100);
 
         GLTexture normalFace = new GLIOTexture(new File("./res/faceNormal.png"));
         GLTexture faceDown = new GLIOTexture(new File("./res/faceDown.png"));
 
-        GLImgButton imgButton = injectInstance(new GLImgButton(normalFace, faceDown, 30, 30));
+        GLImgButton imgButton = warpPrototype(new GLImgButton(normalFace, faceDown, 30, 30));
 
-        GLTextButton b1 = injectInstance(new GLTextButton("Button1", 100, 30));
-        GLTextButton b2 = injectInstance(new GLTextButton("Button2", 100, 30));
-        GLTextButton b3 = injectInstance(new GLTextButton("Button3", 100, 30));
-        GLTextButton b4 = injectInstance(new GLTextButton("Button4", 100, 30));
+        GLTextButton b1 = warpPrototype(new GLTextButton("Button1", 100, 30));
+        GLTextButton b2 = warpPrototype(new GLTextButton("Button2", 100, 30));
+        GLTextButton b3 = warpPrototype(new GLTextButton("Button3", 100, 30));
+        GLTextButton b4 = warpPrototype(new GLTextButton("Button4", 100, 30));
 
-        GLProgressBar progressBar = injectInstance(new GLProgressBar(100, 20));
+        GLProgressBar progressBar = warpPrototype(new GLProgressBar(100, 20));
         progressBar.setProgress(0.3f);
         
-        GLSliderBar slideBar = injectInstance(new GLSliderBar(100, 20));
+        GLSliderBar slideBar = warpPrototype(new GLSliderBar(100, 20));
         slideBar.setProgress(0.75f);
         
         container.add(imgButton);
@@ -70,8 +73,8 @@ public class RectBasedUI extends CinoComponent {
         container.add(slideBar);
         slideBar.addProgressChange(progressBar::setProgress);
         
-        Supplier<Point2D> p2d = SupplierFactory.beizerSmooth(200, 100, -200, 100, 600);
-        auto(p2d,p -> {
+        Supplier<Point2D> p2d = SupplierFactory.beizerSmooth(200, 100, -200, 100, 1200);
+        auto(p2d, p -> {
             container.setX(p.getX());
             container.setY(p.getY());
         });
@@ -79,25 +82,25 @@ public class RectBasedUI extends CinoComponent {
 
     private void buildRadioGroup() {
         RadioGroup group = new RadioGroup();
-        GLRadio radio = injectInstance(new GLRadio(16));
+        GLRadio radio = warpPrototype(new GLRadio(16));
         radio.setCheck(true);
         radio.setY(-100);
         radio.setX(50);
         group.addRadioToGroup(radio);
 
-        radio = injectInstance(new GLRadio(16));
+        radio = warpPrototype(new GLRadio(16));
         radio.setY(-100);
         radio.setX(80);
         group.addRadioToGroup(radio);
 
-        radio = injectInstance(new GLRadio(16));
+        radio = warpPrototype(new GLRadio(16));
         radio.setY(-100);
         radio.setX(110);
         group.addRadioToGroup(radio);
     }
 
     private void buildCheckBox() {
-        GLCheckBox checkBox = injectInstance(new GLCheckBox(16));
+        GLCheckBox checkBox = warpPrototype(new GLCheckBox(16));
         checkBox.setY(-100);
         checkBox.setCheck(true);
     }
@@ -107,7 +110,7 @@ public class RectBasedUI extends CinoComponent {
         GLTexture faceDown = new GLIOTexture(new File("./res/faceDown.png"));
         GLTexture faceFail = new GLIOTexture(new File("./res/faceFail.png"));
 
-        GLImgButton imgButton = injectInstance(new GLImgButton(normalFace, faceDown, 30, 30));
+        GLImgButton imgButton = warpPrototype(new GLImgButton(normalFace, faceDown, 30, 30));
         imgButton.addMouseClicked(e -> imgButton.setButtonUp(faceFail));
         imgButton.addMouseMovein(() -> logger.info("img move in!"));
         imgButton.addMouseMoveout(() -> logger.info("img move out!"));
@@ -115,7 +118,7 @@ public class RectBasedUI extends CinoComponent {
     }
 
     private void buildTextButton() {
-        GLTextButton textButton = injectInstance(new GLTextButton("Button", 100, 30));
+        GLTextButton textButton = warpPrototype(new GLTextButton("Button", 100, 30));
         textButton.setX(-100);
         textButton.addMouseClicked(e -> logger.info("clicked !"));
         textButton.addMouseMovein(() -> logger.info("move in!"));

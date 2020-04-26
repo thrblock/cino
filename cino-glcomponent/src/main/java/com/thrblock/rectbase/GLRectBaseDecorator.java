@@ -11,12 +11,6 @@ public class GLRectBaseDecorator extends GLRectBase {
     }
 
     @Override
-    protected void initShowHide() {
-        onShow(rectSrc::show);
-        onHide(rectSrc::hide);
-    }
-
-    @Override
     protected GLRect buildBase() {
         return rectSrc;
     }

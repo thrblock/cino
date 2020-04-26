@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.thrblock.cino.component.CinoComponent;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.util.math.CMath;
 import com.thrblock.cino.util.math.CubeBezier;
 import com.thrblock.cino.util.structure.Point2D;
@@ -28,8 +27,7 @@ public class BezierDemo extends CinoComponent {
 
     @Override
     public void init() throws Exception {
-        GLNode root = shapeFactory.createNode();
-
+        autoShowHide();
         GLRect back = shapeFactory.buildGLRect(0, 0, RECTW, RECTW);
         back.setFill(true);
         back.setAllPointColor(Color.GRAY);
@@ -47,15 +45,12 @@ public class BezierDemo extends CinoComponent {
             }
         });
         onActivited(() -> {
-            root.show();
             keyIO.pushKeyListener(this);
         });
         onDeactivited(() -> {
-            root.show();
             keyIO.popKeyListener();
         });
 
-        shapeFactory.backtrack();
     }
 
     private void buildBezier() {

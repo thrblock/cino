@@ -5,10 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.thrblock.cino.component.CinoInstance;
+import com.thrblock.cino.component.CinoComponent;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.util.structure.BoolBoxer;
 
 /**
@@ -16,15 +15,12 @@ import com.thrblock.cino.util.structure.BoolBoxer;
  * @author thrblock
  *
  */
-public abstract class GLRectBase extends CinoInstance {
+public abstract class GLRectBase extends CinoComponent {
 
-    protected GLNode node;
     protected GLRect base;
     
     protected boolean disable = false;
 
-    private List<VoidConsumer> showLst = new LinkedList<>();
-    private List<VoidConsumer> hideLst = new LinkedList<>();
 
     protected List<VoidConsumer> movein = new LinkedList<>();
     protected List<VoidConsumer> moveout = new LinkedList<>();
@@ -35,11 +31,9 @@ public abstract class GLRectBase extends CinoInstance {
     
     @Override
     public final void init() {
-        node = shapeFactory.createNode();
-        initShowHide();
+        autoShowHide();
         base = buildBase();
         afterBaseBuild();
-        shapeFactory.backtrack();
     }
 
     protected void afterBaseBuild() {
@@ -73,29 +67,8 @@ public abstract class GLRectBase extends CinoInstance {
         });
     }
     
-    protected void initShowHide() {
-        onShow(node::show);
-        onHide(node::hide);
-    }
-    
     protected abstract GLRect buildBase();
 
-    public void show() {
-        showLst.forEach(VoidConsumer::accept);
-    }
-
-    public void hide() {
-        hideLst.forEach(VoidConsumer::accept);
-    }
-
-    public void onShow(VoidConsumer c) {
-        showLst.add(c);
-    }
-
-    public void onHide(VoidConsumer c) {
-        hideLst.add(c);
-    }
-    
     public boolean isVisible() {
         return base.isVisible();
     }
@@ -117,19 +90,19 @@ public abstract class GLRectBase extends CinoInstance {
     }
 
     public float getX() {
-        return node.getCentralX();
+        return rootNode.getCentralX();
     }
 
     public float getY() {
-        return node.getCentralY();
+        return rootNode.getCentralY();
     }
 
     public void setX(float x) {
-        node.setX(x);
+        rootNode.setX(x);
     }
 
     public void setY(float y) {
-        node.setY(y);
+        rootNode.setY(y);
     }
 
     protected void synRectStatus(GLRect aim, GLRect r) {

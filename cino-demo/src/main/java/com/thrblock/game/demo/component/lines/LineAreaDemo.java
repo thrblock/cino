@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.thrblock.cino.component.CinoComponent;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLRect;
-import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.lintersection.AbstractVector;
 import com.thrblock.cino.lintersection.InstersectionResultHolder;
 import com.thrblock.cino.lintersection.LIntersectionCounter;
@@ -21,7 +20,7 @@ public class LineAreaDemo extends CinoComponent {
 
     @Override
     public void init() throws Exception {
-        GLNode n = shapeFactory.createNewNode();
+        autoShowHide();
         GLRect bg = shapeFactory.buildGLRect(0, 0, 800f, 600f);
         bg.setFill(true);
         bg.setAllPointColor(Color.DARK_GRAY);
@@ -30,13 +29,9 @@ public class LineAreaDemo extends CinoComponent {
         buildLine( 200,-100, 400,-300);
 
         buildRect();
-        
-        onActivited(n::show);
-        onDeactivited(n::hide);
     }
     
     private void buildRect() {
-        GLNode n = shapeFactory.createNode();
         GLRect rect = shapeFactory.buildGLRect(0, 0, 10,10);
         rect.setFill(true);
         rect.setAllPointColor(Color.GREEN);
@@ -49,25 +44,23 @@ public class LineAreaDemo extends CinoComponent {
         
         auto(()->{
             if(keyIO.isKeyDown(KeyEvent.VK_DOWN)) {
-                n.setYOffset(-1);
+                rootNode.setYOffset(-1);
             } else if(keyIO.isKeyDown(KeyEvent.VK_UP)) {
-                n.setYOffset( 1);
+                rootNode.setYOffset( 1);
             }
             if(keyIO.isKeyDown(KeyEvent.VK_LEFT)) {
-                n.setXOffset(-2.0f);
+                rootNode.setXOffset(-2.0f);
             } else if(keyIO.isKeyDown(KeyEvent.VK_RIGHT)) {
-                n.setXOffset( 2.0f);
+                rootNode.setXOffset( 2.0f);
             }
             lines.intersection(vec, insRes);
             if(insRes.isIntersect()) {
                 float dx = insRes.getX() - foot.getCentralX();
                 float dy = insRes.getY() - foot.getCentralY();
-                n.setXOffset(dx);
-                n.setYOffset(dy);
+                rootNode.setXOffset(dx);
+                rootNode.setYOffset(dy);
             }
         });
-        
-        shapeFactory.backtrack();
     }
     
 

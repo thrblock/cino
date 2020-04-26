@@ -17,8 +17,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.thrblock.cino.annotation.BootComponent;
-import com.thrblock.cino.annotation.ECMAComponent;
-import com.thrblock.cino.annotation.EnableECMAScript;
 import com.thrblock.cino.annotation.EnableLocalStorage;
 import com.thrblock.cino.annotation.GLAutoInit;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
@@ -52,9 +50,6 @@ class CinoAnnotationProcessor
     @Autowired
     private ComponentAnnotationProcessor cinoComponentAnnoProc;
 
-    @Autowired
-    private ECMAAnnotationProcessor ecmaAnnotationProcessor;
-
     private ApplicationContext applicationContext;
 
     private List<VoidConsumer> afterProcessed = new LinkedList<>();
@@ -63,9 +58,6 @@ class CinoAnnotationProcessor
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
-        ECMAComponent ecmaComp = AnnotationUtils.findAnnotation(bean.getClass(), ECMAComponent.class);
-        Optional.ofNullable(ecmaComp)
-                .ifPresent(e -> ecmaAnnotationProcessor.processComponentECMA((CinoComponent) bean, e));
         return bean;
     }
 
@@ -108,9 +100,6 @@ class CinoAnnotationProcessor
                     CinoComponent masterComp = applicationContext.getBean(clazz);
                     cinoComponentAnnoProc.asSub(masterComp, (CinoComponent) o);
                 })));
-
-        EnableECMAScript ecma = AnnotationUtils.findAnnotation(o.getClass(), EnableECMAScript.class);
-        Optional.ofNullable(ecma).ifPresent(e -> afterProcessed.add(() -> ecmaAnnotationProcessor.processByECMA(o, e)));
     }
 
 }

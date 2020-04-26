@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.thrblock</groupId>
 	<artifactId>cino-root</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cino-core</module>
@@ -13,7 +13,7 @@
 		<module>cino-glcomponent</module>
 	</modules>
 	<properties>
-		<cino.version>0.0.3</cino.version>
+		<cino.version>0.0.4</cino.version>
 		<spring-framework.version>5.2.5.RELEASE</spring-framework.version>
 		<springframework.boot.version>2.2.6.RELEASE</springframework.boot.version>
 		<jogl.version>2.3.2</jogl.version>

@@ -43,8 +43,8 @@ public class DebugPannel extends CinoComponent {
 
             autoShowHide();
 
-            sceneRoot.setCentralX((float)(screenW - debugPannelWidth) / 2);
-            sceneRoot.setCentralY((float)(screenH - debugPannelHeight) / 2);
+            rootNode.setCentralX((float)(screenW - debugPannelWidth) / 2);
+            rootNode.setCentralY((float)(screenH - debugPannelHeight) / 2);
         }
     }
 

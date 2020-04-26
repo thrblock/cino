@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Supplier;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -63,7 +62,7 @@ public class SmtPhy extends CinoComponent {
         GLProgram programA = new GLProgram(vex, frgA);
         GLUniformFloat graylize = new GLUniformFloat("factor");
         programA.bindDataAsFloat(graylize);
-        Supplier<Double> sp = SupplierFactory.cycleOfSin(60 * 5);
+        var sp = SupplierFactory.cycleOfSin(60 * 5);
         auto(() -> graylize.setValue((float) Math.abs(sp.get())));
         GLProgram programB = new GLProgram(vex, frgB);
 

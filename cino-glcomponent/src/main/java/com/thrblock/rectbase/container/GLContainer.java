@@ -36,18 +36,6 @@ public class GLContainer extends GLRectBase {
     }
 
     @Override
-    public void show() {
-        super.show();
-        subs.forEach(GLRectBase::show);
-    }
-
-    @Override
-    public void hide() {
-        super.hide();
-        subs.forEach(GLRectBase::hide);
-    }
-
-    @Override
     public void setX(float x) {
         super.setX(x);
         layout.noticeCalc();

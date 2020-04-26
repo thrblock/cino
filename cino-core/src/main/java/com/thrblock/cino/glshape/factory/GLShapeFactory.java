@@ -3,6 +3,9 @@ package com.thrblock.cino.glshape.factory;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -68,9 +71,10 @@ public class GLShapeFactory {
         }
         return point;
     }
-    
+
     /**
      * 构造一个点
+     * 
      * @param p 概念点
      * @return
      */
@@ -110,9 +114,10 @@ public class GLShapeFactory {
         }
         return line;
     }
-    
+
     /**
      * 构造一条直线
+     * 
      * @param l 概念线
      * @return
      */
@@ -153,9 +158,10 @@ public class GLShapeFactory {
         }
         return rect;
     }
-    
+
     /**
      * 构造一个矩形
+     * 
      * @param r 概念矩形
      * @return
      */
@@ -239,10 +245,11 @@ public class GLShapeFactory {
         }
         return image;
     }
-    
+
     /**
      * 创建一个贴图对象
-     * @param r 概念矩形
+     * 
+     * @param r       概念矩形
      * @param texture 使用的贴图纹理
      * @return
      */
@@ -356,37 +363,10 @@ public class GLShapeFactory {
     }
 
     /**
-     * 创建新的树结构节点
-     * 
-     * @return GLShapeNode 图像节点
-     */
-    public GLShapeNode createNewNode() {
-        currentNode = new GLShapeNode();
-        return currentNode;
-    }
-
-    /**
-     * 在现有节点的基础上延伸一级子节点
-     * 
-     * @return GLShapeNode 图像节点，当前的子节点
-     */
-    public GLShapeNode createNode() {
-        if (currentNode == null) {
-            currentNode = new GLShapeNode();
-        } else {
-            GLShapeNode nNode = new GLShapeNode();
-            nNode.setParent(currentNode);
-            currentNode.addSubNode(nNode);
-            currentNode = nNode;
-        }
-        return currentNode;
-    }
-
-    /**
      * 将当前节点置空
      */
     public void clearNode() {
-        currentNode = null;
+        setNode(null);
     }
 
     /**
@@ -398,12 +378,131 @@ public class GLShapeFactory {
         currentNode = node;
     }
 
-    /**
-     * 根据当前节点，回溯至上一层
-     */
-    public void backtrack() {
-        if (currentNode != null) {
-            currentNode = currentNode.getParent();
+    public NodeSession<?> nodeSession() {
+        return new NodeSession<>();
+    }
+
+    public final class NodeSession<T extends GLNode> {
+        private T latest;
+        private GLShapeNode node;
+        private GLShapeFactory factory0;
+
+        NodeSession() {
+            this(new GLShapeNode(), new GLShapeFactory());
+        }
+
+        NodeSession(GLShapeNode node, GLShapeFactory factory) {
+            this.node = node;
+            this.factory0 = factory;
+            factory0.layer = GLShapeFactory.this.layer;
+            factory0.layerContainer = GLShapeFactory.this.layerContainer;
+            factory0.setNode(node);
+        }
+
+        private <S extends GLNode> NodeSession<S> apply(S s) {
+            NodeSession<S> result = new NodeSession<>(node, factory0);
+            result.latest = s;
+            return result;
+        }
+
+        public NodeSession<T> then(Consumer<T> cons) {
+            Optional.ofNullable(latest).ifPresent(cons);
+            return this;
+        }
+
+        public NodeSession<GLImage> glImage() {
+            return apply(factory0.buildGLImage());
+        }
+
+        public NodeSession<GLImage> glImage(float w, float h) {
+            return apply(factory0.buildGLImage(w, h));
+        }
+
+        public NodeSession<GLImage> glImage(float x, float y, float w, float h, GLTexture t) {
+            return apply(factory0.buildGLImage(x, y, w, h, t));
+        }
+
+        public NodeSession<GLImage> glImage(Rect r, GLTexture t) {
+            return apply(factory0.buildGLImage(r, t));
+        }
+
+        public NodeSession<GLLine> glLine(float x1, float y1, float x2, float y2) {
+            return apply(factory0.buildGLLine(x1, y1, x2, y2));
+        }
+
+        public NodeSession<GLLine> glLine(Line l) {
+            return apply(factory0.buildGLLine(l));
+        }
+
+        public NodeSession<GLLine> glLine(Vec2 p1, Vec2 p2) {
+            return apply(factory0.buildGLLine(p1, p2));
+        }
+
+        public NodeSession<GLOval> glOval(float x, float y, float axisA, float axisB, int accuracy) {
+            return apply(factory0.buildGLOval(x, y, axisA, axisB, accuracy));
+        }
+
+        public NodeSession<GLOval> glOval(float axisA, float axisB, int accuracy) {
+            return apply(factory0.buildGLOval(axisA, axisB, accuracy));
+        }
+
+        public NodeSession<GLOval> glOval(float diameter, int accuracy) {
+            return apply(factory0.buildGLOval(diameter, accuracy));
+        }
+
+        public NodeSession<GLPoint> glPoint(float x, float y) {
+            return apply(factory0.buildGLPoint(x, y));
+        }
+
+        public NodeSession<GLPoint> glPoint(Point p) {
+            return apply(factory0.buildGLPoint(p));
+        }
+
+        public NodeSession<GLPoint> glPoint(Vec2 v) {
+            return apply(factory0.buildGLPoint(v));
+        }
+
+        public NodeSession<GLPolygonShape<Polygon>> glPolygon(float[] xs, float[] ys) {
+            return apply(factory0.buildGLPolygon(xs, ys));
+        }
+
+        public NodeSession<GLPolygonShape<Polygon>> glPolygon(Vec2... p) {
+            return apply(factory0.buildGLPolygon(p));
+        }
+
+        public NodeSession<GLRect> glRect(float w, float h) {
+            return apply(factory0.buildGLRect(w, h));
+        }
+
+        public NodeSession<GLRect> glRect(float x, float y, float w, float h) {
+            return apply(factory0.buildGLRect(x, y, w, h));
+        }
+
+        public NodeSession<GLRect> glRect(Rect r) {
+            return apply(factory0.buildGLRect(r));
+        }
+
+        public NodeSession<GLTriangle> glTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+            return apply(factory0.buildGLTriangle(x1, y1, x2, y2, x3, y3));
+        }
+
+        public NodeSession<GLTriangle> glTriangle(Vec2 p1, Vec2 p2, Vec2 p3) {
+            return apply(factory0.buildGLTriangle(p1, p2, p3));
+        }
+
+        public NodeSession<T> consumeStream(Consumer<Stream<GLNode>> cons) {
+            cons.accept(node.stream());
+            return this;
+        }
+
+        public <S extends GLNode> NodeSession<T> consumeStream(Consumer<Stream<S>> cons, Class<S> clazz) {
+            cons.accept(node.stream().filter(clazz::isInstance).map(clazz::cast));
+            return this;
+        }
+
+        public GLShapeNode get() {
+            Optional.ofNullable(currentNode).ifPresent(n -> n.addSubNode(node));
+            return node;
         }
     }
 }
