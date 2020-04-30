@@ -13,7 +13,7 @@ import com.thrblock.cino.lintersection.InstersectionResultHolder;
 import com.thrblock.cino.lintersection.LIntersectionCounter;
 import com.thrblock.cino.lintersection.SupplierVector;
 
-@Component
+//@Component
 public class LineAreaDemo extends CinoComponent {
     private LIntersectionCounter<AbstractVector> lines = new LIntersectionCounter<>();
     private InstersectionResultHolder<AbstractVector> insRes = new InstersectionResultHolder<>();

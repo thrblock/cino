@@ -17,11 +17,14 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.thrblock.cino.annotation.BootComponent;
+import com.thrblock.cino.annotation.CinoComponentConfiguration;
+import com.thrblock.cino.annotation.CinoSubComponentConfiguration;
 import com.thrblock.cino.annotation.EnableLocalStorage;
 import com.thrblock.cino.annotation.GLAutoInit;
 import com.thrblock.cino.annotation.ScreenSizeChangeListener;
 import com.thrblock.cino.annotation.SubCompOf;
 import com.thrblock.cino.component.CinoComponent;
+import com.thrblock.cino.component.ComponentConfig;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.glprocessor.GLScreenSizeChangeListenerHolder;
@@ -58,6 +61,15 @@ class CinoAnnotationProcessor
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
+        CinoComponentConfiguration an = AnnotationUtils.findAnnotation(bean.getClass(),
+                CinoComponentConfiguration.class);
+        Optional.ofNullable(an).ifPresent(s -> Optional.ofNullable(bean).filter(CinoComponent.class::isInstance)
+                .map(CinoComponent.class::cast).ifPresent(comp -> comp.setComponentConfig(ComponentConfig.fromAnnotation(an))));
+        
+        CinoSubComponentConfiguration subAn = AnnotationUtils.findAnnotation(bean.getClass(),
+                CinoSubComponentConfiguration.class);
+        Optional.ofNullable(subAn).ifPresent(s -> Optional.ofNullable(bean).filter(CinoComponent.class::isInstance)
+                .map(CinoComponent.class::cast).ifPresent(comp -> comp.setComponentConfig(ComponentConfig.fromAnnotation(an))));
         return bean;
     }
 

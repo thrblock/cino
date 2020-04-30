@@ -54,6 +54,7 @@ public class SmtPhy extends CinoComponent {
 
     @Override
     public void init() throws IOException {
+        autoShowHide();
         autoKeyPushPop();
         
         GLShader vex = new GLShader(GL2.GL_VERTEX_SHADER, new File("./shadersV2/demo/Vertex.txt"));

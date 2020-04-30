@@ -2,10 +2,15 @@ package com.thrblock.cino.glshape;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.concept.GeometricConcept;
 import com.thrblock.cino.debug.GLDebugHelper;
+import com.thrblock.cino.gllayer.GLLayerManager;
 import com.thrblock.cino.glshape.factory.GLNode;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
@@ -24,11 +29,19 @@ public abstract class GLShape<T extends GeometricConcept> implements GLNode {
     private int mixAlpha = GL.GL_SRC_ALPHA;
     private int mixBeta = GL.GL_ONE_MINUS_SRC_ALPHA;
     protected AbstractGLProgram program;
-
+    
+    @Autowired
+    protected GLLayerManager layerContainer;
+    
     protected T concept;
     
     public GLShape(T concept) {
         this.concept = concept;
+    }
+    
+    @PostConstruct
+    protected void init() {
+        layerContainer.addShapeToSwap(layerIndex, this);
     }
     
     public T exuviate() {

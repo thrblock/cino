@@ -1,8 +1,5 @@
 package com.thrblock.cino.glshape.factory;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -12,13 +9,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Iterables;
 import com.thrblock.cino.concept.Line;
 import com.thrblock.cino.concept.Point;
 import com.thrblock.cino.concept.Polygon;
 import com.thrblock.cino.concept.Rect;
-import com.thrblock.cino.gllayer.GLLayerManager;
-import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLImage;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLOval;
@@ -27,7 +21,6 @@ import com.thrblock.cino.glshape.GLPolygonShape;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.glshape.GLTriangle;
 import com.thrblock.cino.gltexture.GLTexture;
-import com.thrblock.cino.util.charprocess.CharAreaConfig;
 import com.thrblock.cino.vec.Vec2;
 
 /**
@@ -35,13 +28,14 @@ import com.thrblock.cino.vec.Vec2;
  * 
  * @author lizepu
  */
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GLShapeFactory {
     private int layer = 0;
     private GLShapeNode currentNode = null;
+
     @Autowired
-    GLLayerManager layerContainer;
+    private ShapeBeanFactory beanFactory;
 
     /**
      * 设置此构造器的图像层索引，该构造器所构造的图形会处于索引层次
@@ -64,11 +58,8 @@ public class GLShapeFactory {
      * @return 点图形
      */
     public GLPoint buildGLPoint(float x, float y) {
-        GLPoint point = new GLPoint(x, y);
-        layerContainer.addShapeToSwap(layer, point);
-        if (currentNode != null) {
-            currentNode.addSubNode(point);
-        }
+        GLPoint point = beanFactory.glPoint(layer, x, y);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(point));
         return point;
     }
 
@@ -78,12 +69,9 @@ public class GLShapeFactory {
      * @param p 概念点
      * @return
      */
-    public GLPoint buildGLPoint(Point p) {
-        GLPoint point = new GLPoint(p);
-        layerContainer.addShapeToSwap(layer, point);
-        if (currentNode != null) {
-            currentNode.addSubNode(point);
-        }
+    public GLPoint buildGLPoint(Point pt) {
+        GLPoint point = beanFactory.glPoint(layer, pt);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(point));
         return point;
     }
 
@@ -107,11 +95,8 @@ public class GLShapeFactory {
      * @return 直线图形
      */
     public GLLine buildGLLine(float x1, float y1, float x2, float y2) {
-        GLLine line = new GLLine(x1, y1, x2, y2);
-        layerContainer.addShapeToSwap(layer, line);
-        if (currentNode != null) {
-            currentNode.addSubNode(line);
-        }
+        GLLine line = beanFactory.glLine(layer, x1, y1, x2, y2);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(line));
         return line;
     }
 
@@ -122,11 +107,8 @@ public class GLShapeFactory {
      * @return
      */
     public GLLine buildGLLine(Line l) {
-        GLLine line = new GLLine(l);
-        layerContainer.addShapeToSwap(layer, line);
-        if (currentNode != null) {
-            currentNode.addSubNode(line);
-        }
+        GLLine line = beanFactory.glLine(layer, l);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(line));
         return line;
     }
 
@@ -151,11 +133,8 @@ public class GLShapeFactory {
      * @return 矩形图形
      */
     public GLRect buildGLRect(float x, float y, float width, float height) {
-        GLRect rect = new GLRect(x, y, width, height);
-        layerContainer.addShapeToSwap(layer, rect);
-        if (currentNode != null) {
-            currentNode.addSubNode(rect);
-        }
+        GLRect rect = beanFactory.glRect(layer, x, y, width, height);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(rect));
         return rect;
     }
 
@@ -166,11 +145,8 @@ public class GLShapeFactory {
      * @return
      */
     public GLRect buildGLRect(Rect r) {
-        GLRect rect = new GLRect(r);
-        layerContainer.addShapeToSwap(layer, rect);
-        if (currentNode != null) {
-            currentNode.addSubNode(rect);
-        }
+        GLRect rect = beanFactory.glRect(layer, r);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(rect));
         return rect;
     }
 
@@ -196,11 +172,8 @@ public class GLShapeFactory {
      * @return 椭圆对象
      */
     public GLOval buildGLOval(float x, float y, float axisA, float axisB, int accuracy) {
-        GLOval oval = GLOval.generate(x, y, axisA, axisB, accuracy);
-        layerContainer.addShapeToSwap(layer, oval);
-        if (currentNode != null) {
-            currentNode.addSubNode(oval);
-        }
+        GLOval oval = beanFactory.glOval(layer, x, y, axisA, axisB, accuracy);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(oval));
         return oval;
     }
 
@@ -238,11 +211,8 @@ public class GLShapeFactory {
      * @return 贴图对象
      */
     public GLImage buildGLImage(float x, float y, float width, float height, GLTexture texture) {
-        GLImage image = new GLImage(x, y, width, height, texture);
-        layerContainer.addShapeToSwap(layer, image);
-        if (currentNode != null) {
-            currentNode.addSubNode(image);
-        }
+        GLImage image = beanFactory.glImage(layer, x, y, width, height, texture);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(image));
         return image;
     }
 
@@ -254,11 +224,8 @@ public class GLShapeFactory {
      * @return
      */
     public GLImage buildGLImage(Rect r, GLTexture texture) {
-        GLImage image = new GLImage(r, texture);
-        layerContainer.addShapeToSwap(layer, image);
-        if (currentNode != null) {
-            currentNode.addSubNode(image);
-        }
+        GLImage image = beanFactory.glImage(layer, r, texture);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(image));
         return image;
     }
 
@@ -268,11 +235,8 @@ public class GLShapeFactory {
      * @return 贴图对象
      */
     public GLImage buildGLImage() {
-        GLImage image = new GLImage();
-        layerContainer.addShapeToSwap(layer, image);
-        if (currentNode != null) {
-            currentNode.addSubNode(image);
-        }
+        GLImage image = beanFactory.glImage(layer);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(image));
         return image;
     }
 
@@ -282,11 +246,8 @@ public class GLShapeFactory {
      * @return 贴图对象
      */
     public GLImage buildGLImage(float w, float h) {
-        GLImage image = new GLImage(w, h);
-        layerContainer.addShapeToSwap(layer, image);
-        if (currentNode != null) {
-            currentNode.addSubNode(image);
-        }
+        GLImage image = beanFactory.glImage(layer, w, h);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(image));
         return image;
     }
 
@@ -302,11 +263,8 @@ public class GLShapeFactory {
      * @return
      */
     public GLTriangle buildGLTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-        GLTriangle triangle = new GLTriangle(x1, y1, x2, y2, x3, y3);
-        layerContainer.addShapeToSwap(layer, triangle);
-        if (currentNode != null) {
-            currentNode.addSubNode(triangle);
-        }
+        GLTriangle triangle = beanFactory.glTriangle(layer, x1, y1, x2, y2, x3, y3);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(triangle));
         return triangle;
     }
 
@@ -322,45 +280,18 @@ public class GLShapeFactory {
      * @return
      */
     public GLPolygonShape<Polygon> buildGLPolygon(float[] xs, float[] ys) {
-        List<Point> pointList = new LinkedList<>();
-        for (int i = 0; i < xs.length; i++) {
-            pointList.add(new Point(xs[i], ys[i]));
-        }
-        Polygon concept = new Polygon(Iterables.toArray(pointList, Point.class));
-        GLPolygonShape<Polygon> polygon = new GLPolygonShape<>(concept);
-        layerContainer.addShapeToSwap(layer, polygon);
-        if (currentNode != null) {
-            currentNode.addSubNode(polygon);
-        }
+        GLPolygonShape<Polygon> polygon = beanFactory.glPolygon(layer, xs, ys);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(polygon));
         return polygon;
     }
 
     public GLPolygonShape<Polygon> buildGLPolygon(Vec2... points) {
-        Polygon concept = new Polygon(Arrays.stream(points).map(Point::new).toArray(Point[]::new));
-        GLPolygonShape<Polygon> polygon = new GLPolygonShape<>(concept);
-        layerContainer.addShapeToSwap(layer, polygon);
-        if (currentNode != null) {
-            currentNode.addSubNode(polygon);
-        }
+        GLPolygonShape<Polygon> polygon = beanFactory.glPolygon(layer, points);
+        Optional.ofNullable(currentNode).ifPresent(p -> p.addSubNode(polygon));
         return polygon;
     }
 
-    public GLCharArea buildGLCharArea(float x, float y, float w, float h, CharAreaConfig conf) {
-        GLCharArea area = new GLCharArea(x, y, w, h, conf);
-        layerContainer.addShapeToSwap(layer, area);
-        if (currentNode != null) {
-            currentNode.addSubNode(area);
-        }
-        return area;
-    }
-
-    public GLCharArea buildGLCharArea(float x, float y, float w, CharAreaConfig conf) {
-        return buildGLCharArea(x, y, w, conf.getFont().getFmheight(), conf);
-    }
-
-    public GLCharArea buildGLCharArea(float w, CharAreaConfig conf) {
-        return buildGLCharArea(0, 0, w, conf);
-    }
+   
 
     /**
      * 将当前节点置空
@@ -395,7 +326,7 @@ public class GLShapeFactory {
             this.node = node;
             this.factory0 = factory;
             factory0.layer = GLShapeFactory.this.layer;
-            factory0.layerContainer = GLShapeFactory.this.layerContainer;
+            factory0.beanFactory = GLShapeFactory.this.beanFactory;
             factory0.setNode(node);
         }
 

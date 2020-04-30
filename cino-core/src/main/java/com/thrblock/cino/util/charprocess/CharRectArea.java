@@ -1,56 +1,73 @@
-package com.thrblock.cino.glshape;
+package com.thrblock.cino.util.charprocess;
 
 import java.awt.Color;
 import java.util.function.Consumer;
 
-import com.jogamp.opengl.GL2;
+import com.thrblock.cino.component.CinoComponent;
+import com.thrblock.cino.glshape.GLImage;
+import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.gltexture.GLFont;
-import com.thrblock.cino.util.charprocess.CharAreaConfig;
-import com.thrblock.cino.util.charprocess.PositionSynchronizer;
-import com.thrblock.cino.util.charprocess.Style;
 
-public class GLCharArea extends GLRect {
+public class CharRectArea extends CinoComponent {
+    private GLRect base;
     private GLFont font;
     private GLImage[] imgs;
     private char[] charArray;
     private PositionSynchronizer positionSyn;
-    private Style style;
+    private CharStyle charStyle;
+    private Consumer<GLRect> rectStyle;
 
-    public GLCharArea(float x, float y, float width, float height, CharAreaConfig config) {
-        super(x, y, width, height);
-        this.font = config.getFont();
-        this.charArray = config.getCharArray();
-        this.imgs = new GLImage[charArray.length];
-        for (int i = 0; i < imgs.length; i++) {
-            imgs[i] = new GLImage();
-        }
-        this.positionSyn = config.getPositionSyn();
-        positionSyn.setImgs(imgs);
-        positionSyn.setRect(this);
-        positionSyn.setSrc(charArray);
+    private float initX;
+    private float initY;
+    private float initWidth;
+    private float initHeight;
+    private CharAreaConfig config;
 
-        this.style = config.getStyle();
-        fillContent();
-        setStyle();
+    public CharRectArea(float x, float y, float width, float height, CharAreaConfig config) {
+        this.initX = x;
+        this.initY = y;
+        this.initWidth = width;
+        this.initHeight = height;
+        this.config = config;
     }
 
     @Override
-    public void drawShape(GL2 gl) {
+    public void init() throws Exception {
+        autoShowHide();
+        
+        this.base = shapeFactory.buildGLRect(initX, initY, initWidth, initHeight);
+        this.font = config.getFont();
+        this.charArray = config.getCharArray();
+
+        this.imgs = new GLImage[charArray.length];
+        for (int i = 0; i < imgs.length; i++) {
+            imgs[i] = shapeFactory.buildGLImage();
+        }
+
+        this.positionSyn = config.getPositionSyn();
+        positionSyn.setImgs(imgs);
+        positionSyn.setRect(base);
+        positionSyn.setSrc(charArray);
+
+        this.charStyle = config.getStyle();
+        this.rectStyle = config.getRectStyle();
+        
+        fillContent();
+        setStyle();
+
+        auto(this::drawShape);
+    }
+
+    public void drawShape() {
         fillContent();
         setStyle();
         positionSyn.synPosition();
-        drawContent(gl);
-    }
-
-    private void drawContent(GL2 gl) {
-        for (int i = 0; i < imgs.length && charArray[i] != '\0'; i++) {
-            imgs[i].drawShape(gl);
-        }
     }
 
     private void setStyle() {
+        rectStyle.accept(base);
         for (int i = 0; i < charArray.length && charArray[i] != '\0'; i++) {
-            style.setStyle(charArray, i, imgs[i]);
+            charStyle.setStyle(charArray, i, imgs[i]);
         }
     }
 
@@ -72,12 +89,12 @@ public class GLCharArea extends GLRect {
         this.font = font;
     }
 
-    public void setStyle(Style style) {
-        this.style = style;
+    public void setStyle(CharStyle style) {
+        this.charStyle = style;
     }
 
     public void setSimpleStyle(Consumer<GLImage> st) {
-        this.style = (arr, i, img) -> st.accept(img);
+        this.charStyle = (arr, i, img) -> st.accept(img);
     }
 
     public void setPositionSyn(PositionSynchronizer positionSyn) {
@@ -94,35 +111,40 @@ public class GLCharArea extends GLRect {
             this.charArray[i] = '\0';
         }
     }
-    
+
     public String getContent() {
         return new String(charArray);
     }
 
-    @Override
     public void setAllPointColor(Color c) {
-        super.setAllPointColor(c);
+        base.setAllPointColor(c);
         for (int i = 0; i < imgs.length; i++) {
             imgs[i].setAllPointColor(c);
         }
     }
 
-    @Override
     public void setAlpha(float alpha) {
-        super.setAlpha(alpha);
+        base.setAlpha(alpha);
         for (int i = 0; i < imgs.length; i++) {
             imgs[i].setAlpha(alpha);
         }
     }
 
-    @Override
     public void setRadian(float dstTheta) {
-        float offset = dstTheta - getRadian();
-        super.setRadian(dstTheta);
-        float rolx = getCentralX();
-        float roly = getCentralY();
+        float offset = dstTheta - base.getRadian();
+        base.setRadian(dstTheta);
+        float rolx = base.getCentralX();
+        float roly = base.getCentralY();
         for (int i = 0; i < imgs.length; i++) {
             imgs[i].revolve(offset, rolx, roly);
         }
+    }
+
+    public float getRadian() {
+        return base.getRadian();
+    }
+
+    public GLRect base() {
+        return base;
     }
 }

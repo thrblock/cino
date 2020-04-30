@@ -30,7 +30,7 @@ public class DebugPannel extends CinoComponent {
     private CharArrayInt arrayInt4fps;
     private CharArrayInt arrayInt4ovr;
     private CharArrayInt arrayInt4ft;
-
+    
     @Override
     public void init() throws Exception {
         if (debug) {
@@ -60,7 +60,7 @@ public class DebugPannel extends CinoComponent {
         arrayInt4fps = new CharArrayInt(fpsC);
         arrayInt4fps.setFrontKeepStr("Fps:");
         arrayInt4fps.setByInt(0);
-        shapeFactory.buildGLCharArea(0, 22, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
+        charRectFactory.charRectArea(0, 22, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     private void buildOVR() {
@@ -69,7 +69,7 @@ public class DebugPannel extends CinoComponent {
         arrayInt4ovr.setFrontKeepStr("Ovr:");
         arrayInt4ovr.setBackKeepStr("%");
         arrayInt4ovr.setByInt(0);
-        shapeFactory.buildGLCharArea(0, 3, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
+        charRectFactory.charRectArea(0, 3, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     private void buildOVD() {
@@ -77,7 +77,7 @@ public class DebugPannel extends CinoComponent {
         arrayInt4ft = new CharArrayInt(fpsC);
         arrayInt4ft.setFrontKeepStr("Tu:");
         arrayInt4ft.setByInt(0);
-        shapeFactory.buildGLCharArea(0, -18, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
+        charRectFactory.charRectArea(0, -18, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     public void noticeDrawCall(long timeUse) {

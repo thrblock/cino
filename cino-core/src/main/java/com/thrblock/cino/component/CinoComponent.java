@@ -39,6 +39,7 @@ import com.thrblock.cino.gltransform.IGLTransForm;
 import com.thrblock.cino.io.KeyControlStack;
 import com.thrblock.cino.io.MouseControl;
 import com.thrblock.cino.storage.Storage;
+import com.thrblock.cino.util.charprocess.CharRectAreaFactory;
 
 /**
  * 提供设计相关的主要成员,可以以此类为单位进行逻辑上的粒度控制<br />
@@ -79,6 +80,13 @@ public abstract class CinoComponent implements KeyListener {
      */
     @Autowired
     protected GLShapeFactory shapeFactory;
+    
+    
+    /**
+     * 基于矩形结构的文字区域工厂类
+     */
+    @Autowired
+    protected CharRectAreaFactory charRectFactory;
 
     /**
      * 键盘IO控制器，可以挂载监听器捕获键盘事件或是读取某一指定按键的状态
@@ -134,6 +142,15 @@ public abstract class CinoComponent implements KeyListener {
 
     protected CinoComponent parent;
     
+    /**
+     * for current component
+     */
+    private ComponentConfig componentConfig;
+    /**
+     * for sub component
+     */
+    private ComponentConfig treeComponentConfig;
+    
     private List<VoidConsumer> activitedHolder;
     private List<VoidConsumer> deactivitedHolder;
     private List<VoidConsumer> destroyHolder;
@@ -165,20 +182,59 @@ public abstract class CinoComponent implements KeyListener {
         eventHolder = new LinkedList<>();
         mouseHolder = new LinkedList<>();
         
-        // 帧执行构件继承自Parent
-        compAni = Optional.ofNullable(parent).map(p -> p.compAni).map(GLAnimateManager::generateSubContainer).orElse(rootAni.generateSubContainer());
+        innerInitByAnnotationConfig();
+        init();
+        initingTree.pop();
+    }
+
+    private void innerInitByAnnotationConfig() {
+        if(treeComponentConfig == null) {
+            Optional.ofNullable(parent)
+                    .map(p -> p.treeComponentConfig)
+                    .ifPresent(p -> this.treeComponentConfig = p);
+        }
+        
+        if(componentConfig == null) {
+            componentConfig = Optional.ofNullable(treeComponentConfig).orElse(new ComponentConfig());
+        }
+        // 帧执行构件继承逻辑
+        compAni = Optional.ofNullable(parent)
+                .filter(x -> componentConfig.isInheritAnimation())
+                .map(p -> p.compAni)
+                .map(GLAnimateManager::generateSubContainer)
+                .orElse(rootAni.generateSubContainer());
         compAni.pause();
         animateFactory.setContainer(compAni);
         
         rootNode = new GLShapeNode();
         shapeFactory.setNode(rootNode);
         
-        init();
+        // 图形工厂继承逻辑
+        Optional.ofNullable(parent)
+                .filter(x -> componentConfig.isInheritLayer())
+                .map(p -> p.shapeFactory)
+                .ifPresent(s -> this.shapeFactory.setLayer(s.getLayer()));
         
-        Optional.ofNullable(parent).ifPresent(p -> p.registerSub(this));
-        initingTree.pop();
+        // 绘制节点继承逻辑
+        Optional.ofNullable(parent)
+                .filter(x -> componentConfig.isInheritShapeNode())
+                .map(p -> p.rootNode)
+                .ifPresent(r -> r.addSubNode(this.rootNode));
+        
+        // 子组件逻辑
+        Optional.ofNullable(parent)
+                .filter(x -> componentConfig.isAutoAsSub())
+                .ifPresent(p -> p.registerSub(this));
+        
+        // auto show/hide
+        if(componentConfig.isAutoShowHide()) {
+            autoShowHide();
+        }
     }
     
+    public void setComponentConfig(ComponentConfig componentConfig) {
+        this.componentConfig = componentConfig;
+    }
     /**
      * auto show/hide scene root when component activited/deactivited
      */
@@ -270,24 +326,21 @@ public abstract class CinoComponent implements KeyListener {
     }
 
     public final void autoShapeClicked(GLPolygonShape<?> shape, Consumer<MouseEvent> e) {
-        Function<Consumer<MouseEvent>, AWTEventListener> funs = mouseIO::addMouseClicked;
-        autoMouseHook(shape, e, funs);
+        autoMouseHook(shape, e, mouseIO::addMouseClicked);
     }
 
     public final void autoShapePressed(GLPolygonShape<?> shape, Consumer<MouseEvent> e) {
-        Function<Consumer<MouseEvent>, AWTEventListener> funs = mouseIO::addMousePressed;
-        autoMouseHook(shape, e, funs);
+        autoMouseHook(shape, e, mouseIO::addMousePressed);
     }
 
     public final void autoShapeReleased(GLPolygonShape<?> shape, Consumer<MouseEvent> e) {
-        Function<Consumer<MouseEvent>, AWTEventListener> funs = mouseIO::addMouseReleased;
-        autoMouseHook(shape, e, funs);
+        autoMouseHook(shape, e, mouseIO::addMouseReleased);
     }
 
     public void autoMouseHook(GLPolygonShape<?> shape, Consumer<MouseEvent> e,
             Function<Consumer<MouseEvent>, AWTEventListener> funs) {
         onActivited(() -> mouseHolder.add(funs.apply(event -> {
-            if (activitedSupplier.getAsBoolean() && isMouseInside(shape)) {
+            if (activitedSupplier.getAsBoolean() && shape.isMouseInside()) {
                 e.accept(event);
             }
         })));
@@ -320,7 +373,7 @@ public abstract class CinoComponent implements KeyListener {
     private AWTEventListener mouseHook(GLPolygonShape<?> shape, Consumer<MouseEvent> e,
             Function<Consumer<MouseEvent>, AWTEventListener> funs) {
         return funs.apply(event -> {
-            if (activitedSupplier.getAsBoolean() && isMouseInside(shape)) {
+            if (activitedSupplier.getAsBoolean() && shape.isMouseInside()) {
                 e.accept(event);
             }
         });
@@ -340,12 +393,6 @@ public abstract class CinoComponent implements KeyListener {
                 cons.accept();
             }
         }));
-    }
-
-    public final boolean isMouseInside(GLPolygonShape<?> shape) {
-        int layerIndex = shape.getLayerIndex();
-        return shape.isVisible() && !shape.isDestory()
-                && shape.isPointInside(mouseIO.getMouseX(layerIndex), mouseIO.getMouseY(layerIndex));
     }
 
     private void removeMouseHolder() {

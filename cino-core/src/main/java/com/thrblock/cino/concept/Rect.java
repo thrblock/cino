@@ -7,7 +7,14 @@ public class Rect extends Polygon {
             throw new IllegalArgumentException("rect must have 4 points");
         }
     }
-    
+
+    public Rect(float x, float y, float w, float h) {
+        this(new Point(x - w / 2, y + h / 2), 
+             new Point(x + w / 2, y + h / 2), 
+             new Point(x + w / 2, y - h / 2),
+             new Point(x - w / 2, y - h / 2));
+    }
+
     /**
      * 获得矩形宽度
      * 

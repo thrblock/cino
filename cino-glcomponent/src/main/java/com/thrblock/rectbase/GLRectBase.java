@@ -127,10 +127,10 @@ public abstract class GLRectBase extends CinoComponent {
     protected void buildMoveInOut() {
         BoolBoxer lastMouseInside = new BoolBoxer();
         auto(() -> {
-            if (isMouseInside(base) && !lastMouseInside.getValue()) {
+            if (base.isMouseInside() && !lastMouseInside.getValue()) {
                 lastMouseInside.setValue(true);
                 movein.forEach(VoidConsumer::accept);
-            } else if (!isMouseInside(base) && lastMouseInside.getValue()) {
+            } else if (!base.isMouseInside() && lastMouseInside.getValue()) {
                 lastMouseInside.setValue(false);
                 moveout.forEach(VoidConsumer::accept);
             }

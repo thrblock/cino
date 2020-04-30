@@ -2,17 +2,17 @@ package com.thrblock.rectbase.button;
 
 import java.awt.Color;
 
-import com.thrblock.cino.glshape.GLCharArea;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.util.charprocess.CentralInLine;
 import com.thrblock.cino.util.charprocess.CharAreaConfig;
+import com.thrblock.cino.util.charprocess.CharRectArea;
 import com.thrblock.rectbase.GLRectBase;
 
 public class GLTextButton extends GLRectBase {
 
     protected CharAreaConfig config;
-    protected GLCharArea charArea;
+    protected CharRectArea charArea;
     
     float w;
     float h;
@@ -29,7 +29,7 @@ public class GLTextButton extends GLRectBase {
         config.setStyle((s, i, m) -> m.setAllPointColor(Color.BLACK));
     }
     
-    public GLCharArea getCharArea() {
+    public CharRectArea getCharArea() {
         return charArea;
     }
 
@@ -43,7 +43,7 @@ public class GLTextButton extends GLRectBase {
         super.afterBaseBuild();
         decorate();
         this.charArea = buildCharArea();
-        auto(() -> synBaseStatus(charArea));
+        auto(() -> synBaseStatus(charArea.base()));
     }
 
     protected void decorate() {
@@ -107,7 +107,7 @@ public class GLTextButton extends GLRectBase {
         right.setAllPointColor(Color.DARK_GRAY);
     }
 
-    protected GLCharArea buildCharArea() {
-        return shapeFactory.buildGLCharArea(0, 0, w, h, config);
+    protected CharRectArea buildCharArea() {
+        return charRectFactory.charRectArea(0, 0, w, h, config);
     }
 }
