@@ -52,6 +52,18 @@ public class CharAreaDemo extends CinoComponent {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(area == null) {
+            return;
+        }
+        if(e.getKeyCode() == KeyEvent.VK_X) {
+            try {
+                area.preDestroy();
+                area = null;
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            return;
+        }
         if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
             builder.setLength(Math.max(builder.length() - 1, 0));
             area.setContent(builder.toString());

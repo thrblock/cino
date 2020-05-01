@@ -408,6 +408,7 @@ public abstract class CinoComponent implements KeyListener {
     @PreDestroy
     public final void preDestroy() throws Exception {
         storage.save(this);
+        Optional.ofNullable(parent).ifPresent(p -> p.subComps.remove(this));
         destroyHolder.forEach(VoidConsumer::accept);
         removeMouseHolder();
         removeEventHolder();

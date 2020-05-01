@@ -19,7 +19,7 @@ import com.thrblock.springcontext.CinoConfig;
 public class SpringBootEntry implements CommandLineRunner {
 
     @Autowired
-    CharAreaDemo phy;
+    CharAreaDemo charAreaDemo;
     
     public static void main(String[] args) {
         System.setProperty("sun.java2d.uiScale", "1.0");
@@ -31,7 +31,9 @@ public class SpringBootEntry implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        phy.activited();
+        charAreaDemo.activited();
+        Thread.sleep(5000L);
+        charAreaDemo.destroy();
     }
     
 }
