@@ -1,6 +1,9 @@
 package com.thrblock.cino.glanimate;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,6 +39,35 @@ public class GLAnimateFactory {
         container.addAnimate(animate);
         Arrays.stream(frags).forEach(animate::add);
         return animate;
+    }
+    
+    class BuildNode {
+        
+        GLAnimate ani = new GLAnimate();
+        Runnable finish;
+        
+        BooleanSupplier currentCondition;
+        List<Runnable> runs = new LinkedList<>();
+        
+        public BuildNode when(BooleanSupplier condition) {
+            this.currentCondition = condition;
+            return this;
+        }
+        
+        public BuildNode then(Runnable r) {
+            runs.add(r);
+            return this;
+        }
+        
+        public BuildNode whenFinish(Runnable r) {
+            
+            return this;
+        }
+        
+        public GLAnimate build() {
+            container.addAnimate(ani); 
+            return ani;
+        }
     }
 
 }

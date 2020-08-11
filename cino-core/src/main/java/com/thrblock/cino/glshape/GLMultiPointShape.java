@@ -345,11 +345,11 @@ public abstract class GLMultiPointShape<R extends MultiPoint> extends GLShape<R>
     }
 
     public void sameCentralOf(GLMultiPointShape<?> shape) {
-        concept.sameCentralOf(shape.concept);
+        concept.sameCentralOf(shape.exuviate());
     }
 
     public void sameStatusOf(GLMultiPointShape<?> shape) {
-        concept.sameStatusOf(shape.concept);
+        concept.sameStatusOf(shape.exuviate());
     }
 
     @Override

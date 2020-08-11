@@ -64,11 +64,11 @@ public class GLRect extends GLPolygonShape<Rect> {
     }
 
     public void leftOf(GLRect another) {
-        concept.leftOf(another.concept, 0);
+        concept.leftOf(another.exuviate(), 0);
     }
 
     public void leftOfInner(GLRect another) {
-        concept.leftOfInner(another.concept, 0);
+        concept.leftOfInner(another.exuviate(), 0);
     }
 
     /**
@@ -77,7 +77,7 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void leftOf(GLRect another, float margin) {
-        concept.leftOf(another.concept, margin);
+        concept.leftOf(another.exuviate(), margin);
     }
 
     /**
@@ -86,11 +86,11 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void leftOfInner(GLRect another, float margin) {
-        concept.leftOfInner(another.concept, margin);
+        concept.leftOfInner(another.exuviate(), margin);
     }
 
     public void rightOf(GLRect another) {
-        concept.rightOf(another.concept, 0);
+        concept.rightOf(another.exuviate(), 0);
     }
 
     /**
@@ -99,11 +99,11 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void rightOf(GLRect another, float margin) {
-        concept.rightOf(another.concept, margin);
+        concept.rightOf(another.exuviate(), margin);
     }
 
     public void rightOfInner(GLRect another) {
-        concept.rightOfInner(another.concept);
+        concept.rightOfInner(another.exuviate());
     }
 
     /**
@@ -112,11 +112,11 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void rightOfInner(GLRect another, float margin) {
-        concept.rightOfInner(another.concept, margin);
+        concept.rightOfInner(another.exuviate(), margin);
     }
 
     public void topOf(GLRect another) {
-        concept.topOf(another.concept, 0);
+        concept.topOf(another.exuviate(), 0);
     }
 
     /**
@@ -125,11 +125,11 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void topOf(GLRect another, float margin) {
-        concept.topOf(another.concept, margin);
+        concept.topOf(another.exuviate(), margin);
     }
 
     public void topOfInner(GLRect another) {
-        concept.topOfInner(another.concept, 0);
+        concept.topOfInner(another.exuviate(), 0);
     }
 
     /**
@@ -138,11 +138,11 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void topOfInner(GLRect another, float margin) {
-        concept.topOfInner(another.concept, margin);
+        concept.topOfInner(another.exuviate(), margin);
     }
 
     public void bottomOf(GLRect another) {
-        concept.bottomOf(another.concept, 0);
+        concept.bottomOf(another.exuviate(), 0);
     }
 
     /**
@@ -151,11 +151,11 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void bottomOf(GLRect another, float margin) {
-        concept.bottomOf(another.concept, margin);
+        concept.bottomOf(another.exuviate(), margin);
     }
 
     public void bottomOfInner(GLRect another) {
-        concept.bottomOfInner(another.concept, 0);
+        concept.bottomOfInner(another.exuviate(), 0);
     }
 
     /**
@@ -164,6 +164,6 @@ public class GLRect extends GLPolygonShape<Rect> {
      * @param another 另一矩形
      */
     public void bottomOfInner(GLRect another, float margin) {
-        concept.bottomOfInner(another.concept, margin);
+        concept.bottomOfInner(another.exuviate(), margin);
     }
 }

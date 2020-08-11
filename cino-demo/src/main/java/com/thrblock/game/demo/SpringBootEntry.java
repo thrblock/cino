@@ -28,12 +28,10 @@ public class SpringBootEntry implements CommandLineRunner {
                 .headless(false)
                 .run(args);
     }
-    
+
     @Override
     public void run(String... args) throws Exception {
         charAreaDemo.activited();
-        Thread.sleep(5000L);
-        charAreaDemo.destroy();
     }
-    
+
 }

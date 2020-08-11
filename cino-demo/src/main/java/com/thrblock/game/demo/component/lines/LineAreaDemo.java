@@ -3,8 +3,6 @@ package com.thrblock.game.demo.component.lines;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
-import org.springframework.stereotype.Component;
-
 import com.thrblock.cino.component.CinoComponent;
 import com.thrblock.cino.glshape.GLLine;
 import com.thrblock.cino.glshape.GLRect;

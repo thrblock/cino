@@ -95,7 +95,6 @@ public class GLLayerManager implements IGLFrameBufferObjectManager {
      * @param shape 图形对象
      */
     public void addShapeToSwap(int index, GLShape<?> shape) {
-//        shape.setLayerIndex(index);
         if (index == -1) {
             topLayer.addShapeToSwap(shape);
             return;

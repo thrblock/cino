@@ -72,7 +72,7 @@ public abstract class MultiPoint extends GeometricConcept {
 
     public void sameStatusOf(MultiPoint m) {
         sameCentralOf(m);
-        setRadian(m.radian);
+        setRadian(m.getRadian());
     }
 
 }
