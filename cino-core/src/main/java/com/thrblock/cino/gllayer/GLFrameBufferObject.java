@@ -230,17 +230,4 @@ public class GLFrameBufferObject {
     public String toString() {
         return "GLFBO@" + fbo[0];
     }
-
-    @Override
-    public int hashCode() {
-        return fbo[0];
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof GLFrameBufferObject) {
-            return fbo[0] == ((GLFrameBufferObject) obj).fbo[0];
-        }
-        return false;
-    }
 }

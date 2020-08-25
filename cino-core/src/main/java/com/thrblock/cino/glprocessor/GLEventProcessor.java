@@ -13,7 +13,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.thrblock.cino.debug.DebugPannel;
 import com.thrblock.cino.debug.GLDebugHelper;
-import com.thrblock.cino.glanimate.GLAnimateManager;
+import com.thrblock.cino.glanimate.GLFragmentManager;
 import com.thrblock.cino.glinitable.GLInitor;
 import com.thrblock.cino.gllayer.GLLayerManager;
 import com.thrblock.cino.gltransform.GLTransformManager;
@@ -29,7 +29,7 @@ public class GLEventProcessor implements GLEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(GLEventProcessor.class);
 
     @Autowired
-    private GLAnimateManager animateManager;
+    private GLFragmentManager animateManager;
 
     @Autowired
     private GLLayerManager layerManager;

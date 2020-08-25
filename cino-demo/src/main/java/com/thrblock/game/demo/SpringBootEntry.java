@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import com.thrblock.game.demo.component.CharAreaDemo;
+import com.thrblock.game.demo.component.SmtPhy;
 import com.thrblock.springcontext.CinoConfig;
 
 @SpringBootApplication
@@ -19,7 +19,7 @@ import com.thrblock.springcontext.CinoConfig;
 public class SpringBootEntry implements CommandLineRunner {
 
     @Autowired
-    CharAreaDemo charAreaDemo;
+    SmtPhy demo;
     
     public static void main(String[] args) {
         System.setProperty("sun.java2d.uiScale", "1.0");
@@ -31,7 +31,7 @@ public class SpringBootEntry implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        charAreaDemo.activited();
+        demo.activited();
     }
 
 }

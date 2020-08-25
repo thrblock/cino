@@ -27,9 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.eventbus.EventBus;
 import com.thrblock.cino.function.VoidConsumer;
-import com.thrblock.cino.glanimate.GLAnimate;
-import com.thrblock.cino.glanimate.GLAnimateFactory;
-import com.thrblock.cino.glanimate.GLAnimateManager;
+import com.thrblock.cino.glanimate.GLFragmentManager;
 import com.thrblock.cino.glanimate.IPureFragment;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.GLPolygonShape;
@@ -103,18 +101,12 @@ public abstract class CinoComponent implements KeyListener {
      * 根片段容器
      */
     @Autowired
-    protected GLAnimateManager rootAni;
+    protected GLFragmentManager rootAni;
 
     /**
      * 组件片段容器
      */
-    protected GLAnimateManager compAni;
-    /**
-     * 片段构造器
-     */
-    @Autowired
-    protected GLAnimateFactory animateFactory;
-
+    protected GLFragmentManager compAni;
     /**
      * 帧缓冲管理器
      */
@@ -201,10 +193,9 @@ public abstract class CinoComponent implements KeyListener {
         compAni = Optional.ofNullable(parent)
                 .filter(x -> componentConfig.isInheritAnimation())
                 .map(p -> p.compAni)
-                .map(GLAnimateManager::generateSubContainer)
+                .map(GLFragmentManager::generateSubContainer)
                 .orElse(rootAni.generateSubContainer());
         compAni.pause();
-        animateFactory.setContainer(compAni);
         
         rootNode = new GLShapeNode();
         shapeFactory.setNode(rootNode);
@@ -258,28 +249,20 @@ public abstract class CinoComponent implements KeyListener {
      * @param pure
      */
     public final void auto(IPureFragment pure) {
-        GLAnimate ani = animateFactory.build();
-        ani.add(pure);
-        ani.enable();
+        compAni.addFragment(pure);
     }
 
     public final <T> void auto(Supplier<T> sup, Consumer<T> cons) {
-        GLAnimate ani = animateFactory.build();
-        ani.add(() -> cons.accept(sup.get()));
-        ani.enable();
+        compAni.addFragment(() -> cons.accept(sup.get()));
     }
 
     public final void autoEvery(int count, IPureFragment pure) {
-        GLAnimate ani = animateFactory.build();
-        ani.add(pure.mergeDelay(count));
-        ani.enable();
+        compAni.addFragment(pure.mergeDelay(count));
     }
 
     public final <T> void autoEvery(int count, Supplier<T> sup, Consumer<T> cons) {
-        GLAnimate ani = animateFactory.build();
         IPureFragment pure = () -> cons.accept(sup.get());
-        ani.add(pure.mergeDelay(count));
-        ani.enable();
+        compAni.addFragment(pure.mergeDelay(count));
     }
 
     /**
@@ -288,29 +271,21 @@ public abstract class CinoComponent implements KeyListener {
      * @param pure
      */
     public final void auto(BooleanSupplier condition, IPureFragment pure) {
-        GLAnimate ani = animateFactory.build();
-        ani.add(pure.mergeCondition(condition));
-        ani.enable();
+        compAni.addFragment(pure.mergeCondition(condition));
     }
 
     public final <T> void auto(BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
-        GLAnimate ani = animateFactory.build();
         IPureFragment pure = () -> cons.accept(sup.get());
-        ani.add(pure.mergeCondition(condition));
-        ani.enable();
+        compAni.addFragment(pure.mergeCondition(condition));
     }
 
     public final void autoEvery(int count, BooleanSupplier condition, IPureFragment pure) {
-        GLAnimate ani = animateFactory.build();
-        ani.add(pure.mergeDelay(count).mergeCondition(condition));
-        ani.enable();
+        compAni.addFragment(pure.mergeDelay(count).mergeCondition(condition));
     }
 
     public final <T> void autoEvery(int count, BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
-        GLAnimate ani = animateFactory.build();
         IPureFragment pure = () -> cons.accept(sup.get());
-        ani.add(pure.mergeDelay(count).mergeCondition(condition));
-        ani.enable();
+        compAni.addFragment(pure.mergeDelay(count).mergeCondition(condition));
     }
 
     public final void autoMouseClicked(Consumer<MouseEvent> e) {

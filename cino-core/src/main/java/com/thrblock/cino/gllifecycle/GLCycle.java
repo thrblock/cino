@@ -27,6 +27,10 @@ public class GLCycle<T> {
     public void safeRemove(T t) {
         safeOperation(s -> s.remove(t));
     }
+    
+    public void safeRemoveAll() {
+        safeOperation(Set::clear);
+    }
 
     public void safeUpdate(Consumer<T> cons) {
         safeOperation(s -> s.forEach(cons));

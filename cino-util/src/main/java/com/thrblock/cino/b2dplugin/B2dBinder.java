@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.concept.Polygon;
 import com.thrblock.cino.concept.Rect;
-import com.thrblock.cino.glanimate.GLAnimateFactory;
+import com.thrblock.cino.glanimate.GLFragmentManager;
 
 /**
  * Box2d 图形绑定工具
@@ -26,8 +26,6 @@ import com.thrblock.cino.glanimate.GLAnimateFactory;
 public class B2dBinder {
     @Autowired
     private CinoFrameConfig config;
-    @Autowired
-    protected GLAnimateFactory animateFactory;
     /**
      * 定义 Box2d 的1meter 相当于cino渲染窗格的多少像素
      */
@@ -36,6 +34,7 @@ public class B2dBinder {
     private float restitution = 0.3f;
     private float density = 1.0f;
     private World world;
+    private GLFragmentManager fragmentManager;
 
     public World getWorld() {
         return world;
@@ -67,6 +66,14 @@ public class B2dBinder {
 
     public void setDensity(float density) {
         this.density = density;
+    }
+    
+    public GLFragmentManager getFragmentManager() {
+        return fragmentManager;
+    }
+
+    public void setFragmentManager(GLFragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
     }
 
     /**
@@ -155,8 +162,7 @@ public class B2dBinder {
         fixture.setRestitution(restitution);
         
         if(enable) {
-            B2dBinderFragment frag = generate(rect, body);
-            animateFactory.build(frag).enable();
+            this.fragmentManager.addFragment(generate(rect, body));
         }
         return body;
     }
@@ -199,7 +205,7 @@ public class B2dBinder {
         fixture.setRestitution(restitution);
         B2dBinderFragment frag = generate(rect, body);
         if(enable) {
-            animateFactory.build(frag).enable();
+            this.fragmentManager.addFragment(frag);
         }
         return frag;
     }
@@ -230,7 +236,7 @@ public class B2dBinder {
 
         B2dBinderFragment frag = generate(rect, body);
         if(enable) {
-            animateFactory.build(frag).enable();
+            this.fragmentManager.addFragment(frag);
         }
         return body;
     }
@@ -258,13 +264,5 @@ public class B2dBinder {
                 shape.setCentralY(vec.y * meterToPixel);
             }
         };
-    }
-
-    public GLAnimateFactory getAnimateFactory() {
-        return animateFactory;
-    }
-
-    public void setAnimateFactory(GLAnimateFactory animateFactory) {
-        this.animateFactory = animateFactory;
     }
 }
