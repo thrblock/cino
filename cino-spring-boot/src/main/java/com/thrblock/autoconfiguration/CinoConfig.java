@@ -1,4 +1,4 @@
-package com.thrblock.springcontext;
+package com.thrblock.autoconfiguration;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

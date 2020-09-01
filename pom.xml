@@ -4,16 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.thrblock</groupId>
 	<artifactId>cino-root</artifactId>
-	<version>0.0.5.20200825</version>
+	<version>0.0.6.20200901</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cino-core</module>
 		<module>cino-util</module>
 		<module>cino-demo</module>
 		<module>cino-glcomponent</module>
+		<module>cino-spring-boot</module>
 	</modules>
 	<properties>
-		<cino.version>0.0.5.20200825</cino.version>
+		<cino.version>0.0.6.20200901</cino.version>
 		<spring-framework.version>5.2.5.RELEASE</spring-framework.version>
 		<springframework.boot.version>2.2.6.RELEASE</springframework.boot.version>
 		<jogl.version>2.3.2</jogl.version>
@@ -37,6 +38,11 @@
 			<dependency>
 				<groupId>com.thrblock</groupId>
 				<artifactId>cino-core</artifactId>
+				<version>${cino.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thrblock</groupId>
+				<artifactId>cino-spring-boot</artifactId>
 				<version>${cino.version}</version>
 			</dependency>
 			<dependency>

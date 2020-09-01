@@ -40,4 +40,16 @@ public class GLOval extends GLPolygonShape<Polygon> {
         result.setCentralY(y);
         return result;
     }
+    
+    public void resize(float axisA,float axisB,float accuracy) {
+        double thetaAcc = 2 * Math.PI / accuracy;
+        float cx = getCentralX();
+        float cy = getCentralY();
+        for (int i = 0; i < points.length; i++) {
+            float px = (axisA / 2) * (float) Math.cos(thetaAcc * i) + cx;
+            float py = (axisB / 2) * (float) Math.sin(thetaAcc * i) + cy;
+            points[i].setX(px);
+            points[i].setY(py);
+        }
+    }
 }

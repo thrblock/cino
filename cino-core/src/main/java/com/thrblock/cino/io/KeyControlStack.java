@@ -93,6 +93,13 @@ public class KeyControlStack implements AWTEventListener {
             keyStatus[e.getKeyCode()] = false;
         }
     }
+    
+    private void onKeyTyped(KeyEvent e) {
+        KeyListener listener = peekKeyListener();
+        if (listener != null) {
+            listener.keyTyped(e);
+        }
+    }
 
     @Override
     public void eventDispatched(AWTEvent event) {
@@ -105,6 +112,9 @@ public class KeyControlStack implements AWTEventListener {
                 break;
             case KeyEvent.KEY_RELEASED:
                 onKeyRelease(e);
+                break;
+            case KeyEvent.KEY_TYPED:
+                onKeyTyped(e);
                 break;
             default:
                 break;

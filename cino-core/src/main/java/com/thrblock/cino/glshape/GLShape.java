@@ -150,7 +150,7 @@ public abstract class GLShape<T extends GeometricConcept> implements GLNode {
         if (program != null) {
             program.bind(gl);
         }
-        GLDebugHelper.logIfError(gl,"before shape draw:" + this.toString());
+        GLDebugHelper.logIfError(gl,"before shape draw:" + this.getClass().getSimpleName());
     }
 
     /**
@@ -170,7 +170,7 @@ public abstract class GLShape<T extends GeometricConcept> implements GLNode {
         if (program != null) {
             program.unBind(gl);
         }
-        GLDebugHelper.logIfError(gl,"after shape draw:" + this.toString());
+        GLDebugHelper.logIfError(gl,"after shape draw:" + this.getClass().getSimpleName());
     }
     
     /**

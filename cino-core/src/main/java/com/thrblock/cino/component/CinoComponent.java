@@ -5,9 +5,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BooleanSupplier;
@@ -51,6 +53,7 @@ public abstract class CinoComponent implements KeyListener {
      * 加载树
      */
     private static Deque<CinoComponent> initingTree = new ConcurrentLinkedDeque<>();
+    private static Set<String> initingTreeSet = new HashSet<>();
     /**
      * 日志
      */
@@ -165,7 +168,9 @@ public abstract class CinoComponent implements KeyListener {
         initingTree.push(this);
         
         String initTree = printInitTree();
-        logger.info("init-tree:{}", initTree);
+        if(initingTreeSet.add(initTree)) {
+            logger.info("init-tree:{}", initTree);
+        }
         
         activitedSupplier = () -> activited;
         activitedHolder = new LinkedList<>();
@@ -185,7 +190,6 @@ public abstract class CinoComponent implements KeyListener {
                     .map(p -> p.treeComponentConfig)
                     .ifPresent(p -> this.treeComponentConfig = p);
         }
-        
         if(componentConfig == null) {
             componentConfig = Optional.ofNullable(treeComponentConfig).orElse(new ComponentConfig());
         }

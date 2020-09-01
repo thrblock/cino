@@ -4,14 +4,10 @@
 	<parent>
 		<groupId>com.thrblock</groupId>
 		<artifactId>cino-root</artifactId>
-		<version>0.0.5.20200825</version>
+		<version>0.0.6.20200901</version>
 	</parent>
 	<artifactId>cino-demo</artifactId>
 	<dependencies>
-		<dependency>
-			<groupId>com.thrblock</groupId>
-			<artifactId>cino-core</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>com.thrblock</groupId>
 			<artifactId>cino-util</artifactId>
@@ -62,6 +58,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.thrblock</groupId>
+			<artifactId>cino-spring-boot</artifactId>
 		</dependency>
 	</dependencies>
 </project>

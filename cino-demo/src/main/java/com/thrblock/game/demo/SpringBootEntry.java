@@ -3,19 +3,18 @@ package com.thrblock.game.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import com.thrblock.game.demo.component.SmtPhy;
-import com.thrblock.springcontext.CinoConfig;
 
 @SpringBootApplication
 @Configuration
-@Import(CinoConfig.class)
 @ComponentScan(value = { "com.thrblock.game", "com.thrblock.aria" })
+@EnableAutoConfiguration
 public class SpringBootEntry implements CommandLineRunner {
 
     @Autowired

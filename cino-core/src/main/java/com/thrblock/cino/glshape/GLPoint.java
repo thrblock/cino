@@ -75,6 +75,14 @@ public class GLPoint extends GLShape<Point> {
         float b = c.getBlue() / 255f;
         color.setRgb(new Vec3(r, g, b));
     }
+    
+    public void setColor(int c) {
+        int v = 0xff000000 | c;
+        int ri = (v >> 16) & 0xFF;
+        int gi = (v >> 8) & 0xFF;
+        int bi = (v >> 0) & 0xFF;
+        color.setRgb(new Vec3(ri / 255f, gi / 255f, bi / 255f));
+    }
 
     /**
      * 设置颜色分量R

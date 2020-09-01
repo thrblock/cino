@@ -68,7 +68,14 @@ public abstract class GLMultiPointShape<R extends MultiPoint> extends GLShape<R>
             point.setColor(c);
         }
     }
-
+    
+    public void setAllPointColor(int rgb) {
+        for (int i = 0; i < points.length; i++) {
+            GLPoint point = points[i];
+            point.setColor(rgb);
+        }
+    }
+    
     /**
      * 设置指定索引点的颜色
      * 
@@ -78,6 +85,12 @@ public abstract class GLMultiPointShape<R extends MultiPoint> extends GLShape<R>
     public void setPointColor(int index, Color c) {
         if (index >= 0 && index < points.length) {
             points[index].setColor(c);
+        }
+    }
+    
+    public void setPointColor(int index, int rgb) {
+        if (index >= 0 && index < points.length) {
+            points[index].setColor(rgb);
         }
     }
 

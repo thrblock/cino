@@ -1,7 +1,8 @@
 package com.thrblock.poolable;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -79,7 +80,7 @@ public class ArrayPool<T extends Poolable> {
         crt = -1;
     }
 
-    public void forEach(Consumer<? super T> action) {
-        lst.forEach(action);
+    public List<T> snapShot() {
+        return new LinkedList<>(lst);
     }
 }

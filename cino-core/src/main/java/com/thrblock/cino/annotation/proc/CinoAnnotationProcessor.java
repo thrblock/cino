@@ -69,7 +69,7 @@ class CinoAnnotationProcessor
         CinoSubComponentConfiguration subAn = AnnotationUtils.findAnnotation(bean.getClass(),
                 CinoSubComponentConfiguration.class);
         Optional.ofNullable(subAn).ifPresent(s -> Optional.ofNullable(bean).filter(CinoComponent.class::isInstance)
-                .map(CinoComponent.class::cast).ifPresent(comp -> comp.setComponentConfig(ComponentConfig.fromAnnotation(an))));
+                .map(CinoComponent.class::cast).ifPresent(comp -> comp.setComponentConfig(ComponentConfig.fromAnnotation(subAn))));
         return bean;
     }
 
