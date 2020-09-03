@@ -4,6 +4,7 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.stereotype.Component;
 
+import com.thrblock.cino.glanimate.fragment.IPureFragment;
 import com.thrblock.cino.gllifecycle.GLCycle;
 
 /**

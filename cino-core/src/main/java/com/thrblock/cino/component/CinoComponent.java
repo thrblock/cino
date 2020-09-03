@@ -30,7 +30,7 @@ import com.thrblock.cino.CinoFrameConfig;
 import com.thrblock.cino.eventbus.EventBus;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glanimate.GLFragmentManager;
-import com.thrblock.cino.glanimate.IPureFragment;
+import com.thrblock.cino.glanimate.fragment.IPureFragment;
 import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
 import com.thrblock.cino.glshape.GLPolygonShape;
 import com.thrblock.cino.glshape.factory.GLShapeFactory;
@@ -261,12 +261,12 @@ public abstract class CinoComponent implements KeyListener {
     }
 
     public final void autoEvery(int count, IPureFragment pure) {
-        compAni.addFragment(pure.mergeDelay(count));
+        compAni.addFragment(pure.delay(count));
     }
 
     public final <T> void autoEvery(int count, Supplier<T> sup, Consumer<T> cons) {
         IPureFragment pure = () -> cons.accept(sup.get());
-        compAni.addFragment(pure.mergeDelay(count));
+        compAni.addFragment(pure.delay(count));
     }
 
     /**
@@ -275,21 +275,21 @@ public abstract class CinoComponent implements KeyListener {
      * @param pure
      */
     public final void auto(BooleanSupplier condition, IPureFragment pure) {
-        compAni.addFragment(pure.mergeCondition(condition));
+        compAni.addFragment(pure.whenThen(condition));
     }
 
     public final <T> void auto(BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
         IPureFragment pure = () -> cons.accept(sup.get());
-        compAni.addFragment(pure.mergeCondition(condition));
+        compAni.addFragment(pure.whenThen(condition));
     }
 
     public final void autoEvery(int count, BooleanSupplier condition, IPureFragment pure) {
-        compAni.addFragment(pure.mergeDelay(count).mergeCondition(condition));
+        compAni.addFragment(pure.delay(count).whenThen(condition));
     }
 
     public final <T> void autoEvery(int count, BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
         IPureFragment pure = () -> cons.accept(sup.get());
-        compAni.addFragment(pure.mergeDelay(count).mergeCondition(condition));
+        compAni.addFragment(pure.delay(count).whenThen(condition));
     }
 
     public final void autoMouseClicked(Consumer<MouseEvent> e) {

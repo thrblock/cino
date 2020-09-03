@@ -3,7 +3,7 @@ package com.thrblock.cino.b2dplugin;
 import org.jbox2d.dynamics.Body;
 
 import com.thrblock.cino.concept.Polygon;
-import com.thrblock.cino.glanimate.IPureFragment;
+import com.thrblock.cino.glanimate.fragment.IPureFragment;
 
 /**
  * Box2d 绑定帧逻辑<br />

@@ -9,6 +9,7 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL2;
@@ -94,7 +95,8 @@ public class SmtPhy extends CinoComponent {
         binder.bindRectToRect(left.exuviate(), false);
         binder.bindRectToRect(right.exuviate(), false);
 
-        GLTexture funny = new GLIOTexture(getClass().getResourceAsStream("haha.png"), "png");
+        ClassPathResource resource = new ClassPathResource("img/haha.png");
+        GLTexture funny = new GLIOTexture(resource.getInputStream(), "png");
         shapeFactory.setLayer(1);
         for (int i = 0; i < FUNNY_NUMBER; i++) {
             GLImage img = shapeFactory.buildGLImage(0, 0, FUNNY_RADIS, FUNNY_RADIS, funny);
