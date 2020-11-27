@@ -36,7 +36,7 @@ public class GLRadio extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        return shapeFactory.buildGLRect(0, 0, w, h);
+        return rootNode().glRect(0, 0, w, h);
     }
 
     @Override
@@ -55,10 +55,10 @@ public class GLRadio extends GLRectBase {
         base.setAllPointColor(Color.WHITE);
         base.setFill(true);
 
-        GLRect border = shapeFactory.buildGLRect(0, 0, w, h);
+        GLRect border = rootNode().glRect(0, 0, w, h);
         border.setAllPointColor(Color.BLACK);
         
-        GLOval innerOval = shapeFactory.buildGLOval(0, 0, w - margin * 2, h - margin * 2, 12);
+        GLOval innerOval = rootNode().glOval(0, 0, w - margin * 2, h - margin * 2, 12);
         innerOval.setAllPointColor(Color.DARK_GRAY);
         
         

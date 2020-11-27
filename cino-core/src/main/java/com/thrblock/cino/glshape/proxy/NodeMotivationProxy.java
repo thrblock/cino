@@ -1,6 +1,6 @@
 package com.thrblock.cino.glshape.proxy;
 
-import com.thrblock.cino.glshape.factory.GLNode;
+import com.thrblock.cino.glshape.GLNode;
 import com.thrblock.cino.util.math.CMath;
 
 /**

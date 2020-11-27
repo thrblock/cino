@@ -24,7 +24,7 @@ public class GLTextButton extends GLRectBase {
     }
     
     public GLTextButton(String text, float w, float h) {
-        this(new CharAreaConfig(text), w, h);
+        this(CharAreaConfig.builder().charArray(text.toCharArray()).build(), w, h);
         config.setPositionSyn(new CentralInLine());
         config.setStyle((s, i, m) -> m.setAllPointColor(Color.BLACK));
     }
@@ -35,7 +35,7 @@ public class GLTextButton extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        return shapeFactory.buildGLRect(0, 0, w, h);
+        return rootNode().glRect(0, 0, w, h);
     }
     
     @Override
@@ -50,19 +50,19 @@ public class GLTextButton extends GLRectBase {
         base.setFill(true);
         base.setAllPointColor(Color.GRAY);
 
-        GLLine top = shapeFactory.buildGLLine(-w / 2, h / 2, w / 2, h / 2);
+        GLLine top = rootNode().glLine(-w / 2, h / 2, w / 2, h / 2);
         top.setAllPointColor(Color.WHITE);
         top.setLineWidth(2f);
 
-        GLLine left = shapeFactory.buildGLLine(-w / 2, h / 2, -w / 2, -h / 2);
+        GLLine left = rootNode().glLine(-w / 2, h / 2, -w / 2, -h / 2);
         left.setAllPointColor(Color.WHITE);
         left.setLineWidth(2f);
 
-        GLLine bottom = shapeFactory.buildGLLine(-w / 2, -h / 2, w / 2, -h / 2);
+        GLLine bottom = rootNode().glLine(-w / 2, -h / 2, w / 2, -h / 2);
         bottom.setAllPointColor(Color.DARK_GRAY);
         bottom.setLineWidth(2f);
 
-        GLLine right = shapeFactory.buildGLLine(w / 2, h / 2, w / 2, -h / 2);
+        GLLine right = rootNode().glLine(w / 2, h / 2, w / 2, -h / 2);
         right.setAllPointColor(Color.DARK_GRAY);
         right.setLineWidth(2f);
 

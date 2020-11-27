@@ -23,7 +23,7 @@ public class GLImgButton extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        GLImage img = shapeFactory.buildGLImage(0, 0, w, h, GLImage.EMPTY_TEXTURE);
+        GLImage img = rootNode().glImage(0, 0, w, h, GLImage.EMPTY_TEXTURE);
         this.baseImg = img;
         return img;
     }

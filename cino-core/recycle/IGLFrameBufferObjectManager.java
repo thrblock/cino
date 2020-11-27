@@ -1,4 +1,4 @@
-package com.thrblock.cino.gllayer;
+package com.thrblock.cino.lnode;
 
 /**
  * OpenGL 帧缓冲对象管理器

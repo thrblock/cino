@@ -1,5 +1,7 @@
 package com.thrblock.cino.concept;
 
+import java.util.Arrays;
+
 public class Rect extends Polygon {
     public Rect(Point... points) {
         super(points);
@@ -9,10 +11,8 @@ public class Rect extends Polygon {
     }
 
     public Rect(float x, float y, float w, float h) {
-        this(new Point(x - w / 2, y + h / 2), 
-             new Point(x + w / 2, y + h / 2), 
-             new Point(x + w / 2, y - h / 2),
-             new Point(x - w / 2, y - h / 2));
+        this(new Point(x - w / 2, y + h / 2), new Point(x + w / 2, y + h / 2), new Point(x + w / 2, y - h / 2),
+                new Point(x - w / 2, y - h / 2));
     }
 
     /**
@@ -209,5 +209,61 @@ public class Rect extends Polygon {
         float xoffset = (float) Math.sin(getRadian()) * h;
         setCentralX(getCentralX() + xoffset);
         setCentralY(getCentralY() - yoffset);
+    }
+
+    public MBRSession mbrSession() {
+        return new MBRSession();
+    }
+
+    public class MBRSession {
+        float maxX = Float.MIN_VALUE;
+        float minX = Float.MAX_VALUE;
+        float maxY = Float.MIN_VALUE;
+        float minY = Float.MAX_VALUE;
+
+        public void auto(GeometricConcept concept) {
+            if (Point.class.isInstance(concept)) {
+                calc(Point.class.cast(concept));
+            } else {
+                calc(MultiPoint.class.cast(concept));
+            }
+        }
+
+        public void calc(MultiPoint p) {
+            Arrays.stream(p.getPoints()).forEach(this::calc);
+        }
+
+        public void calc(Point p) {
+            float px = p.getX();
+            float py = p.getY();
+            if (px > maxX) {
+                maxX = px;
+            }
+            if (px < minX) {
+                minX = px;
+            }
+            if (py > maxY) {
+                maxY = py;
+            }
+            if (py < minY) {
+                minY = py;
+            }
+        }
+
+        public void complete() {
+            if (maxX > minX && maxY > minY) {
+                setRadian(0);
+                setCentralX((maxX + minX) / 2);
+                setCentralY((maxY + minY) / 2);
+                setWidth(maxX - minX);
+                setHeight(maxY - minY);
+            } else {
+                setRadian(0);
+                setCentralX(0);
+                setCentralY(0);
+                setWidth(2);
+                setHeight(2);
+            }
+        }
     }
 }

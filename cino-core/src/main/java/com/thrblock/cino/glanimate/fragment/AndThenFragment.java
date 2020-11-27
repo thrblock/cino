@@ -1,11 +1,14 @@
 package com.thrblock.cino.glanimate.fragment;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class AndThenFragment implements IPureFragment {
+@EqualsAndHashCode(callSuper = true)
+public class AndThenFragment extends AbstractFragment {
     private final IPureFragment src;
     private final IPureFragment then;
+    private IPureFragment ref;
 
     @Override
     public void fragment() {
@@ -18,4 +21,5 @@ public class AndThenFragment implements IPureFragment {
         src.reset();
         then.reset();
     }
+
 }

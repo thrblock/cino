@@ -1,4 +1,4 @@
-package com.thrblock.cino.gllayer;
+package com.thrblock.cino.fbo;
 
 import java.nio.FloatBuffer;
 
@@ -9,7 +9,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.thrblock.cino.debug.GLDebugHelper;
 import com.thrblock.cino.glshape.GLPoint;
-import com.thrblock.cino.gltransform.GLTransformManager;
+import com.thrblock.cino.gltransform.GLTransform;
 import com.thrblock.cino.shader.AbstractGLProgram;
 
 /**
@@ -131,7 +131,7 @@ public class GLFrameBufferObject {
             inited = false;
         }
         if (!inited) {
-            if (flexmode == GLTransformManager.FIX) {
+            if (flexmode == GLTransform.FIX) {
                 initPointPosition();
             }
             initFBOByGLContext(gl);
@@ -184,7 +184,7 @@ public class GLFrameBufferObject {
         gl2.glMatrixMode(GL2.GL_MODELVIEW);
         gl2.glPopMatrix();
 
-        if (flexmode == GLTransformManager.FIX) {
+        if (flexmode == GLTransform.FIX) {
             gl2.glMatrixMode(GL2.GL_PROJECTION);
             gl2.glPopMatrix();
         }
@@ -193,7 +193,7 @@ public class GLFrameBufferObject {
     }
 
     private void pushCurrentMat(GL2 gl2) {
-        if (flexmode == GLTransformManager.FIX) {
+        if (flexmode == GLTransform.FIX) {
             gl2.glMatrixMode(GL2.GL_PROJECTION);
             gl2.glPushMatrix();
             gl2.glLoadIdentity();

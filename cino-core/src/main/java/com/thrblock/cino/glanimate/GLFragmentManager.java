@@ -5,7 +5,9 @@ import javax.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.glanimate.fragment.IPureFragment;
-import com.thrblock.cino.gllifecycle.GLCycle;
+import com.thrblock.cino.gllifecycle.CycleArray;
+
+import lombok.Getter;
 
 /**
  * GLAnimateManager 片段逻辑容器，为各类片段逻辑提供线程安全的插入、删除、遍历操作
@@ -14,9 +16,11 @@ import com.thrblock.cino.gllifecycle.GLCycle;
  */
 @Component
 public class GLFragmentManager {
-    private GLCycle<GLFragmentManager> subs = new GLCycle<>(GLFragmentManager[]::new);
-    private GLCycle<IPureFragment> aniCycle = new GLCycle<>(IPureFragment[]::new);
+    private CycleArray<GLFragmentManager> subs = new CycleArray<>(GLFragmentManager[]::new);
+    private CycleArray<IPureFragment> aniCycle = new CycleArray<>(IPureFragment[]::new);
     private boolean pause = false;
+    @Getter
+    private long clock;
 
     private GLFragmentManager() {
     }
@@ -25,6 +29,7 @@ public class GLFragmentManager {
         if (pause) {
             return;
         }
+        clock++;
         IPureFragment[] frags = aniCycle.safeHold();
         for (int i = 0; i < frags.length; i++) {
             frags[i].fragment();

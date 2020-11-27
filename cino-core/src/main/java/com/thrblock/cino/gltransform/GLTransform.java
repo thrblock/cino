@@ -9,6 +9,18 @@ import com.jogamp.opengl.glu.GLU;
 import com.thrblock.cino.glmatrix.GLMatrixData;
 
 public final class GLTransform {
+    /**
+     * 等比例缩放
+     * 
+     * @see #setFlexMode
+     */
+    public static final int SCALE = 0;
+    /**
+     * 仅仅是画布变大，图形大小不变
+     * 
+     * @see #setFlexMode
+     */
+    public static final int FIX = 1;
 
     private float translateX;
     private float translateY;

@@ -1,4 +1,4 @@
-package com.thrblock.cino.glshape.factory;
+package com.thrblock.cino.lnode;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -36,9 +36,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLPoint glPoint(int layer, float x, float y) {
+    public GLPoint glPoint(float x, float y) {
         GLPoint point = new GLPoint(x, y);
-        point.setLayerIndex(layer);
         return point;
     }
 
@@ -50,9 +49,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLPoint glPoint(int layer, Point pt) {
+    public GLPoint glPoint(Point pt) {
         GLPoint point = new GLPoint(pt);
-        point.setLayerIndex(layer);
         return point;
     }
 
@@ -67,9 +65,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLLine glLine(int layer, float x1, float y1, float x2, float y2) {
+    public GLLine glLine(float x1, float y1, float x2, float y2) {
         GLLine line = new GLLine(x1, y1, x2, y2);
-        line.setLayerIndex(layer);
         return line;
     }
 
@@ -81,9 +78,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLLine glLine(int layer, Line l) {
+    public GLLine glLine(Line l) {
         GLLine line = new GLLine(l);
-        line.setLayerIndex(layer);
         return line;
     }
 
@@ -95,9 +91,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLRect glRect(int layer, Rect r) {
+    public GLRect glRect(Rect r) {
         GLRect rect = new GLRect(r);
-        rect.setLayerIndex(layer);
         return rect;
     }
 
@@ -113,9 +108,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLOval glOval(int layer, float x, float y, float axisA, float axisB, int accuracy) {
+    public GLOval glOval(float x, float y, float axisA, float axisB, int accuracy) {
         GLOval oval = GLOval.generate(x, y, axisA, axisB, accuracy);
-        oval.setLayerIndex(layer);
         return oval;
     }
 
@@ -131,9 +125,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLImage glImage(int layer, float x, float y, float width, float height, GLTexture texture) {
+    public GLImage glImage(float x, float y, float width, float height, GLTexture texture) {
         GLImage image = new GLImage(x, y, width, height, texture);
-        image.setLayerIndex(layer);
         return image;
     }
 
@@ -146,9 +139,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLImage glImage(int layer, Rect r, GLTexture texture) {
+    public GLImage glImage(Rect r, GLTexture texture) {
         GLImage image = new GLImage(r, texture);
-        image.setLayerIndex(layer);
         return image;
     }
 
@@ -159,9 +151,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLImage glImage(int layer) {
+    public GLImage glImage() {
         GLImage image = new GLImage();
-        image.setLayerIndex(layer);
         return image;
     }
 
@@ -172,9 +163,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLImage glImage(int layer, float w, float h) {
+    public GLImage glImage(float w, float h) {
         GLImage image = new GLImage(w, h);
-        image.setLayerIndex(layer);
         return image;
     }
 
@@ -191,9 +181,8 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLTriangle glTriangle(int layer, float x1, float y1, float x2, float y2, float x3, float y3) {
+    public GLTriangle glTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
         GLTriangle triangle = new GLTriangle(x1, y1, x2, y2, x3, y3);
-        triangle.setLayerIndex(layer);
         return triangle;
     }
 
@@ -206,31 +195,28 @@ class ShapeBeanFactory {
      */
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLPolygonShape<Polygon> glPolygon(int layer, float[] xs, float[] ys) {
+    public GLPolygonShape<Polygon> glPolygon(float[] xs, float[] ys) {
         List<Point> pointList = new LinkedList<>();
         for (int i = 0; i < xs.length; i++) {
             pointList.add(new Point(xs[i], ys[i]));
         }
         Polygon concept = new Polygon(Iterables.toArray(pointList, Point.class));
         GLPolygonShape<Polygon> polygon = new GLPolygonShape<>(concept);
-        polygon.setLayerIndex(layer);
         return polygon;
     }
 
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLPolygonShape<Polygon> glPolygon(int layer, Vec2... points) {
+    public GLPolygonShape<Polygon> glPolygon(Vec2... points) {
         Polygon concept = new Polygon(Arrays.stream(points).map(Point::new).toArray(Point[]::new));
         GLPolygonShape<Polygon> polygon = new GLPolygonShape<>(concept);
-        polygon.setLayerIndex(layer);
         return polygon;
     }
 
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public GLRect glRect(int layer, float x, float y, float width, float height) {
+    public GLRect glRect(float x, float y, float width, float height) {
         GLRect rect = new GLRect(x, y, width, height);
-        rect.setLayerIndex(layer);
         return rect;
     }
 }

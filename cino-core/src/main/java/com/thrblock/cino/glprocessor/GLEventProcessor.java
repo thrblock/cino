@@ -15,8 +15,7 @@ import com.thrblock.cino.debug.DebugPannel;
 import com.thrblock.cino.debug.GLDebugHelper;
 import com.thrblock.cino.glanimate.GLFragmentManager;
 import com.thrblock.cino.glinitable.GLInitor;
-import com.thrblock.cino.gllayer.GLLayerManager;
-import com.thrblock.cino.gltransform.GLTransformManager;
+import com.thrblock.cino.lnode.LNodeManager;
 
 /**
  * GLEventProcessor 捕捉OpenGL绘制事件并进行处理，是各类组件中同步逻辑的调用者
@@ -32,7 +31,7 @@ public class GLEventProcessor implements GLEventListener {
     private GLFragmentManager animateManager;
 
     @Autowired
-    private GLLayerManager layerManager;
+    private LNodeManager lnodeManager;
 
     @Autowired
     private GLInitor contextInitor;
@@ -48,24 +47,22 @@ public class GLEventProcessor implements GLEventListener {
 
     @Autowired
     private GLScreenSizeChangeListenerHolder screenChangeListener;
-
+    
     @Autowired
-    private GLTransformManager transformManager;
+    private Clock clock;
 
     @Override
     public void display(GLAutoDrawable drawable) {
         long startTime = System.currentTimeMillis();
+        clock.clock();
         GL gl = drawable.getGL();
         GL2 gl2 = gl.getGL2();
-
-        transformManager.initDefault(gl2);
-        GLDebugHelper.logIfError(gl2, "init default transform");
 
         contextInitor.glInitializing(gl);
         GLDebugHelper.logIfError(gl2, "glInitializing");
 
-        layerManager.drawAllLayer(gl2);
-        GLDebugHelper.logIfError(gl2, "drawAllLayer");
+        lnodeManager.drawAllNode(gl2);
+        GLDebugHelper.logIfError(gl2, "drawAllNode");
 
         animateManager.runAll();
         GLDebugHelper.logIfError(gl2, "runAllAnimate");
@@ -119,7 +116,6 @@ public class GLEventProcessor implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
-        transformManager.reshape(drawable, x, y, w, h);
         screenChangeListener.getScreenChangeListener().forEach(e -> e.accept(w, h));
         GLDebugHelper.logIfError(drawable.getGL(), "glreshape");
     }

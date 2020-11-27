@@ -19,7 +19,7 @@ public class GLProgressBar extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        return shapeFactory.buildGLRect(0, 0, w, h);
+        return rootNode().glRect(0, 0, w, h);
     }
 
     @Override
@@ -28,11 +28,11 @@ public class GLProgressBar extends GLRectBase {
         base.setAllPointColor(Color.WHITE);
         base.setFill(true);
 
-        GLRect progressBar = shapeFactory.buildGLRect(0, 0, w, h);
+        GLRect progressBar = rootNode().glRect(0, 0, w, h);
         progressBar.setFill(true);
         progressBar.setAllPointColor(new Color(81, 205, 91));
         
-        GLRect border = shapeFactory.buildGLRect(0, 0, w, h);
+        GLRect border = rootNode().glRect(0, 0, w, h);
         border.setAllPointColor(Color.BLACK);
         
         auto(() -> {

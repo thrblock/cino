@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.springframework.stereotype.Component;
 
 import com.jogamp.opengl.GL;
-import com.thrblock.cino.gllifecycle.GLCycle;
+import com.thrblock.cino.gllifecycle.CycleArray;
 
 /**
  * 用于加载 GLInitializable 的组件
@@ -14,7 +14,7 @@ import com.thrblock.cino.gllifecycle.GLCycle;
  */
 @Component
 public class GLInitor {
-    private GLCycle<GLInitializable> initCycle = new GLCycle<>(GLInitializable[]::new);
+    private CycleArray<GLInitializable> initCycle = new CycleArray<>(GLInitializable[]::new);
 
     /**
      * 加载一个组件，一般来讲，使用此方法的目的是预加载； 此方法可以在非GL上下文所在线程调用

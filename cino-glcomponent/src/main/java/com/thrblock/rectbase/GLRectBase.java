@@ -90,19 +90,19 @@ public abstract class GLRectBase extends CinoComponent {
     }
 
     public float getX() {
-        return rootNode.getCentralX();
+        return rootNode().getCentralX();
     }
 
     public float getY() {
-        return rootNode.getCentralY();
+        return rootNode().getCentralY();
     }
 
     public void setX(float x) {
-        rootNode.setX(x);
+        rootNode().setX(x);
     }
 
     public void setY(float y) {
-        rootNode.setY(y);
+        rootNode().setY(y);
     }
 
     protected void synRectStatus(GLRect aim, GLRect r) {

@@ -35,7 +35,7 @@ public class GLCheckBox extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        return shapeFactory.buildGLRect(0, 0, w, h);
+        return rootNode().glRect(0, 0, w, h);
     }
 
     @Override
@@ -56,10 +56,10 @@ public class GLCheckBox extends GLRectBase {
         base.setAllPointColor(Color.WHITE);
         base.setFill(true);
 
-        GLRect border = shapeFactory.buildGLRect(0, 0, w, h);
+        GLRect border = rootNode().glRect(0, 0, w, h);
         border.setAllPointColor(Color.BLACK);
         
-        GLRect innerRect = shapeFactory.buildGLRect(0, 0, w - margin * 2, h - margin * 2);
+        GLRect innerRect = rootNode().glRect(0, 0, w - margin * 2, h - margin * 2);
         innerRect.setAllPointColor(Color.DARK_GRAY);
         
         auto(() -> {

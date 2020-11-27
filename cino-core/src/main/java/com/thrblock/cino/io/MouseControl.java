@@ -9,12 +9,9 @@ import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.thrblock.cino.annotation.ScreenSizeChangeListener;
-import com.thrblock.cino.gltransform.GLTransformManager;
 
 /**
  * 鼠标控制器
@@ -37,23 +34,13 @@ public class MouseControl implements AWTEventListener {
     @Value("${cino.frame.flexmode:0}")
     private int flexmode;
 
-    private float currentW;
-    private float currentH;
-
-    private int scaledX;
-    private int scaledY;
-
     private boolean[] mouseButtonStatus = new boolean[64];
 
-    @Autowired
-    private GLTransformManager glTransform;
     private int originalX;
     private int originalY;
 
     @PostConstruct
     void init() {
-        this.currentW = screenWidth;
-        this.currentH = screenHeight;
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
@@ -70,8 +57,6 @@ public class MouseControl implements AWTEventListener {
             if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_DRAGGED) {
                 this.originalX = e.getX();
                 this.originalY = e.getY();
-                this.scaledX = getConvertedX(e.getX());
-                this.scaledY = getConvertedY(e.getY());
             } else if (e.getID() == MouseEvent.MOUSE_PRESSED) {
                 press(e.getButton());
             } else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
@@ -80,52 +65,12 @@ public class MouseControl implements AWTEventListener {
         }
     }
 
-    private int getConvertedX(int x) {
-        return flexmode == 1 ? x : (int) (x * screenWidth / currentW);
-    }
-
-    private int getConvertedY(int y) {
-        return flexmode == 1 ? y : (int) (y * screenHeight / currentH);
-    }
-
-    public int getScaledMouseX() {
-        return scaledX;
-    }
-
-    public int getScaledMouseY() {
-        return scaledY;
-    }
-
     public int getOriginalX() {
         return originalX;
     }
 
     public int getOriginalY() {
         return originalY;
-    }
-
-    public float getScaledFactorX() {
-        return flexmode == 1 ? 1.0f : (screenWidth / currentW);
-    }
-
-    public float getScaledFactorY() {
-        return flexmode == 1 ? 1.0f : (screenHeight / currentH);
-    }
-
-    public int getMouseX() {
-        return getMouseX(-1);
-    }
-
-    public int getMouseX(int layerIndex) {
-        return Math.round(glTransform.getGLTransform(layerIndex).getUnprojectedMouseData()[0]);
-    }
-
-    public int getMouseY() {
-        return getMouseY(-1);
-    }
-
-    public int getMouseY(int layerIndex) {
-        return Math.round(glTransform.getGLTransform(layerIndex).getUnprojectedMouseData()[1]);
     }
 
     private void press(int st) {
@@ -178,9 +123,4 @@ public class MouseControl implements AWTEventListener {
         }
     }
 
-    @ScreenSizeChangeListener
-    public void screenChange(int w, int h) {
-        this.currentW = w;
-        this.currentH = h;
-    }
 }

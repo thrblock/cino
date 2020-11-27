@@ -1,6 +1,7 @@
 package com.thrblock.cino.glanimate.fragment;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 原始逻辑仅执行一次
@@ -9,22 +10,23 @@ import lombok.Data;
  *
  */
 @Data
-public class OnceFragment implements IPureFragment {
-    private boolean enable = true;
+@EqualsAndHashCode(callSuper = true)
+public class OnceFragment extends AbstractFragment {
+    private boolean runflag = true;
 
     private final IPureFragment src;
 
     @Override
     public void fragment() {
-        if (enable) {
+        if (runflag) {
+            runflag = false;
             src.fragment();
-            enable = false;
         }
     }
 
     @Override
     public void reset() {
-        enable = true;
+        runflag = true;
         src.reset();
     }
 

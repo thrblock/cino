@@ -1,6 +1,7 @@
 package com.thrblock.cino.glanimate.fragment;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 /**
  * 一个纯粹的片段逻辑 函数式接口<br />
@@ -16,31 +17,53 @@ public interface IPureFragment {
      */
     public void fragment();
 
+    /**
+     * 内态值复位
+     */
     public default void reset() {
     }
 
+    public default void referance(IPureFragment ref) {
+    }
+
     public default AndThenFragment andThen(IPureFragment then) {
-        return new AndThenFragment(this, then);
+        AndThenFragment result = new AndThenFragment(this, then);
+        referance(result);
+        then.referance(result);
+        return result;
     }
 
-    public default AndThenFragment asThen(IPureFragment prev) {
-        return new AndThenFragment(prev, this);
+    public default AndThenFragment andAfter(IPureFragment prev) {
+        AndThenFragment result = new AndThenFragment(prev, this);
+        referance(result);
+        prev.referance(result);
+        return result;
     }
 
-    public default ConditionFragment whenThen(BooleanSupplier condition) {
-        return new ConditionFragment(condition, this, null);
+    public default ConditionFragment withCondition(BooleanSupplier condition) {
+        ConditionFragment result = new ConditionFragment(condition, this, null);
+        referance(result);
+        return result;
     }
 
-    public default ConditionFragment whenThenElse(BooleanSupplier condition, IPureFragment elseDo) {
-        return new ConditionFragment(condition, this, elseDo);
+    public default ConditionFragment withConditionOrElse(BooleanSupplier condition, IPureFragment elseDo) {
+        ConditionFragment result = new ConditionFragment(condition, this, elseDo);
+        referance(result);
+        elseDo.referance(result);
+        return result;
     }
 
-    public default ConditionFragment whenElseThen(BooleanSupplier condition, IPureFragment then) {
-        return new ConditionFragment(condition, then, this);
+    public default ConditionFragment asElse(BooleanSupplier condition, IPureFragment then) {
+        ConditionFragment result = new ConditionFragment(condition, then, this);
+        referance(result);
+        then.referance(result);
+        return result;
     }
-
+    
     public default OnceFragment runOnece() {
-        return new OnceFragment(this);
+        OnceFragment result = new OnceFragment(this);
+        referance(result);
+        return result;
     }
 
     /**
@@ -50,14 +73,60 @@ public interface IPureFragment {
      * @return
      */
     public default DelayFragment delay(int delay) {
-        return new DelayFragment(delay, this);
+        DelayFragment result = new DelayFragment(delay, this);
+        referance(result);
+        return result;
     }
 
     public default SwitchFragment wrapSwitch() {
-        return new SwitchFragment(this);
+        SwitchFragment result = new SwitchFragment(this);
+        referance(result);
+        return result;
+    }
+
+    public default IPureFragment rootReferance() {
+        IPureFragment current = this;
+        while (AbstractFragment.class.isInstance(current)) {
+            IPureFragment next = AbstractFragment.class.cast(current).ref;
+            if(next != null) {
+                current = next;
+            } else {
+                return current;
+            }
+        }
+        return current;
+    }
+    
+    public default IPureFragment withSelfOperation(Consumer<IPureFragment> cons) {
+        AbstractFragment result =  new AbstractFragment() {
+            @Override
+            public void fragment() {
+                IPureFragment.this.fragment();
+                cons.accept(IPureFragment.this);
+            }
+        };
+        result.referance(this);
+        return result;
+    }
+    
+    public default IPureFragment withRootOperation(Consumer<IPureFragment> cons) {
+        AbstractFragment result = new AbstractFragment() {
+            @Override
+            public void fragment() {
+                IPureFragment.this.fragment();
+                cons.accept(rootReferance());
+            }
+        };
+        result.referance(this);
+        return result;
     }
 
     public static IPureFragment of(Runnable r) {
-        return r::run;
+        return new AbstractFragment() {
+            @Override
+            public void fragment() {
+                r.run();
+            }
+        };
     }
 }

@@ -30,12 +30,13 @@ public class DebugPannel extends CinoComponent {
     private CharArrayInt arrayInt4fps;
     private CharArrayInt arrayInt4ovr;
     private CharArrayInt arrayInt4ft;
-    
+
     @Override
     public void init() throws Exception {
         if (debug) {
             lastRegTime = System.currentTimeMillis();
-            shapeFactory.setLayer(-1);
+            rootNode().setOrder(Integer.MAX_VALUE);
+            rootNode().setName("haha");
             buildPanel();
             buildFPS();
             buildOVR();
@@ -43,13 +44,13 @@ public class DebugPannel extends CinoComponent {
 
             autoShowHide();
 
-            rootNode.setCentralX((float)(screenW - debugPannelWidth) / 2);
-            rootNode.setCentralY((float)(screenH - debugPannelHeight) / 2);
+            rootNode().setCentralX((float) (screenW - debugPannelWidth) / 2);
+            rootNode().setCentralY((float) (screenH - debugPannelHeight) / 2);
         }
     }
 
     private void buildPanel() {
-        GLRect rect = shapeFactory.buildGLRect(0, 0, debugPannelWidth, debugPannelHeight);
+        GLRect rect = rootNode().glRect(0, 0, debugPannelWidth, debugPannelHeight);
         rect.setAllPointColor(Color.GRAY);
         rect.setFill(true);
         rect.setAlpha(0.5f);
@@ -60,24 +61,27 @@ public class DebugPannel extends CinoComponent {
         arrayInt4fps = new CharArrayInt(fpsC);
         arrayInt4fps.setFrontKeepStr("Fps:");
         arrayInt4fps.setByInt(0);
-        charRectFactory.charRectArea(0, 22, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
+        charRectFactory.charRectArea(0, 22, 50, CharAreaConfig.builder().charArray(fpsC).node(rootNode()).build())
+                .setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     private void buildOVR() {
-        char[] fpsC = new char[7];
-        arrayInt4ovr = new CharArrayInt(fpsC);
+        char[] ovrC = new char[7];
+        arrayInt4ovr = new CharArrayInt(ovrC);
         arrayInt4ovr.setFrontKeepStr("Ovr:");
         arrayInt4ovr.setBackKeepStr("%");
         arrayInt4ovr.setByInt(0);
-        charRectFactory.charRectArea(0, 3, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
+        charRectFactory.charRectArea(0, 3, 50, CharAreaConfig.builder().charArray(ovrC).node(rootNode()).build())
+                .setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     private void buildOVD() {
-        char[] fpsC = new char[7];
-        arrayInt4ft = new CharArrayInt(fpsC);
+        char[] ovdC = new char[7];
+        arrayInt4ft = new CharArrayInt(ovdC);
         arrayInt4ft.setFrontKeepStr("Tu:");
         arrayInt4ft.setByInt(0);
-        charRectFactory.charRectArea(0, -18, 50, new CharAreaConfig(fpsC)).setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
+        charRectFactory.charRectArea(0, -18, 50, CharAreaConfig.builder().charArray(ovdC).node(rootNode()).build())
+                .setSimpleStyle(i -> i.setAllPointColor(Color.BLACK));
     }
 
     public void noticeDrawCall(long timeUse) {

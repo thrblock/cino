@@ -1,44 +1,34 @@
 package com.thrblock.cino.util.charprocess;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.util.function.Consumer;
 
+import com.thrblock.cino.glshape.GLImage;
 import com.thrblock.cino.glshape.GLRect;
 import com.thrblock.cino.gltexture.FontsInCommon;
 import com.thrblock.cino.gltexture.GLFont;
+import com.thrblock.cino.lnode.LNode;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class CharAreaConfig {
     private static final GLFont DEFAULT_FONT = new GLFont(new Font(FontsInCommon.GNU_FREE_MONO, Font.PLAIN, 12));
-    private char[] charArray;
-    private GLFont font;
+    private final char[] charArray;
+    @Builder.Default
+    private GLFont font = DEFAULT_FONT;
+    @Builder.Default
     private PositionSynchronizer positionSyn = new FlowAsLine();
+    @Builder.Default
     private CharStyle style = (arr, i, img) -> {
     };
-    private Consumer<GLRect> rectStyle = r -> {
-        r.setPointColor(0, Color.WHITE);
-        r.setPointColor(1, Color.GRAY);
-        r.setPointColor(2, Color.BLACK);
-        r.setPointColor(3, Color.GRAY);
-    };
+    private LNode node;
+    @Builder.Default
+    private Consumer<GLRect> rectStyle = r -> r.setDisplay(false);
 
-    public CharAreaConfig(String str) {
-        charArray = str.toCharArray();
+    public void setSimpleStyle(Consumer<GLImage> st) {
+        this.style = (arr, i, img) -> st.accept(img);
     }
-
-    public CharAreaConfig(char[] array) {
-        this.charArray = array;
-    }
-
-    public CharAreaConfig(int size) {
-        this.charArray = new char[size];
-    }
-
-    public GLFont getFont() {
-        return font == null ? DEFAULT_FONT : font;
-    }
-
 }

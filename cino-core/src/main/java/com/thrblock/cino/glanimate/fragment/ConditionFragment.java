@@ -3,9 +3,11 @@ package com.thrblock.cino.glanimate.fragment;
 import java.util.function.BooleanSupplier;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class ConditionFragment implements IPureFragment {
+@EqualsAndHashCode(callSuper = true)
+public class ConditionFragment extends AbstractFragment {
     private final BooleanSupplier sup;
     private final IPureFragment then;
     private final IPureFragment elseDo;

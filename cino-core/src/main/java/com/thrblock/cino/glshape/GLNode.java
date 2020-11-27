@@ -1,4 +1,4 @@
-package com.thrblock.cino.glshape.factory;
+package com.thrblock.cino.glshape;
 
 import com.thrblock.cino.glshape.proxy.NodeAlphaProxy;
 import com.thrblock.cino.glshape.proxy.NodeMotivationProxy;
@@ -19,10 +19,6 @@ public interface GLNode {
      * 隐藏节点
      */
     public void hide();
-    /**
-     * 销毁节点
-     */
-    public void destroy();
     
     /**
      * 设置位置坐标 x,具体效果依赖于GLNode实现类

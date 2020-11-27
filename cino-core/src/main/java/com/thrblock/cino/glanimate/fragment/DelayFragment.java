@@ -1,6 +1,11 @@
 package com.thrblock.cino.glanimate.fragment;
 
-public class DelayFragment implements IPureFragment {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class DelayFragment extends AbstractFragment {
     private int count;
     private int countReg = 0;
     private IPureFragment pure;
@@ -14,8 +19,8 @@ public class DelayFragment implements IPureFragment {
     public void fragment() {
         countReg++;
         if (countReg >= count) {
-            pure.fragment();
             countReg = 0;
+            pure.fragment();
         }
     }
 

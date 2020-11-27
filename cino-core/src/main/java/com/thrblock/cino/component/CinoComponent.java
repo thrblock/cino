@@ -4,6 +4,7 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,15 +32,16 @@ import com.thrblock.cino.eventbus.EventBus;
 import com.thrblock.cino.function.VoidConsumer;
 import com.thrblock.cino.glanimate.GLFragmentManager;
 import com.thrblock.cino.glanimate.fragment.IPureFragment;
-import com.thrblock.cino.gllayer.IGLFrameBufferObjectManager;
+import com.thrblock.cino.glprocessor.Clock;
 import com.thrblock.cino.glshape.GLPolygonShape;
-import com.thrblock.cino.glshape.factory.GLShapeFactory;
-import com.thrblock.cino.glshape.factory.GLShapeNode;
-import com.thrblock.cino.gltransform.IGLTransForm;
 import com.thrblock.cino.io.KeyControlStack;
 import com.thrblock.cino.io.MouseControl;
+import com.thrblock.cino.lnode.LNode;
+import com.thrblock.cino.lnode.LNodeManager;
 import com.thrblock.cino.storage.Storage;
 import com.thrblock.cino.util.charprocess.CharRectAreaFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 提供设计相关的主要成员,可以以此类为单位进行逻辑上的粒度控制<br />
@@ -47,6 +49,7 @@ import com.thrblock.cino.util.charprocess.CharRectAreaFactory;
  * 
  * @author zepu.li
  */
+@Slf4j
 public abstract class CinoComponent implements KeyListener {
 
     /**
@@ -64,7 +67,12 @@ public abstract class CinoComponent implements KeyListener {
 
     @Value("${cino.frame.screen.height:600}")
     protected int screenH;
-
+    
+    /**
+     * 时钟
+     */
+    @Autowired
+    protected Clock clock;
     /**
      * local storage
      */
@@ -76,13 +84,6 @@ public abstract class CinoComponent implements KeyListener {
     @Autowired
     protected CinoFrameConfig frame;
 
-    /**
-     * 图形构造器，用来绘制图形
-     */
-    @Autowired
-    protected GLShapeFactory shapeFactory;
-    
-    
     /**
      * 基于矩形结构的文字区域工厂类
      */
@@ -110,42 +111,25 @@ public abstract class CinoComponent implements KeyListener {
      * 组件片段容器
      */
     protected GLFragmentManager compAni;
-    /**
-     * 帧缓冲管理器
-     */
-    @Autowired
-    protected IGLFrameBufferObjectManager fboManager;
-
-    @Autowired
-    protected IGLTransForm transformManager;
 
     @Autowired
     protected EventBus eventBus;
 
     @Autowired
     protected ScriptEngine scriptEngine;
-    
+
     @Autowired
     private CinoComponentWarpper beanWapper;
-    
-    /**
-     * sceneRoot是场景自动创建的GLNode根节点
-     */
-    protected GLShapeNode rootNode;
+
+    private LNode rootNode;
+
+    @Autowired
+    protected LNodeManager nodeManager;
 
     protected BooleanSupplier activitedSupplier = () -> false;
 
     protected CinoComponent parent;
-    
-    /**
-     * for current component
-     */
-    private ComponentConfig componentConfig;
-    /**
-     * for sub component
-     */
-    private ComponentConfig treeComponentConfig;
-    
+
     private List<VoidConsumer> activitedHolder;
     private List<VoidConsumer> deactivitedHolder;
     private List<VoidConsumer> destroyHolder;
@@ -154,95 +138,71 @@ public abstract class CinoComponent implements KeyListener {
 
     private boolean activited = false;
     private List<CinoComponent> subComps = new CopyOnWriteArrayList<>();
-    
+
     private static String printInitTree() {
         StringBuilder builder = new StringBuilder();
         builder.append("<root>");
         initingTree.descendingIterator().forEachRemaining(e -> builder.append("->" + e.getClass().getSimpleName()));
         return builder.toString();
     }
-    
+
     @PostConstruct
     private final void postConstruct() throws Exception {
         parent = initingTree.peek();
         initingTree.push(this);
-        
+
         String initTree = printInitTree();
-        if(initingTreeSet.add(initTree)) {
+        if (initingTreeSet.add(initTree)) {
             logger.info("init-tree:{}", initTree);
         }
-        
+
         activitedSupplier = () -> activited;
         activitedHolder = new LinkedList<>();
         deactivitedHolder = new LinkedList<>();
         destroyHolder = new LinkedList<>();
         eventHolder = new LinkedList<>();
         mouseHolder = new LinkedList<>();
-        
-        innerInitByAnnotationConfig();
-        init();
-        initingTree.pop();
-    }
 
-    private void innerInitByAnnotationConfig() {
-        if(treeComponentConfig == null) {
-            Optional.ofNullable(parent)
-                    .map(p -> p.treeComponentConfig)
-                    .ifPresent(p -> this.treeComponentConfig = p);
-        }
-        if(componentConfig == null) {
-            componentConfig = Optional.ofNullable(treeComponentConfig).orElse(new ComponentConfig());
-        }
-        // 帧执行构件继承逻辑
         compAni = Optional.ofNullable(parent)
-                .filter(x -> componentConfig.isInheritAnimation())
-                .map(p -> p.compAni)
-                .map(GLFragmentManager::generateSubContainer)
+                .map(p -> p.rootAni.generateSubContainer())
                 .orElse(rootAni.generateSubContainer());
         compAni.pause();
         
-        rootNode = new GLShapeNode();
-        shapeFactory.setNode(rootNode);
+        Optional.ofNullable(parent).ifPresent(p -> {
+            rootNode = Optional.ofNullable(rootNode).orElse(p.rootNode);
+        });
         
-        // 图形工厂继承逻辑
-        Optional.ofNullable(parent)
-                .filter(x -> componentConfig.isInheritLayer())
-                .map(p -> p.shapeFactory)
-                .ifPresent(s -> this.shapeFactory.setLayer(s.getLayer()));
-        
-        // 绘制节点继承逻辑
-        Optional.ofNullable(parent)
-                .filter(x -> componentConfig.isInheritShapeNode())
-                .map(p -> p.rootNode)
-                .ifPresent(r -> r.addSubNode(this.rootNode));
-        
-        // 子组件逻辑
-        Optional.ofNullable(parent)
-                .filter(x -> componentConfig.isAutoAsSub())
-                .ifPresent(p -> p.registerSub(this));
-        
-        // auto show/hide
-        if(componentConfig.isAutoShowHide()) {
-            autoShowHide();
+        Optional.ofNullable(parent).ifPresent(p -> p.sameLifeCycleOf(this));
+
+        init();
+        rootNode.syncMbr();
+        initingTree.pop();
+    }
+
+    public final LNode rootNode() {
+        if (this.rootNode == null) {
+            this.rootNode = nodeManager.createRootNode();
         }
+        return rootNode;
     }
-    
-    public void setComponentConfig(ComponentConfig componentConfig) {
-        this.componentConfig = componentConfig;
+
+    public final void setRootNode(LNode node) {
+        this.rootNode = node;
     }
+
     /**
      * auto show/hide scene root when component activited/deactivited
      */
     public final void autoShowHide() {
-        onActivited(rootNode::show);
-        onDeactivited(rootNode::hide);
+        onActivited(() -> rootNode().show());
+        onDeactivited(() -> rootNode().hide());
     }
 
     public final void autoKeyPushPop() {
         onActivited(() -> keyIO.pushKeyListener(this));
         onDeactivited(keyIO::popKeyListener);
     }
-    
+
     public final <T extends CinoComponent> T warpPrototype(T o) {
         return beanWapper.warpPrototype(o);
     }
@@ -275,21 +235,21 @@ public abstract class CinoComponent implements KeyListener {
      * @param pure
      */
     public final void auto(BooleanSupplier condition, IPureFragment pure) {
-        compAni.addFragment(pure.whenThen(condition));
+        compAni.addFragment(pure.withCondition(condition));
     }
 
     public final <T> void auto(BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
         IPureFragment pure = () -> cons.accept(sup.get());
-        compAni.addFragment(pure.whenThen(condition));
+        compAni.addFragment(pure.withCondition(condition));
     }
 
     public final void autoEvery(int count, BooleanSupplier condition, IPureFragment pure) {
-        compAni.addFragment(pure.delay(count).whenThen(condition));
+        compAni.addFragment(pure.delay(count).withCondition(condition));
     }
 
     public final <T> void autoEvery(int count, BooleanSupplier condition, Supplier<T> sup, Consumer<T> cons) {
         IPureFragment pure = () -> cons.accept(sup.get());
-        compAni.addFragment(pure.delay(count).whenThen(condition));
+        compAni.addFragment(pure.delay(count).withCondition(condition));
     }
 
     public final void autoMouseClicked(Consumer<MouseEvent> e) {
@@ -325,6 +285,13 @@ public abstract class CinoComponent implements KeyListener {
         })));
     }
 
+    public final void sameLifeCycleOf(CinoComponent... comps) {
+        Arrays.stream(comps).forEach(c -> {
+            onActivited(c::activited);
+            onDeactivited(c::deactivited);
+        });
+    }
+
     public final void onActivited(VoidConsumer v) {
         activitedHolder.add(v);
     }
@@ -332,7 +299,7 @@ public abstract class CinoComponent implements KeyListener {
     public final void onDeactivited(VoidConsumer v) {
         deactivitedHolder.add(v);
     }
-    
+
     public final void onDestroy(VoidConsumer v) {
         destroyHolder.add(v);
     }
@@ -392,14 +359,12 @@ public abstract class CinoComponent implements KeyListener {
         removeMouseHolder();
         removeEventHolder();
         compAni.destroy();
-        rootNode.destroy();
-        shapeFactory.clearNode();
         keyIO.removeKeyListener(this);
 
         activitedHolder.clear();
         deactivitedHolder.clear();
         destroyHolder.clear();
-        
+
         destroy();
     }
 
@@ -411,6 +376,7 @@ public abstract class CinoComponent implements KeyListener {
 
     /**
      * for debug only.
+     * 
      * @throws Exception
      */
     public final void reload() throws Exception {
@@ -424,17 +390,19 @@ public abstract class CinoComponent implements KeyListener {
      * 销毁时调用一次
      */
     public void destroy() throws Exception {
-        
+
     }
 
     /**
      * 激活组件
      */
     public final void activited() {
+        log.debug("{} activited.", getClass().getSimpleName());
+
         activited = true;
         compAni.remuse();
         activitedHolder.forEach(VoidConsumer::accept);
-        
+
         subComps.forEach(CinoComponent::activited);
     }
 
@@ -442,6 +410,8 @@ public abstract class CinoComponent implements KeyListener {
      * 停止组件
      */
     public final void deactivited() {
+        log.info("{} deactivited.", getClass().getSimpleName());
+
         subComps.forEach(CinoComponent::deactivited);
 
         deactivitedHolder.forEach(VoidConsumer::accept);

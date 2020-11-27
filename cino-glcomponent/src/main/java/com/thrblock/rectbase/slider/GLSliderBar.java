@@ -29,7 +29,7 @@ public class GLSliderBar extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        return shapeFactory.buildGLRect(0, 0, w, h);
+        return rootNode().glRect(0, 0, w, h);
     }
 
     @Override
@@ -38,13 +38,13 @@ public class GLSliderBar extends GLRectBase {
         base.setAllPointColor(Color.GRAY);
         base.setFill(true);
 
-        GLRect rLine = shapeFactory.buildGLRect(0, 0, w, 2);
+        GLRect rLine = rootNode().glRect(0, 0, w, 2);
         rLine.setAllPointColor(Color.WHITE);
         rLine.setFill(true);
 
         float bouyw = getWidth() / 10f > 10f ? 10f : getWidth() / 10f;
         float bouyh = getHeight() - 5f > 15f ? 15f : getHeight() - 5f;
-        GLRect bouy = shapeFactory.buildGLRect(0, 0, bouyw, bouyh);
+        GLRect bouy = rootNode().glRect(0, 0, bouyw, bouyh);
         bouy.setAllPointColor(Color.DARK_GRAY);
         bouy.setFill(true);
 
@@ -61,14 +61,14 @@ public class GLSliderBar extends GLRectBase {
         });
 
         autoShapePressed(bouy, e -> {
-            ctX = mouseIO.getMouseX(shapeFactory.getLayer());
+            ctX = (int) rootNode().getMouseX();
             ctProgress = progress;
             incontrol = true;
         });
 
         autoMouseReleased(e -> incontrol = false);
         auto(() -> incontrol, () -> {
-            int offset = mouseIO.getMouseX(shapeFactory.getLayer()) - ctX;
+            int offset = (int) rootNode().getMouseX() - ctX;
             float aimProgress = CMath.clamp(ctProgress + offset / getWidth(), 0f, 1f);
             if (!CMath.floatEqual(progress, aimProgress)) {
                 progressChange.forEach(f -> f.accept(aimProgress));

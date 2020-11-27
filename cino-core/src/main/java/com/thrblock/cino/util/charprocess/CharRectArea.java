@@ -1,6 +1,7 @@
 package com.thrblock.cino.util.charprocess;
 
 import java.awt.Color;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.thrblock.cino.component.CinoComponent;
@@ -29,19 +30,20 @@ public class CharRectArea extends CinoComponent {
         this.initWidth = width;
         this.initHeight = height;
         this.config = config;
+        Optional.ofNullable(config.getNode()).ifPresent(this::setRootNode);
     }
 
     @Override
     public void init() throws Exception {
         autoShowHide();
-        
-        this.base = shapeFactory.buildGLRect(initX, initY, initWidth, initHeight);
+
+        this.base = rootNode().glRect(initX, initY, initWidth, initHeight);
         this.font = config.getFont();
         this.charArray = config.getCharArray();
 
         this.imgs = new GLImage[charArray.length];
         for (int i = 0; i < imgs.length; i++) {
-            imgs[i] = shapeFactory.buildGLImage();
+            imgs[i] = rootNode().glImage();
         }
 
         this.positionSyn = config.getPositionSyn();
@@ -51,7 +53,7 @@ public class CharRectArea extends CinoComponent {
 
         this.charStyle = config.getStyle();
         this.rectStyle = config.getRectStyle();
-        
+
         fillContent();
         setStyle();
 

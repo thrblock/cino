@@ -7,7 +7,7 @@ import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 
-public class GLCycle<T> {
+public class CycleArray<T> {
 
     IntFunction<T[]> arraySupplier;
     T[] cache;
@@ -15,7 +15,7 @@ public class GLCycle<T> {
     Semaphore operationSp = new Semaphore(1);
     Set<Consumer<Set<T>>> operations = new LinkedHashSet<>();
 
-    public GLCycle(IntFunction<T[]> supplier) {
+    public CycleArray(IntFunction<T[]> supplier) {
         this.arraySupplier = supplier;
         this.cache = arraySupplier.apply(0);
     }

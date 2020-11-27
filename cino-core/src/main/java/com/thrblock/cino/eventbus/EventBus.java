@@ -7,12 +7,12 @@ import javax.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 
 import com.thrblock.cino.function.VoidConsumer;
-import com.thrblock.cino.gllifecycle.GLCycle;
+import com.thrblock.cino.gllifecycle.CycleArray;
 
 @Component
 public class EventBus {
 
-    private GLCycle<Object> entryCycle = new GLCycle<>(Object[]::new);
+    private CycleArray<Object> entryCycle = new CycleArray<>(Object[]::new);
 
     public <T> Object mapEvent(Class<T> clz, Consumer<T> con) {
         MapEntry<T> ent = new MapEntry<>();

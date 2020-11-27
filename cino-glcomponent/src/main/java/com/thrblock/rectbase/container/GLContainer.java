@@ -61,7 +61,7 @@ public class GLContainer extends GLRectBase {
 
     @Override
     protected GLRect buildBase() {
-        return shapeFactory.buildGLRect(0, 0, w, h);
+        return rootNode().glRect(0, 0, w, h);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GLContainer extends GLRectBase {
         super.afterBaseBuild();
         base.setFill(true);
         base.setAllPointColor(Color.GRAY);
-        GLRect r = shapeFactory.buildGLRect(0, 0, w, h);
+        GLRect r = rootNode().glRect(0, 0, w, h);
         r.setAllPointColor(Color.BLACK);
         auto(() -> r.sameStatusOf(base));
     }

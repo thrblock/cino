@@ -16,7 +16,7 @@ import com.thrblock.cino.vec.Vec2;
 public class GLPolygonShape<E extends Polygon> extends GLMultiPointShape<E> {
 
     private boolean fill = false;
-    
+
     @Autowired
     protected MouseControl mouseIO;
 
@@ -71,14 +71,16 @@ public class GLPolygonShape<E extends Polygon> extends GLMultiPointShape<E> {
     public boolean isPointInside(float px, float py) {
         return concept.isPointInside(px, py);
     }
-    
+
     /**
      * 鼠标指针是否处于多边形内<br />
      * 该方法考虑绘制层级对应的变换操作
+     * 
      * @return
      */
     public boolean isMouseInside() {
-        return !isDestory() && isPointInside(mouseIO.getMouseX(getLayerIndex()), mouseIO.getMouseY(getLayerIndex()));
+        float[] xy = node.unprojectedMouse();
+        return isPointInside(xy[0], xy[1]);
     }
 
     @Override
