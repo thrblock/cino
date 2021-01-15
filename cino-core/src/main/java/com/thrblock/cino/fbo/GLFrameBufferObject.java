@@ -49,7 +49,7 @@ public class GLFrameBufferObject {
      * @param frameSizeH
      * @param flexmode   缩放模式
      */
-    public GLFrameBufferObject(int frameSizeW, int frameSizeH, int flexmode) {
+    GLFrameBufferObject(int frameSizeW, int frameSizeH, int flexmode) {
         this.frameSizeW = frameSizeW;
         this.frameSizeH = frameSizeH;
         fboVectorBuffer.put(FBO_VECS);

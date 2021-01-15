@@ -1,5 +1,9 @@
 package com.thrblock.cino.util.math;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Collection;
+import java.util.stream.Stream;
+
 /**
  * 这里放置了一些数学相关方法<br />
  * 不推荐使用静态方法，必要时，会把特定用途的方法移植为OO格式 <br />
@@ -146,5 +150,9 @@ public class CMath {
     public static float smoothstep(float edge0, float edge1, float x) {
         float t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
         return t * t * (3 - 2 * t);
+    }
+    
+    public static <A, B> Stream<SimpleEntry<A, B>> cartesianProduct(Collection<A> as, Collection<B> bs) {
+        return as.stream().flatMap(a -> bs.stream().map(b -> new SimpleEntry<>(a, b)));
     }
 }

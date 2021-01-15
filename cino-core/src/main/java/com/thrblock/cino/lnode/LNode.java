@@ -23,6 +23,7 @@ import com.thrblock.cino.glshape.GLShape;
 import com.thrblock.cino.glshape.GLTriangle;
 import com.thrblock.cino.gltexture.GLTexture;
 import com.thrblock.cino.gltransform.GLTransform;
+import com.thrblock.cino.gltransform.GLTransformManager;
 import com.thrblock.cino.vec.Vec2;
 
 import lombok.Getter;
@@ -62,16 +63,20 @@ public class LNode implements GLNode, Comparable<LNode> {
 
     @Setter
     private GLFrameBufferObjectManager fboManager;
-
+    
     @Setter
     private ShapeBeanFactory shapeFactory;
-
+    
+    @Setter
+    private GLTransformManager transformManager;
+    
     private CycleArray<GLFrameBufferObject> fboCycle = new CycleArray<>(GLFrameBufferObject[]::new);
 
-    LNode(GLFrameBufferObjectManager fboManager, ShapeBeanFactory shapeFactory) {
+    LNode(GLFrameBufferObjectManager fboManager, ShapeBeanFactory shapeFactory,GLTransformManager transformManager) {
         this.shapeFactory = shapeFactory;
         this.fboManager = fboManager;
-
+        this.transformManager = transformManager;
+        
         this.mixA = GL.GL_SRC_ALPHA;
         this.mixB = GL.GL_ONE_MINUS_SRC_ALPHA;
     }
@@ -80,6 +85,7 @@ public class LNode implements GLNode, Comparable<LNode> {
         this.node = parent;
         this.fboManager = parent.fboManager;
         this.shapeFactory = parent.shapeFactory;
+        this.transformManager = parent.transformManager;
         parent.subNodes.safeAdd(this);
     }
 
@@ -105,6 +111,11 @@ public class LNode implements GLNode, Comparable<LNode> {
         gl2.glBlendFunc(getMixA(), getMixB());
         GLFrameBufferObject[] fbos = fboCycle.safeHold();
         fboManager.bind(fbos, gl2);
+        
+        if(this.transform != null) {
+            transform.transform(gl2);
+        }
+        
         GLNode[] arr = subNodes.safeHold();
         for (int i = 0; i < arr.length; i++) {
             GLNode n = arr[i];
@@ -119,7 +130,8 @@ public class LNode implements GLNode, Comparable<LNode> {
                 LNode.class.cast(n).drawShape(gl2);
             }
         }
-        fboManager.unBind(fbos,gl2);
+        
+        fboManager.unBind(fbos, gl2);
     }
 
     public GLFrameBufferObject createFBO() {
@@ -133,11 +145,17 @@ public class LNode implements GLNode, Comparable<LNode> {
         fboManager.destroyFBO(fbo);
     }
 
-    GLTransform currentTransform() {
+    public GLTransform currentTransform() {
         if (node == null) {
             return transform;
         }
         return transform == null ? node.currentTransform() : transform;
+    }
+
+    public GLTransform createTransform() {
+        GLTransform result = transformManager.generateGLTransform();
+        setTransform(result);
+        return result;
     }
 
     public float[] unprojectedMouse() {

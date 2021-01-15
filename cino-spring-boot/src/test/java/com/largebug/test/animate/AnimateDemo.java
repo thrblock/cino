@@ -19,6 +19,7 @@ public class AnimateDemo extends CinoComponent {
         rect.setPointColor(0, Color.RED);
         rect.setPointColor(1, Color.GREEN);
         rect.setPointColor(2, Color.BLUE);
+        rect.setPointColor(3, Color.CYAN);
         rect.setFill(true);
         
         auto(() -> {

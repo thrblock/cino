@@ -7,6 +7,9 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.thrblock.cino.glmatrix.GLMatrixData;
+import com.thrblock.cino.io.MouseControl;
+
+import lombok.Setter;
 
 public final class GLTransform {
     /**
@@ -41,6 +44,14 @@ public final class GLTransform {
     }
 
     private OrderedTransform orderedTransformfun;
+    
+    @Setter
+    private int hW;
+    @Setter
+    private int hH;
+    @Setter
+    private MouseControl mouse;
+    
     /**
      * 平移-缩放-旋转 变换（默认)
      */
@@ -78,19 +89,19 @@ public final class GLTransform {
         gl2.glScalef(tr.scaleX, tr.scaleY, 1.0f);
     };
 
-    public GLTransform() {
+    protected GLTransform() {
         this.orderedTransformfun = TSR;
     }
 
-    public GLTransform(OrderedTransform tr) {
+    protected GLTransform(OrderedTransform tr) {
         this.orderedTransformfun = tr;
     }
 
-    public void transform(GL gl, int hW, int hH, int orgX, int orgY) {
+    public void transform(GL gl) {
         GL2 gl2 = gl.getGL2();
         project(gl2, hW, hH);
         modelAndView(gl2);
-        calcMouse(gl2, orgX, orgY);
+        calcMouse(gl2, mouse.getOriginalX(), mouse.getOriginalY());
     }
 
     private void calcMouse(GL2 gl2, int orgX, int orgY) {

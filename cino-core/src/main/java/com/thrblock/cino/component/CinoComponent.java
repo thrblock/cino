@@ -118,9 +118,6 @@ public abstract class CinoComponent implements KeyListener {
     @Autowired
     protected ScriptEngine scriptEngine;
 
-    @Autowired
-    private CinoComponentWarpper beanWapper;
-
     private LNode rootNode;
 
     @Autowired
@@ -201,10 +198,6 @@ public abstract class CinoComponent implements KeyListener {
     public final void autoKeyPushPop() {
         onActivited(() -> keyIO.pushKeyListener(this));
         onDeactivited(keyIO::popKeyListener);
-    }
-
-    public final <T extends CinoComponent> T warpPrototype(T o) {
-        return beanWapper.warpPrototype(o);
     }
 
     /**
